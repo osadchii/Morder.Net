@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
 using Infrastructure.Interfaces;
 
-namespace Infrastructure.Models.Products;
+namespace Infrastructure.Models.Prices;
 
-[Table("Product", Schema = "dbo")]
-public class Product : IHasId
+[Table("PriceType", Schema = "dbo")]
+public class PriceType : IHasId
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(Limits.ProductName)]
+    [MaxLength(Limits.PriceTypeName)]
     public string Name { get; set; }
 }

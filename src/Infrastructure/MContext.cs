@@ -1,3 +1,4 @@
+using Infrastructure.Models.Companies;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
@@ -7,11 +8,16 @@ namespace Infrastructure;
 
 public class MContext : DbContext
 {
+    #region Company
+
     public DbSet<Product> Products { get; set; }
     public DbSet<PriceType> PriceTypes { get; set; }
     public DbSet<Price> Prices { get; set; }
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Stock> Stocks { get; set; }
+    public DbSet<Company> Companies { get; set; }
+
+    #endregion
 
     public MContext(DbContextOptions<MContext> options) : base(options)
     {

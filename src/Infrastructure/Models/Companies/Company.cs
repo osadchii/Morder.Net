@@ -3,22 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
 using Infrastructure.Interfaces;
 
-namespace Infrastructure.Models.Products;
+namespace Infrastructure.Models.Companies;
 
-[Table("Product", Schema = "dbo")]
-public class Product : IHasId
+public class Company : IHasId
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(Limits.ProductName)]
+    [MaxLength(Limits.CompanyName)]
     public string Name { get; set; }
 
-    [ForeignKey("Category")]
-    public int CategoryId { get; set; }
+    [Required]
+    [MaxLength(Limits.ShopName)]
+    public string Shop { get; set; }
 
-    public Category? Category { get; set; }
-
-    public bool IsDeleted { get; set; }
+    [MaxLength(Limits.ShopUrl)]
+    public string Url { get; set; }
 }

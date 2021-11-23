@@ -8,16 +8,14 @@ namespace Infrastructure.Models.Prices;
 [Table("Price", Schema = "dbo")]
 public class Price
 {
-    [ForeignKey("Product")]
-    public int ProductId { get; set; }
-    
+    [ForeignKey("Product")] public int ProductId { get; set; }
+
     public Product Product { get; set; }
 
-    [ForeignKey("PriceType")] 
-    public int PriceTypeId { get; set; }
-    
+    [ForeignKey("PriceType")] public int PriceTypeId { get; set; }
+
     public PriceType PriceType { get; set; }
-    
+
     [Range(Limits.MinimalPrice, Limits.MaximalPrice)]
     public decimal Value { get; set; }
 }

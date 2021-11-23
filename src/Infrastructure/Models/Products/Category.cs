@@ -6,19 +6,21 @@ using Infrastructure.Interfaces;
 namespace Infrastructure.Models.Products;
 
 [Table("Category", Schema = "dbo")]
-public class Category : IHasId
+public class Category : IHasId, IHasExternalId
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
     [MaxLength(Limits.CategoryName)]
     public string Name { get; set; }
 
-    [ForeignKey("Parent")]
-    public int ParentId { get; set; }
+    [ForeignKey("Parent")] public int? ParentId { get; set; }
 
     public Category? Parent { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public Guid ExternalId { get; set; }
 }

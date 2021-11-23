@@ -4,9 +4,9 @@ var env = builder.Environment;
 var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
-    .AddJsonFile(Path.Combine(sharedFolder, $"appsettings.json"), true)
+    .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
     .AddJsonFile(Path.Combine(sharedFolder, $"appsettings.{env.EnvironmentName}.json"), true)
-    .AddJsonFile($"appsettings.json", true)
+    .AddJsonFile("appsettings.json", true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
 // Add services to the container.

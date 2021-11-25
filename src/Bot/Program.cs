@@ -1,7 +1,7 @@
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
-var env = builder.Environment;
-var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+IWebHostEnvironment? env = builder.Environment;
+string? sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
     .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

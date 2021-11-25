@@ -1,9 +1,14 @@
+using AutoMapper;
 using Infrastructure;
+using Infrastructure.Mappings;
+using Infrastructure.MediatR.Companies.Commands;
+using Infrastructure.MediatR.Companies.Handlers;
+using MediatR;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var env = builder.Environment;
-var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+IWebHostEnvironment env = builder.Environment;
+string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
     .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -16,8 +21,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMContext(builder.Configuration);
+builder.Services.AddMediatR(typeof(UpdateCompanyInformationHandler).Assembly);
+builder.Services.AddTransient<IRequestHandler<UpdateCompanyInformation, bool>,
+    UpdateCompanyInformationHandler>();
+var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new CompanyProfile()); });
 
-var app = builder.Build();
+IMapper mapper = mappingConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

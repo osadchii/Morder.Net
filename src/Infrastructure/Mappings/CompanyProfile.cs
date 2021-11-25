@@ -9,5 +9,6 @@ public class CompanyProfile : Profile
     public CompanyProfile()
     {
         CreateMap<UpdateCompanyInformation, Company>();
+        CreateMap<Company, CompanyDto>();
     }
 }

@@ -1,8 +1,10 @@
 using AutoMapper;
+using Infrastructure.Common;
 using Infrastructure.MediatR.Companies.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Models.Companies;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
@@ -10,15 +12,19 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
+    private readonly IMemoryCache _cache;
 
-    public UpdateCompanyInformationHandler(MContext context, IMapper mapper)
+    public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache)
     {
         _context = context;
         _mapper = mapper;
+        _cache = cache;
     }
 
     public async Task<bool> Handle(UpdateCompanyInformation request, CancellationToken cancellationToken)
     {
+        _cache.Remove(CacheKeys.CompanyInformation);
+
         Company? dbEntry =
             await _context.Companies.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
@@ -34,16 +40,8 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     {
         var dbEntry = _mapper.Map<Company>(request);
 
-        try
-        {
-            await _context.AddAsync(dbEntry, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
+        await _context.AddAsync(dbEntry, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return true;
     }
@@ -53,15 +51,7 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     {
         _mapper.Map(request, company);
 
-        try
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
+        await _context.SaveChangesAsync(cancellationToken);
 
         return true;
     }

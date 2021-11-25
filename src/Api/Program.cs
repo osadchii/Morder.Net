@@ -1,9 +1,4 @@
-using AutoMapper;
 using Infrastructure;
-using Infrastructure.Mappings;
-using Infrastructure.MediatR.Companies.Commands;
-using Infrastructure.MediatR.Companies.Handlers;
-using MediatR;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMContext(builder.Configuration);
-builder.Services.AddMediatR(typeof(UpdateCompanyInformationHandler).Assembly);
-builder.Services.AddTransient<IRequestHandler<UpdateCompanyInformation, bool>,
-    UpdateCompanyInformationHandler>();
-var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new CompanyProfile()); });
-
-IMapper mapper = mappingConfig.CreateMapper();
-builder.Services.AddSingleton(mapper);
+builder.Services.AddMorder(builder.Configuration);
+builder.Services.AddMemoryCache();
 
 WebApplication app = builder.Build();
 

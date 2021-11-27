@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 namespace Infrastructure.Models.Companies;
 
 [Table("Company", Schema = "dbo")]
-public class Company : IHasId
+public class Company : BaseEntity, IHasId
 {
     [Key] public int Id { get; set; }
 

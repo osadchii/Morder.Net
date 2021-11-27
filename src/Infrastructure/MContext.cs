@@ -12,6 +12,7 @@ public class MContext : DbContext
 {
     #region Company
 
+    public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<PriceType> PriceTypes { get; set; }
     public DbSet<Price> Prices { get; set; }

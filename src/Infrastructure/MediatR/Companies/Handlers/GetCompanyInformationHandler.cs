@@ -8,31 +8,27 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
-public class GetCompanyInformationHandler : IRequestHandler<GetCompanyInformation, CompanyDto>
+public class GetCompanyInformationHandler : BaseRequestHandler, IRequestHandler<GetCompanyInformation, CompanyDto>
 {
-    private readonly MContext _context;
-    private readonly IMapper _mapper;
-    private readonly IMemoryCache _cache;
-
-    public GetCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache)
+    public GetCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache) : base(context, mapper,
+        cache)
     {
-        _context = context;
-        _mapper = mapper;
-        _cache = cache;
     }
 
     public async Task<CompanyDto> Handle(GetCompanyInformation request, CancellationToken cancellationToken)
     {
-        CompanyDto result;
-        if (_cache.TryGetValue(CacheKeys.CompanyInformation, out result))
+        if (Cache.TryGetValue(CacheKeys.CompanyInformation, out CompanyDto result))
         {
             return result;
         }
 
-        Company? dbEntry = await _context.Companies.SingleOrDefaultAsync(cancellationToken);
-        result = _mapper.Map<CompanyDto>(dbEntry);
+        Company? dbEntry = await Context.Companies
+            .AsNoTracking()
+            .SingleOrDefaultAsync(cancellationToken);
 
-        _cache.Set(CacheKeys.CompanyInformation, result);
+        result = Mapper.Map<CompanyDto>(dbEntry);
+
+        Cache.Set(CacheKeys.CompanyInformation, result);
 
         return result;
     }

@@ -26,9 +26,9 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Result> UpdateCompany([Required] [FromBody] UpdateCompanyInformation command)
+    public async Task<Result> UpdateCompany([Required] [FromBody] UpdateCompanyInformationRequest command)
     {
-        var result = await _mediator.Send(command);
+        await _mediator.Send(command);
         return Result.Ok;
     }
 }

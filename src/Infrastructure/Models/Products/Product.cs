@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 namespace Infrastructure.Models.Products;
 
 [Table("Product", Schema = "dbo")]
-public class Product : IHasId, IHasExternalId, IHasDeletionMark
+public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 {
     [Key] public int Id { get; set; }
 
@@ -24,5 +24,5 @@ public class Product : IHasId, IHasExternalId, IHasDeletionMark
 
     public bool DeletionMark { get; set; }
 
-    public Guid ExternalId { get; set; }
+    [Required] public Guid ExternalId { get; set; }
 }

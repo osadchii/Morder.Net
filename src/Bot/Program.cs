@@ -1,7 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-var env = builder.Environment;
-var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+
+IWebHostEnvironment? env = builder.Environment;
+string? sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
     .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -11,12 +15,21 @@ builder.Configuration
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new IsoDateTimeConverter
+        {
+            DateTimeStyles = DateTimeStyles.AdjustToUniversal
+        });
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

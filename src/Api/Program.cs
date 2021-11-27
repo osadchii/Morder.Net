@@ -1,9 +1,12 @@
+using System.Globalization;
 using Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var env = builder.Environment;
-var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+IWebHostEnvironment env = builder.Environment;
+string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
     .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -11,13 +14,23 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new IsoDateTimeConverter
+        {
+            DateTimeStyles = DateTimeStyles.AdjustToUniversal
+        });
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMContext(builder.Configuration);
+builder.Services.AddMorder(builder.Configuration);
+builder.Services.AddMemoryCache();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

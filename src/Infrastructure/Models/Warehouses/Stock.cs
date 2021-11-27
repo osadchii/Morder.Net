@@ -6,7 +6,7 @@ using Infrastructure.Models.Products;
 namespace Infrastructure.Models.Warehouses;
 
 [Table("Stock", Schema = "dbo")]
-public class Stock
+public class Stock : BaseEntity
 {
     [ForeignKey("Product")] public int ProductId { get; set; }
 

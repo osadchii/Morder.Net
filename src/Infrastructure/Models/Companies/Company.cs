@@ -5,8 +5,11 @@ using Infrastructure.Interfaces;
 
 namespace Infrastructure.Models.Companies;
 
-public class Company : IHasId
+[Table("Company", Schema = "dbo")]
+public class Company : BaseEntity, IHasId
 {
+    [Key] public int Id { get; set; }
+
     [Required]
     [MaxLength(Limits.CompanyName)]
     public string Name { get; set; }
@@ -16,8 +19,4 @@ public class Company : IHasId
     public string Shop { get; set; }
 
     [MaxLength(Limits.ShopUrl)] public string Url { get; set; }
-
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
 }

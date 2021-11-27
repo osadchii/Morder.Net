@@ -6,7 +6,7 @@ using Infrastructure.Models.Products;
 namespace Infrastructure.Models.Prices;
 
 [Table("Price", Schema = "dbo")]
-public class Price
+public class Price : BaseEntity
 {
     [ForeignKey("Product")] public int ProductId { get; set; }
 

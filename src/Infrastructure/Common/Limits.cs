@@ -5,6 +5,7 @@ public static class Limits
     public const int CategoryName = 256;
 
     public const int ProductName = 256;
+    public const int ProductArticul = 256;
 
     public const int PriceTypeName = 128;
     public const int MinimalPrice = 0;

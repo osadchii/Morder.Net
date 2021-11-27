@@ -4,12 +4,27 @@ using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure;
 
 public class MContext : DbContext
 {
+    #region Company
+
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<PriceType> PriceTypes { get; set; }
+    public DbSet<Price> Prices { get; set; }
+    public DbSet<Warehouse> Warehouses { get; set; }
+    public DbSet<Stock> Stocks { get; set; }
+    public DbSet<Company> Companies { get; set; }
+
+    #endregion
+
+#pragma warning disable CS8618
     public MContext(DbContextOptions<MContext> options) : base(options)
+#pragma warning restore CS8618
     {
     }
 
@@ -27,38 +42,21 @@ public class MContext : DbContext
             e.HasIndex(p => new { p.ProductId, p.WarehouseId });
         });
 
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
+
+        foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) == null)
+            if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) != null)
             {
-                continue;
+                IMutableProperty? property = entityType.GetProperty("ExternalId");
+                entityType.AddIndex(property, "ExternalId");
             }
 
-            var property = entityType.GetProperty("ExternalId");
-            entityType.AddIndex(property, "ExternalId");
-        }
-
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            if (entityType.ClrType.GetInterface(nameof(IHasId)) == null)
-            {
-                continue;
-            }
-
-            entityType.AddProperty("CreatedAt", typeof(DateTime)).SetDefaultValueSql("now() at time zone 'utc'");
+            if (entityType.ClrType.GetInterface(nameof(IHasId)) != null)
+                entityType.AddProperty("CreatedAt", typeof(DateTime))
+                    .SetDefaultValueSql("now() at time zone 'utc'");
         }
 
         base.OnModelCreating(modelBuilder);
     }
-
-    #region Company
-
-    public DbSet<Product> Products { get; set; }
-    public DbSet<PriceType> PriceTypes { get; set; }
-    public DbSet<Price> Prices { get; set; }
-    public DbSet<Warehouse> Warehouses { get; set; }
-    public DbSet<Stock> Stocks { get; set; }
-    public DbSet<Company> Companies { get; set; }
-
-    #endregion
 }

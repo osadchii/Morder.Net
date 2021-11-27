@@ -1,4 +1,7 @@
+using System.Globalization;
 using Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,16 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new IsoDateTimeConverter
+        {
+            DateTimeStyles = DateTimeStyles.AdjustToUniversal
+        });
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

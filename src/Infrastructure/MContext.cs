@@ -21,7 +21,9 @@ public class MContext : DbContext
 
     #endregion
 
+#pragma warning disable CS8618
     public MContext(DbContextOptions<MContext> options) : base(options)
+#pragma warning restore CS8618
     {
     }
 
@@ -38,6 +40,8 @@ public class MContext : DbContext
             e.HasKey(p => new { p.ProductId, p.WarehouseId });
             e.HasIndex(p => new { p.ProductId, p.WarehouseId });
         });
+
+        modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
         {

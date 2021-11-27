@@ -8,7 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
-public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInformation, bool>
+public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInformation, Unit>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
         _cache = cache;
     }
 
-    public async Task<bool> Handle(UpdateCompanyInformation request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateCompanyInformation request, CancellationToken cancellationToken)
     {
         _cache.Remove(CacheKeys.CompanyInformation);
 
@@ -36,23 +36,23 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
         return await UpdateCompany(dbEntry, request, cancellationToken);
     }
 
-    private async Task<bool> CreateCompany(UpdateCompanyInformation request, CancellationToken cancellationToken)
+    private async Task<Unit> CreateCompany(UpdateCompanyInformation request, CancellationToken cancellationToken)
     {
         var dbEntry = _mapper.Map<Company>(request);
 
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return Unit.Value;
     }
 
-    private async Task<bool> UpdateCompany(Company company, UpdateCompanyInformation request,
+    private async Task<Unit> UpdateCompany(Company company, UpdateCompanyInformation request,
         CancellationToken cancellationToken)
     {
         _mapper.Map(request, company);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return Unit.Value;
     }
 }

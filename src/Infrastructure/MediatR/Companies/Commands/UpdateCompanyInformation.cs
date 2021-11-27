@@ -4,7 +4,7 @@ using MediatR;
 namespace Infrastructure.MediatR.Companies.Commands;
 
 [DataContract]
-public class UpdateCompanyInformation : IRequest<bool>
+public class UpdateCompanyInformation : IRequest
 {
     [DataMember] public string Name { get; }
 

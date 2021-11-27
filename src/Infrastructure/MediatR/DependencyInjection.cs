@@ -12,7 +12,7 @@ public static class MediatRDependencyInjection
     public static void AddMorderMediatR(this IServiceCollection services)
     {
         services.AddMediatR(typeof(UpdateCompanyInformationHandler).Assembly);
-        services.AddTransient<IRequestHandler<UpdateCompanyInformation, bool>,
+        services.AddTransient<IRequestHandler<UpdateCompanyInformation, Unit>,
             UpdateCompanyInformationHandler>();
         services.AddTransient<IRequestHandler<GetCompanyInformation, CompanyDto>,
             GetCompanyInformationHandler>();

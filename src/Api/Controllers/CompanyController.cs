@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Infrastructure.Common;
 using Infrastructure.MediatR.Companies.Commands;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.Models.Companies;
@@ -19,15 +20,15 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<CompanyDto>> GetCompanyInformation()
+    public async Task<Result<CompanyDto>> GetCompanyInformation()
     {
-        return Ok(await _mediator.Send(new GetCompanyInformation()));
+        return (await _mediator.Send(new GetCompanyInformation())).AsResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateCompany([Required] [FromBody] UpdateCompanyInformation command)
+    public async Task<Result> UpdateCompany([Required] [FromBody] UpdateCompanyInformation command)
     {
         var result = await _mediator.Send(command);
-        return Ok(result);
+        return Result.Ok;
     }
 }

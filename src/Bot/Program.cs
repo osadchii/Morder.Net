@@ -1,3 +1,7 @@
+using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 IWebHostEnvironment? env = builder.Environment;
@@ -11,7 +15,16 @@ builder.Configuration
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new IsoDateTimeConverter
+        {
+            DateTimeStyles = DateTimeStyles.AdjustToUniversal
+        });
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

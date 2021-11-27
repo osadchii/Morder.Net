@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 namespace Infrastructure.Models.Products;
 
 [Table("Category", Schema = "dbo")]
-public class Category : IHasId, IHasExternalId
+public class Category : IHasId, IHasExternalId, IHasDeletionMark
 {
     [Key] public int Id { get; set; }
 
@@ -18,7 +18,7 @@ public class Category : IHasId, IHasExternalId
 
     public Category? Parent { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public bool DeletionMark { get; set; }
 
     public Guid ExternalId { get; set; }
 }

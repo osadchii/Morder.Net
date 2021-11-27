@@ -6,7 +6,7 @@ using Infrastructure.Interfaces;
 namespace Infrastructure.Models.Warehouses;
 
 [Table("Warehouse", Schema = "dbo")]
-public class Warehouse : IHasId, IHasExternalId
+public class Warehouse : IHasId, IHasExternalId, IHasDeletionMark
 {
     [Key] public int Id { get; set; }
 
@@ -15,4 +15,6 @@ public class Warehouse : IHasId, IHasExternalId
     public string Name { get; set; }
 
     public Guid ExternalId { get; set; }
+
+    public bool DeletionMark { get; set; }
 }

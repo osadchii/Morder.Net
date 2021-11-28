@@ -1,26 +1,23 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
-using Infrastructure.Interfaces;
+using Infrastructure.Models.Products;
+using MediatR;
 
-namespace Infrastructure.Models.Products;
+namespace Infrastructure.MediatR.Products.Commands;
 
-[Table("Product", Schema = "dbo")]
-public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
+public class UpdateProductRequest : IRequest<Unit>
 {
-    [Key] public int Id { get; set; }
-
     [Required]
     [MaxLength(Limits.ProductName)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required]
     [MaxLength(Limits.ProductArticul)]
-    public string Articul { get; set; }
+    public string? Articul { get; set; }
 
-    [Required] public Guid ExternalId { get; set; }
+    [Required] public Guid? ExternalId { get; set; }
 
-    [ForeignKey("Category")] public int? CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
 
     public Category? Category { get; set; }
 
@@ -46,5 +43,5 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
 
-    public Vat? Vat { get; set; }
+    [EnumDataType(typeof(Vat))] public Vat? Vat { get; set; }
 }

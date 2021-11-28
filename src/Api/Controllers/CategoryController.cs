@@ -22,7 +22,7 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<Result<List<CategoryDto>>> GetAllCategories()
     {
-        return (await _mediator.Send(new GetAllCategories())).AsResult();
+        return (await _mediator.Send(new GetAllCategoriesRequest())).AsResult();
     }
 
     [HttpPost]

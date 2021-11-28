@@ -22,7 +22,7 @@ public class CompanyController : ControllerBase
     [HttpGet]
     public async Task<Result<CompanyDto>> GetCompanyInformation()
     {
-        return (await _mediator.Send(new GetCompanyInformation())).AsResult();
+        return (await _mediator.Send(new GetCompanyInformationRequest())).AsResult();
     }
 
     [HttpPost]

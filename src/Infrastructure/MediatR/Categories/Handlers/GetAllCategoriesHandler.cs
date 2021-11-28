@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MediatR.Categories.Handlers;
 
-public class GetAllCategoriesHandler : IRequestHandler<GetAllCategories, List<CategoryDto>>
+public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesRequest, List<CategoryDto>>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
@@ -17,7 +17,7 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategories, List<Ca
         _mapper = mapper;
     }
 
-    public Task<List<CategoryDto>> Handle(GetAllCategories request, CancellationToken cancellationToken)
+    public Task<List<CategoryDto>> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
     {
         return _context.Categories
             .Include(c => c.Parent)

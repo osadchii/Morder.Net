@@ -15,7 +15,7 @@ public class UpdateCategoryRequest : IRequest
 
     public bool DeletionMark { get; set; }
 
-    [Required] public Guid ExternalId { get; set; }
+    [Required] public Guid? ExternalId { get; set; }
 
     public Category? Parent { get; set; }
 }

@@ -8,14 +8,15 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
-public class GetCompanyInformationHandler : BaseRequestHandler, IRequestHandler<GetCompanyInformation, CompanyDto>
+public class GetCompanyInformationHandler : BaseRequestHandler,
+    IRequestHandler<GetCompanyInformationRequest, CompanyDto>
 {
     public GetCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache) : base(context, mapper,
         cache)
     {
     }
 
-    public async Task<CompanyDto> Handle(GetCompanyInformation request, CancellationToken cancellationToken)
+    public async Task<CompanyDto> Handle(GetCompanyInformationRequest request, CancellationToken cancellationToken)
     {
         if (Cache.TryGetValue(CacheKeys.CompanyInformation, out CompanyDto result))
         {

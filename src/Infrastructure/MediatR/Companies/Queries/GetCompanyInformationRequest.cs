@@ -3,6 +3,6 @@ using MediatR;
 
 namespace Infrastructure.MediatR.Companies.Queries;
 
-public class GetCompanyInformation : IRequest<CompanyDto>
+public class GetCompanyInformationRequest : IRequest<CompanyDto>
 {
 }

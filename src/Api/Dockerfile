@@ -4,7 +4,6 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR src/Bot
 COPY ["src/Api/Api.csproj", "Api/"]
 COPY ["src/Configurations/appsettings.json", "Configurations/"]
 RUN dotnet restore "Bot/Bot.csproj"

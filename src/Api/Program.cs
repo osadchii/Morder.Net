@@ -26,6 +26,8 @@ builder.Services.AddControllers()
         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
     });
 
+builder.Services.AddLogging(logBuilder => { logBuilder.AddConfiguration(builder.Configuration); });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMorder(builder.Configuration);

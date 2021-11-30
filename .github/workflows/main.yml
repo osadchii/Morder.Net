@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "morder.net"
+          context: ./src/api/
           file: ./src/Api/Dockerfile
 
   build-bot:
@@ -31,4 +32,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "morder.bot"
+          context: ./src/bot/
           file: ./src/Bot/Dockerfile

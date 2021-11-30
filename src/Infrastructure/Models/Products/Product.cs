@@ -12,11 +12,11 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.ProductName)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required]
     [MaxLength(Limits.ProductArticul)]
-    public string Articul { get; set; }
+    public string? Articul { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
 

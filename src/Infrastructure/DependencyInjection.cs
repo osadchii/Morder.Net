@@ -1,4 +1,3 @@
-using Infrastructure.Database;
 using Infrastructure.MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,5 @@ public static class DependencyInjection
 
         services.AddMorderAutoMapper();
         services.AddMorderMediatR();
-
-        services.AddTransient<IMigrationService, MigrationService>();
     }
 }

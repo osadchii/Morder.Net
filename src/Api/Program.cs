@@ -1,6 +1,5 @@
 using System.Globalization;
 using Infrastructure;
-using Infrastructure.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -41,11 +40,6 @@ builder.Services.AddMemoryCache();
 
 WebApplication app = builder.Build();
 
-using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    var migrationService = serviceScope.ServiceProvider.GetRequiredService<IMigrationService>();
-    migrationService.Migrate();
-}
 
 if (app.Environment.IsDevelopment())
 {

@@ -12,7 +12,9 @@ public class Category : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.CategoryName)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
+
+    [MaxLength(100)] public string? TestField { get; set; }
 
     [ForeignKey("Parent")] public int? ParentId { get; set; }
 

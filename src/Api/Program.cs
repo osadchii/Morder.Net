@@ -15,6 +15,8 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {

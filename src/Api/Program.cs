@@ -33,8 +33,11 @@ builder.Services.AddMemoryCache();
 
 WebApplication app = builder.Build();
 
-IMigrationService migrationService = app.Services.GetRequiredService<IMigrationService>();
-migrationService.Migrate();
+using (IServiceScope serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var migrationService = serviceScope.ServiceProvider.GetRequiredService<IMigrationService>();
+    migrationService.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {

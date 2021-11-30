@@ -1,0 +1,20 @@
+name: Publish Docker
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@3.04
+        with:
+          registry: docker.pkg.github.com
+          name: docker.pkg.github.com/osadchii/morder.net/morder.net
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: "morder.net"
+          path: "src/api"

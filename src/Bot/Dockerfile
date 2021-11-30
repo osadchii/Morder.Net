@@ -6,6 +6,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR src/Bot
 COPY ["src/Bot/Bot.csproj", "Bot/"]
+COPY ["src/Configurations/appsettings.json", "Configurations/"]
 RUN dotnet restore "Bot/Bot.csproj"
 COPY . .
 WORKDIR "src/Bot"

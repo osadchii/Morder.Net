@@ -4,12 +4,12 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src/Api
+WORKDIR src/Bot
 COPY ["src/Api/Api.csproj", "Api/"]
 COPY ["src/Configurations/appsettings.json", "Configurations/"]
-RUN dotnet restore "src/Api/Api.csproj"
+RUN dotnet restore "Bot/Bot.csproj"
 COPY . .
-WORKDIR "/src/Api"
+WORKDIR "src/Api"
 RUN dotnet build "Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

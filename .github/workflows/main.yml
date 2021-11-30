@@ -31,4 +31,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "morder.bot"
-          workdir: ./src/bot/
+          workdir: ../../src/bot/

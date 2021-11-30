@@ -18,6 +18,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "morder.net"
           dockerfile: src/Api/Dockerfile
+          context: src/Api
 
   build-bot:
     runs-on: ubuntu-latest
@@ -32,3 +33,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "morder.bot"
           dockerfile: src/Bot/Dockerfile
+          context: src/Bot

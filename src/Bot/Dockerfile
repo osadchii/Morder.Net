@@ -4,11 +4,11 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR "/src/Bot"
+WORKDIR src/Bot
 COPY ["src/Bot/Bot.csproj", "Bot/"]
-RUN dotnet restore "/src/Bot/Bot.csproj"
+RUN dotnet restore "Bot/Bot.csproj"
 COPY . .
-WORKDIR "/src/Bot"
+WORKDIR "src/Bot"
 RUN dotnet build "Bot.csproj" -c Release -o /app/build
 
 FROM build AS publish

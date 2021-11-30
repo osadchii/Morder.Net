@@ -1,5 +1,6 @@
 using System.Globalization;
 using Infrastructure;
+using Infrastructure.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -31,6 +32,9 @@ builder.Services.AddMorder(builder.Configuration);
 builder.Services.AddMemoryCache();
 
 WebApplication app = builder.Build();
+
+IMigrationService migrationService = app.Services.GetRequiredService<IMigrationService>();
+migrationService.Migrate();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,5 +1,6 @@
 using System.Globalization;
 using Infrastructure;
+using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -46,6 +47,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseHttpsRedirection();
 

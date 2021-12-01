@@ -1,6 +1,7 @@
 using System.Globalization;
 using Bot;
 using Bot.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Telegram.Bot;
@@ -50,6 +51,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseRouting();
 app.UseHttpsRedirection();

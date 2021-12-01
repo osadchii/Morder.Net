@@ -1,5 +1,5 @@
-using Infrastructure.Interfaces;
 using Infrastructure.Models.Companies;
+using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;

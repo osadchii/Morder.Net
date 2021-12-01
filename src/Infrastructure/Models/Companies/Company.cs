@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
-using Infrastructure.Interfaces;
+using Infrastructure.Models.Interfaces;
 
 namespace Infrastructure.Models.Companies;
 

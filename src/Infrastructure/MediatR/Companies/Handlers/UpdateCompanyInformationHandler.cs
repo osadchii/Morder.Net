@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Models.Companies;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
@@ -13,12 +14,15 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     private readonly MContext _context;
     private readonly IMapper _mapper;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<UpdateCompanyInformationHandler> _logger;
 
-    public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache)
+    public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache,
+        ILogger<UpdateCompanyInformationHandler> logger)
     {
         _context = context;
         _mapper = mapper;
         _cache = cache;
+        _logger = logger;
     }
 
     public async Task<Unit> Handle(UpdateCompanyInformationRequest request, CancellationToken cancellationToken)
@@ -43,6 +47,8 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
+        _logger.LogInformation($"Created company {request.Name}");
+
         return Unit.Value;
     }
 
@@ -52,6 +58,8 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
         _mapper.Map(request, dbEntry);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation($"Updated company {request.Name}");
 
         return Unit.Value;
     }

@@ -1,6 +1,9 @@
 using System.Globalization;
+using Bot;
+using Bot.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Telegram.Bot;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,13 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+
+builder.Services.AddHostedService<ConfigureWebhook>();
+builder.Services.AddHttpClient("tgwebhook")
+    .AddTypedClient<ITelegramBotClient>(httpClient
+        => new TelegramBotClient(config.BotToken, httpClient));
+
 WebApplication? app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,8 +51,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    // Configure custom endpoint per Telegram API recommendations:
+    // https://core.telegram.org/bots/api#setwebhook
+    // If you'd like to make sure that the Webhook request comes from Telegram, we recommend
+    // using a secret path in the URL, e.g. https://www.example.com/<token>.
+    // Since nobody else knows your bot's token, you can be pretty sure it's us.
+    var token = config.BotToken;
+    endpoints.MapControllerRoute(name: "tgwebhook",
+        pattern: $"bot/{token}",
+        new { controller = "Webhook", action = "Post" });
+    endpoints.MapControllers();
+});
 
 app.Run();

@@ -14,8 +14,6 @@ public class Category : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
     [MaxLength(Limits.CategoryName)]
     public string? Name { get; set; }
 
-    [MaxLength(100)] public string? TestField { get; set; }
-
     [ForeignKey("Parent")] public int? ParentId { get; set; }
 
     public Category? Parent { get; set; }

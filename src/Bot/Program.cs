@@ -40,6 +40,8 @@ builder.Services.AddHttpClient("tgwebhook")
     .AddTypedClient<ITelegramBotClient>(httpClient
         => new TelegramBotClient(config.BotToken, httpClient));
 
+builder.Services.AddScoped<HandleUpdateService>();
+
 WebApplication? app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 
 app.UseEndpoints(endpoints =>

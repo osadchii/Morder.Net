@@ -23,12 +23,6 @@ public class HandleUpdateService
     {
         var handler = update.Type switch
         {
-            // UpdateType.Unknown:
-            // UpdateType.ChannelPost:
-            // UpdateType.EditedChannelPost:
-            // UpdateType.ShippingQuery:
-            // UpdateType.PreCheckoutQuery:
-            // UpdateType.Poll:
             UpdateType.Message => BotOnMessageReceived(update.Message!),
             UpdateType.EditedMessage => BotOnMessageReceived(update.EditedMessage!),
             UpdateType.CallbackQuery => BotOnCallbackQueryReceived(update.CallbackQuery!),
@@ -212,16 +206,16 @@ public class HandleUpdateService
         return Task.CompletedTask;
     }
 
-    public Task HandleErrorAsync(Exception exception)
+    private Task HandleErrorAsync(Exception exception)
     {
-        var ErrorMessage = exception switch
+        var errorMessage = exception switch
         {
             ApiRequestException apiRequestException =>
                 $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
 
-        _logger.LogInformation("HandleError: {ErrorMessage}", ErrorMessage);
+        _logger.LogInformation("HandleError: {ErrorMessage}", errorMessage);
         return Task.CompletedTask;
     }
 }

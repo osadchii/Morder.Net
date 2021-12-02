@@ -36,11 +36,7 @@ public class MContext : DbContext
             e.HasIndex(p => new { p.ProductId, p.PriceTypeId });
         });
 
-        modelBuilder.Entity<Stock>(e =>
-        {
-            e.HasKey(p => new { p.ProductId, p.WarehouseId });
-            e.HasIndex(p => new { p.ProductId, p.WarehouseId });
-        });
+        modelBuilder.Entity<Stock>(e => { e.HasKey(p => new { p.ProductId, p.WarehouseId }); });
 
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 

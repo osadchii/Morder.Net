@@ -41,7 +41,6 @@ builder.Services.AddMemoryCache();
 
 WebApplication app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -36,22 +36,22 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
 
         if (priceTypeId is null)
         {
-            _logger.LogWarning($"Price type with external id {request.PriceTypeExternalId} not found");
-            return Unit.Value;
+            string message = $"Price type with external id {request.PriceTypeExternalId} not found";
+            throw new ArgumentException(message);
         }
 
         int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
 
         if (productId is null)
         {
-            _logger.LogWarning($"Product with external id {request.ProductExternalId} not found");
-            return Unit.Value;
+            string message = $"Product with external id {request.ProductExternalId} not found";
+            throw new ArgumentException(message);
         }
 
         if (!request.Value.HasValue)
         {
-            _logger.LogWarning($"Empty price for product {productId.Value} at price type {priceTypeId.Value}");
-            return Unit.Value;
+            string message = $"Empty price for product {productId.Value} at price type {priceTypeId.Value}";
+            throw new ArgumentException(message);
         }
 
         Price? dbEntry = await _context.Prices

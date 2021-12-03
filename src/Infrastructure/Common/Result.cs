@@ -9,11 +9,7 @@ public class Result
 
     public bool IsSucceeded => Status == ResultCode.Success;
 
-    public bool HasErrors => Errors?.Any() == true;
-
-    public Exception Exception { get; protected set; }
-
-    public Dictionary<string, List<string>> Errors { get; protected set; }
+    public List<string> Errors;
 
     public static Result Ok => new();
 
@@ -25,6 +21,15 @@ public class Result
     public Result(ResultCode status)
     {
         Status = status;
+    }
+
+    public Result(Exception exception)
+    {
+        Status = ResultCode.Error;
+        Errors = new List<string>
+        {
+            exception.Message
+        };
     }
 }
 
@@ -44,5 +49,10 @@ public static class ResultExtensions
     public static Result<T> AsResult<T>(this T value)
     {
         return new Result<T>(value);
+    }
+
+    public static Result AsResult(this Exception exception)
+    {
+        return new Result(exception);
     }
 }

@@ -35,22 +35,22 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
 
         if (warehouseId is null)
         {
-            _logger.LogWarning($"Warehouse with external id {request.WarehouseExternalId} not found");
-            return Unit.Value;
+            string message = $"Warehouse with external id {request.WarehouseExternalId} not found";
+            throw new ArgumentException(message);
         }
 
         int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
 
         if (productId is null)
         {
-            _logger.LogWarning($"Product with external id {request.ProductExternalId} not found");
-            return Unit.Value;
+            string message = $"Product with external id {request.ProductExternalId} not found";
+            throw new ArgumentException(message);
         }
 
         if (!request.Value.HasValue)
         {
-            _logger.LogWarning($"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}");
-            return Unit.Value;
+            string message = $"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}";
+            throw new ArgumentException(message);
         }
 
         Stock? dbEntry = await _context.Stocks

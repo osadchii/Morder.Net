@@ -63,6 +63,11 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
                 productId.Value, request.Value.Value, cancellationToken);
         }
 
+        if (dbEntry.Value == request.Value.Value)
+        {
+            return Unit.Value;
+        }
+
         return await UpdateStock(dbEntry, request.Value.Value, cancellationToken);
     }
 

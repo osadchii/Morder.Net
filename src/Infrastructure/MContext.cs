@@ -30,11 +30,7 @@ public class MContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Price>(e =>
-        {
-            e.HasKey(p => new { p.ProductId, p.PriceTypeId });
-            e.HasIndex(p => new { p.ProductId, p.PriceTypeId });
-        });
+        modelBuilder.Entity<Price>(e => { e.HasKey(p => new { p.ProductId, p.PriceTypeId }); });
 
         modelBuilder.Entity<Stock>(e => { e.HasKey(p => new { p.ProductId, p.WarehouseId }); });
 

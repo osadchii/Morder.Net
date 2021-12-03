@@ -1,4 +1,5 @@
 using System.Globalization;
+using Api.Filters;
 using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ builder.Configuration
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options => { options.Filters.Add<ServiceExceptionFilter>(); })
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -52,9 +53,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-app.UseHttpsRedirection();
+app.UseHsts();
 
-app.UseAuthorization();
+app.UseRouting();
+app.UseHttpsRedirection();
 
 app.MapControllers();
 

@@ -1,9 +1,11 @@
 using AutoMapper;
 using Infrastructure.MediatR.Categories.Commands;
 using Infrastructure.MediatR.Companies.Commands;
+using Infrastructure.MediatR.PriceTypes.Commands;
 using Infrastructure.MediatR.Products.Commands;
 using Infrastructure.MediatR.Warehouses.Commands;
 using Infrastructure.Models.Companies;
+using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
 
@@ -18,6 +20,9 @@ public class CompanyProfile : Profile
 
         CreateMap<UpdateWarehouseRequest, Warehouse>();
         CreateMap<Warehouse, WarehouseDto>();
+
+        CreateMap<UpdatePriceTypeRequest, PriceType>();
+        CreateMap<PriceType, PriceTypeDto>();
 
         CreateMap<Category, CategoryDto>()
             .ForMember(m => m.ParentId,

@@ -14,22 +14,18 @@ public class UpdateWarehouseHandler : IRequestHandler<UpdateWarehouseRequest, Un
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
-    private readonly IMemoryCache _cache;
     private readonly ILogger<UpdateWarehouseHandler> _logger;
 
-    public UpdateWarehouseHandler(MContext context, IMapper mapper, IMemoryCache cache,
+    public UpdateWarehouseHandler(MContext context, IMapper mapper,
         ILogger<UpdateWarehouseHandler> logger)
     {
         _context = context;
         _mapper = mapper;
-        _cache = cache;
         _logger = logger;
     }
 
     public async Task<Unit> Handle(UpdateWarehouseRequest request, CancellationToken cancellationToken)
     {
-        _cache.Remove(CacheKeys.CompanyInformation);
-
         Warehouse? dbEntry =
             await _context.Warehouses.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 

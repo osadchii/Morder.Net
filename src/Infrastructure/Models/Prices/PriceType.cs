@@ -12,7 +12,7 @@ public class PriceType : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.PriceTypeName)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
 

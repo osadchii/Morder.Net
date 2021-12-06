@@ -3,7 +3,7 @@ using Infrastructure.MediatR.Categories.Commands;
 
 namespace Api.Integration.Categories;
 
-public class TestCases
+public static class TestCases
 {
     public static UpdateCategoryRequest UpdateParentCategoryRequest => new()
     {

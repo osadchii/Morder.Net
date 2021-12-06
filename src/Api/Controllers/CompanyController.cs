@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Companies.Commands;
 using Infrastructure.MediatR.Companies.Queries;
-using Infrastructure.Models.Companies;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<Result<CompanyDto>> GetCompanyInformation()
+    public async Task<Result> GetCompanyInformation()
     {
         return (await _mediator.Send(new GetCompanyInformationRequest())).AsResult();
     }

@@ -46,8 +46,13 @@ public class Result<T> : Result
 
 public static class ResultExtensions
 {
-    public static Result<T> AsResult<T>(this T value)
+    public static Result AsResult<T>(this T value)
     {
+        if (value is null)
+        {
+            return new Result(ResultCode.NotFound);
+        }
+
         return new Result<T>(value);
     }
 

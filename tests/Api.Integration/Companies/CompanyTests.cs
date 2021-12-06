@@ -14,6 +14,7 @@ public class CompanyTests : IClassFixture<MorderWebApplicationFactory>
 {
     private readonly MorderWebApplicationFactory _factory;
     private readonly HttpClient _client;
+    private const string BaseUrl = "company";
 
     public CompanyTests(MorderWebApplicationFactory factory)
     {
@@ -24,7 +25,7 @@ public class CompanyTests : IClassFixture<MorderWebApplicationFactory>
     [Fact]
     public async Task UpdateCompanyInformationFail()
     {
-        string url = MorderWebApplicationFactory.ServiceUrl(1, "company");
+        string url = MorderWebApplicationFactory.ServiceUrl(1, BaseUrl);
 
         var request = new UpdateCompanyInformationRequest();
         HttpResponseMessage response = await _client.PostAsync(url, JsonContent.Create(request));
@@ -35,7 +36,7 @@ public class CompanyTests : IClassFixture<MorderWebApplicationFactory>
     [Fact]
     public async Task UpdateCompanyInformationSuccess()
     {
-        string url = MorderWebApplicationFactory.ServiceUrl(1, "company");
+        string url = MorderWebApplicationFactory.ServiceUrl(1, BaseUrl);
         HttpResponseMessage response =
             await _client.PostAsync(url, JsonContent.Create(TestCases.UpdateCompanyInformationRequest));
 
@@ -45,7 +46,7 @@ public class CompanyTests : IClassFixture<MorderWebApplicationFactory>
     [Fact]
     public async Task GetCompanyInformationSuccess()
     {
-        string url = MorderWebApplicationFactory.ServiceUrl(1, "company");
+        string url = MorderWebApplicationFactory.ServiceUrl(1, BaseUrl);
         HttpResponseMessage response = await _client.GetAsync(url);
 
         string content = await response.Content.ReadAsStringAsync();

@@ -1,6 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
+using Infrastructure.Enums;
 using Infrastructure.MediatR.Products.Commands;
+using Infrastructure.MediatR.Products.Queries;
+using Infrastructure.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +18,14 @@ public class ProductController : ControllerBase
     public ProductController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    [Route("{externalId:guid}")]
+    public async Task<Result> GetByExternalId([Required] Guid externalId)
+    {
+        ProductDto? result = await _mediator.Send(new GetProductByExternalIdRequest { ExternalId = externalId });
+        return result.AsResult();
     }
 
     [HttpPost]

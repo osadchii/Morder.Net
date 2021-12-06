@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 		src\Configurations\appsettings.json = src\Configurations\appsettings.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Integration", "tests\Api.Integration\Api.Integration.csproj", "{CE9ED0E6-19DD-49B1-9311-B57065828260}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,7 @@ Global
 		{914FAA4F-7D30-4D98-8FB9-B540A2A99CAF} = {22388791-955A-4473-A532-7E1BF988BC8F}
 		{9D241C27-8A6A-49B0-8A2A-3582628F856E} = {22388791-955A-4473-A532-7E1BF988BC8F}
 		{7F276425-0DC4-4199-A5B4-A03F0E8B23C3} = {22388791-955A-4473-A532-7E1BF988BC8F}
+		{CE9ED0E6-19DD-49B1-9311-B57065828260} = {0A829978-E54F-4C39-87AF-35748BAE9037}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3F4EDB0F-F04A-4C96-B231-DBF7567CF8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,5 +50,9 @@ Global
 		{9D241C27-8A6A-49B0-8A2A-3582628F856E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D241C27-8A6A-49B0-8A2A-3582628F856E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D241C27-8A6A-49B0-8A2A-3582628F856E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE9ED0E6-19DD-49B1-9311-B57065828260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE9ED0E6-19DD-49B1-9311-B57065828260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE9ED0E6-19DD-49B1-9311-B57065828260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE9ED0E6-19DD-49B1-9311-B57065828260}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

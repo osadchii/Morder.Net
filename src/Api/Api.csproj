@@ -53,4 +53,8 @@
         <None Remove=".github\**"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Api.Integration"/>
+    </ItemGroup>
+
 </Project>

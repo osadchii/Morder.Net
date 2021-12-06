@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.PriceTypes.Commands;
+using Infrastructure.MediatR.PriceTypes.Queries;
+using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +17,14 @@ public class PriceTypeController : ControllerBase
     public PriceTypeController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    [Route("{externalId:guid}")]
+    public async Task<Result> GetByExternalId([Required] Guid externalId)
+    {
+        PriceTypeDto? result = await _mediator.Send(new GetPriceTypeByExternalIdRequest() { ExternalId = externalId });
+        return result.AsResult();
     }
 
     [HttpPost]

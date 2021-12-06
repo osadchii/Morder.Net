@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Categories.Commands;
 using Infrastructure.MediatR.Categories.Queries;
-using Infrastructure.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<Result<List<CategoryDto>>> GetAllCategories()
+    public async Task<Result> GetAllCategories()
     {
         return (await _mediator.Send(new GetAllCategoriesRequest())).AsResult();
     }

@@ -1,3 +1,4 @@
+using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.Prices;
@@ -19,6 +20,12 @@ public class MContext : DbContext
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<Company> Companies { get; set; }
+
+    #endregion
+
+    #region Telegram
+
+    public DbSet<BotUser> BotUsers { get; set; }
 
     #endregion
 

@@ -1,6 +1,7 @@
 using System.Globalization;
 using Bot;
 using Bot.Services;
+using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -9,7 +10,7 @@ using Telegram.Bot;
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 IWebHostEnvironment? env = builder.Environment;
-string? sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
 builder.Configuration
     .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -42,6 +43,7 @@ builder.Services.AddHttpClient("tgwebhook")
         => new TelegramBotClient(config.BotToken, httpClient));
 
 builder.Services.AddScoped<HandleUpdateService>();
+builder.Services.AddMorder(builder.Configuration);
 
 WebApplication? app = builder.Build();
 
@@ -62,11 +64,6 @@ app.UseHttpsRedirection();
 
 app.UseEndpoints(endpoints =>
 {
-    // Configure custom endpoint per Telegram API recommendations:
-    // https://core.telegram.org/bots/api#setwebhook
-    // If you'd like to make sure that the Webhook request comes from Telegram, we recommend
-    // using a secret path in the URL, e.g. https://www.example.com/<token>.
-    // Since nobody else knows your bot's token, you can be pretty sure it's us.
     var token = config.BotToken;
     endpoints.MapControllerRoute(name: "tgwebhook",
         pattern: $"bot/{token}",

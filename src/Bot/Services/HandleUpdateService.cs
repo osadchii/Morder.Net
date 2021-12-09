@@ -1,3 +1,6 @@
+using Infrastructure.MediatR.BotUsers.Commands;
+using Infrastructure.Models.BotUsers;
+using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -12,22 +15,27 @@ public class HandleUpdateService
 {
     private readonly ITelegramBotClient _botClient;
     private readonly ILogger<HandleUpdateService> _logger;
+    private readonly IMediator _mediator;
+    private readonly string _ownerUserName;
+    private BotUser _user;
 
-    public HandleUpdateService(ITelegramBotClient botClient, ILogger<HandleUpdateService> logger)
+    public HandleUpdateService(ITelegramBotClient botClient,
+        ILogger<HandleUpdateService> logger,
+        IConfiguration configuration, IMediator mediator)
     {
         _botClient = botClient;
         _logger = logger;
+        _mediator = mediator;
+
+        var config = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+        _ownerUserName = config.BotOwnerUserName;
     }
 
     public async Task EchoAsync(Update update)
     {
-        var handler = update.Type switch
+        Task handler = update.Type switch
         {
             UpdateType.Message => BotOnMessageReceived(update.Message!),
-            UpdateType.EditedMessage => BotOnMessageReceived(update.EditedMessage!),
-            UpdateType.CallbackQuery => BotOnCallbackQueryReceived(update.CallbackQuery!),
-            UpdateType.InlineQuery => BotOnInlineQueryReceived(update.InlineQuery!),
-            UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(update.ChosenInlineResult!),
             _ => UnknownUpdateHandlerAsync(update)
         };
 
@@ -46,6 +54,21 @@ public class HandleUpdateService
         _logger.LogInformation("Receive message type: {messageType}", message.Type);
         if (message.Type != MessageType.Text)
             return;
+
+        _user = await _mediator.Send(new CreateUpdateBotUserRequest
+        {
+            ChatId = message.Chat.Id,
+            FirstName = message.Chat.FirstName,
+            LastName = message.Chat.LastName,
+            UserName = message.Chat.Username
+        });
+
+        if (!_user.Verified
+            && string.Equals(_user.UserName, _ownerUserName, StringComparison.InvariantCultureIgnoreCase))
+        {
+            await _botClient.SendTextMessageAsync(_user.ChatId,
+                "У вас нет доступа для работы с ботом. Обратитесь к администратору.");
+        }
 
         var action = message.Text!.Split(' ')[0] switch
         {

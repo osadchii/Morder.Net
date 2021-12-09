@@ -8,7 +8,11 @@ public static class AutoMapperDependencyInjection
 {
     public static void AddMorderAutoMapper(this IServiceCollection services)
     {
-        var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new CompanyProfile()); });
+        var mappingConfig = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new CompanyProfile());
+            mc.AddProfile(new BotProfile());
+        });
 
         IMapper mapper = mappingConfig.CreateMapper();
         services.AddSingleton(mapper);

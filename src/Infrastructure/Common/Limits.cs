@@ -31,4 +31,8 @@ public static class Limits
     public const int CompanyName = 256;
     public const int ShopName = 256;
     public const int ShopUrl = 256;
+
+    public const int BotUserUserName = 128;
+    public const int BotFirstName = 128;
+    public const int BotLastName = 128;
 }

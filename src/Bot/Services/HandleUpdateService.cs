@@ -63,22 +63,26 @@ public class HandleUpdateService
             UserName = message.Chat.Username
         });
 
+        Task<Message>? action;
+
         if (!_user.Verified
-            && string.Equals(_user.UserName, _ownerUserName, StringComparison.InvariantCultureIgnoreCase))
+            && !string.Equals(_user.UserName, _ownerUserName, StringComparison.InvariantCultureIgnoreCase))
         {
-            await _botClient.SendTextMessageAsync(_user.ChatId,
-                "У вас нет доступа для работы с ботом. Обратитесь к администратору.");
+            action = AccessDenied(_botClient, message);
+        }
+        else
+        {
+            action = message.Text!.Split(' ')[0] switch
+            {
+                "/inline" => SendInlineKeyboard(_botClient, message),
+                "/keyboard" => SendReplyKeyboard(_botClient, message),
+                "/remove" => RemoveKeyboard(_botClient, message),
+                "/photo" => SendFile(_botClient, message),
+                "/request" => RequestContactAndLocation(_botClient, message),
+                _ => Usage(_botClient, message)
+            };
         }
 
-        var action = message.Text!.Split(' ')[0] switch
-        {
-            "/inline" => SendInlineKeyboard(_botClient, message),
-            "/keyboard" => SendReplyKeyboard(_botClient, message),
-            "/remove" => RemoveKeyboard(_botClient, message),
-            "/photo" => SendFile(_botClient, message),
-            "/request" => RequestContactAndLocation(_botClient, message),
-            _ => Usage(_botClient, message)
-        };
         Message sentMessage = await action;
         _logger.LogInformation("The message was sent with id: {sentMessageId}", sentMessage.MessageId);
 
@@ -176,6 +180,14 @@ public class HandleUpdateService
             return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
                 text: usage,
                 replyMarkup: new ReplyKeyboardRemove());
+        }
+
+        static async Task<Message> AccessDenied(ITelegramBotClient bot, Message message)
+        {
+            const string AccessDeniedMessage = "У вас нет доступа для работы с ботом. Обратитесь к администратору.";
+
+            return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
+                text: AccessDeniedMessage);
         }
     }
 

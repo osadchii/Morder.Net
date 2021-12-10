@@ -1,3 +1,4 @@
+using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
 using MediatR;
@@ -16,16 +17,18 @@ public class HandleUpdateService
     private readonly ITelegramBotClient _botClient;
     private readonly ILogger<HandleUpdateService> _logger;
     private readonly IMediator _mediator;
+    private readonly IBotUsersCache _cache;
     private readonly string _ownerUserName;
-    private BotUser _user;
+    private BotUser _user = null!;
 
     public HandleUpdateService(ITelegramBotClient botClient,
         ILogger<HandleUpdateService> logger,
-        IConfiguration configuration, IMediator mediator)
+        IConfiguration configuration, IMediator mediator, IBotUsersCache cache)
     {
         _botClient = botClient;
         _logger = logger;
         _mediator = mediator;
+        _cache = cache;
 
         var config = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
         _ownerUserName = config.BotOwnerUserName;
@@ -49,19 +52,36 @@ public class HandleUpdateService
         }
     }
 
+    private async Task SetCurrentUser(Message message)
+    {
+        BotUser? result = await _cache.GetUserAsync(message.Chat.Id);
+
+        if (result is null
+            || result.UserName != message.Chat.Username
+            || result.FirstName != message.Chat.FirstName
+            || result.LastName != message.Chat.LastName)
+        {
+            _user = await _mediator.Send(new CreateUpdateBotUserRequest
+            {
+                ChatId = message.Chat.Id,
+                FirstName = message.Chat.FirstName,
+                LastName = message.Chat.LastName,
+                UserName = message.Chat.Username
+            });
+        }
+        else
+        {
+            _user = result;
+        }
+    }
+
     private async Task BotOnMessageReceived(Message message)
     {
         _logger.LogInformation("Receive message type: {messageType}", message.Type);
         if (message.Type != MessageType.Text)
             return;
 
-        _user = await _mediator.Send(new CreateUpdateBotUserRequest
-        {
-            ChatId = message.Chat.Id,
-            FirstName = message.Chat.FirstName,
-            LastName = message.Chat.LastName,
-            UserName = message.Chat.Username
-        });
+        await SetCurrentUser(message);
 
         Task<Message>? action;
 
@@ -184,10 +204,10 @@ public class HandleUpdateService
 
         static async Task<Message> AccessDenied(ITelegramBotClient bot, Message message)
         {
-            const string AccessDeniedMessage = "У вас нет доступа для работы с ботом. Обратитесь к администратору.";
+            const string accessDeniedMessage = "У вас нет доступа для работы с ботом. Обратитесь к администратору.";
 
             return await bot.SendTextMessageAsync(chatId: message.Chat.Id,
-                text: AccessDeniedMessage);
+                text: accessDeniedMessage);
         }
     }
 

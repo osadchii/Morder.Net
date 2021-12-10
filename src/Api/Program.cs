@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+namespace Api;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -41,6 +43,7 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
         builder.Services.AddMorder(builder.Configuration);
         builder.Services.AddMemoryCache();
 

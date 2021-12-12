@@ -33,6 +33,8 @@ public static class Limits
     public const int ShopUrl = 256;
 
     public const int BotUserUserName = 128;
-    public const int BotFirstName = 128;
-    public const int BotLastName = 128;
+    public const int BotUserFirstName = 128;
+    public const int BotUserLastName = 128;
+    public const int BotUserCurrentState = 128;
+    public const int BotUserCurrentStateKey = 36;
 }

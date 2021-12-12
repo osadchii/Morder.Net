@@ -2,7 +2,6 @@ using Bot.Extensions;
 using Bot.Services.Interfaces;
 using Bot.Services.MessageHandlers;
 using Bot.States;
-using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
 using MediatR;
@@ -15,16 +14,14 @@ public class MessageRouter : IMessageRouter
 {
     private readonly IMediator _mediator;
     private readonly ILogger<MessageRouter> _logger;
-    private readonly IBotUsersCache _cache;
     private readonly string _ownerUserName;
     private BotUser? _user;
 
-    public MessageRouter(IMediator mediator, ILogger<MessageRouter> logger, IBotUsersCache cache,
+    public MessageRouter(IMediator mediator, ILogger<MessageRouter> logger,
         IConfiguration configuration)
     {
         _mediator = mediator;
         _logger = logger;
-        _cache = cache;
 
         var config = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
         _ownerUserName = config.BotOwnerUserName;
@@ -49,8 +46,8 @@ public class MessageRouter : IMessageRouter
 
         MessageHandler handler = _user.CurrentState switch
         {
-            StateIds.MainMenu => new MainMenuHandler(bot, _mediator, message, _user),
-            _ => new MessageHandler(bot, _mediator, message, _user)
+            StateIds.MainMenu => new MainMenuHandler(bot, _mediator, message, _user, _logger),
+            _ => new MessageHandler(bot, _mediator, message, _user, _logger)
         };
 
         await handler.Handle();
@@ -58,25 +55,13 @@ public class MessageRouter : IMessageRouter
 
     private async Task SetCurrentUser(Message message)
     {
-        BotUser? result = await _cache.GetUserAsync(message.Chat.Id);
-
-        if (result is null
-            || result.UserName != message.Chat.Username
-            || result.FirstName != message.Chat.FirstName
-            || result.LastName != message.Chat.LastName)
+        _user = await _mediator.Send(new CreateUpdateBotUserRequest
         {
-            _user = await _mediator.Send(new CreateUpdateBotUserRequest
-            {
-                ChatId = message.Chat.Id,
-                FirstName = message.Chat.FirstName,
-                LastName = message.Chat.LastName,
-                UserName = message.Chat.Username
-            });
-        }
-        else
-        {
-            _user = result;
-        }
+            ChatId = message.Chat.Id,
+            FirstName = message.Chat.FirstName,
+            LastName = message.Chat.LastName,
+            UserName = message.Chat.Username
+        });
     }
 
     private static async Task AccessDenied(ITelegramBotClient bot, Message message)

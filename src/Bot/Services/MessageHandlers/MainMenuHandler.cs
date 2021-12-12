@@ -21,8 +21,8 @@ public class MainMenuHandler : MessageHandler
         };
     }
 
-    public MainMenuHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user)
-        : base(client, mediator, message, user)
+    public MainMenuHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger)
+        : base(client, mediator, message, user, logger)
     {
     }
 
@@ -30,6 +30,7 @@ public class MainMenuHandler : MessageHandler
     {
         await Client.SendReplyKeyboard(ChatId, BotMenus.ReportMenu);
         await SetUserState(StateIds.Reports);
+        LogRouting("Reports");
     }
 
     private Task SendSummary(DateOnly date)

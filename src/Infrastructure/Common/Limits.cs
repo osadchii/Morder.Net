@@ -37,4 +37,6 @@ public static class Limits
     public const int BotUserLastName = 128;
     public const int BotUserCurrentState = 128;
     public const int BotUserCurrentStateKey = 36;
+
+    public const int OrderNumber = 36;
 }

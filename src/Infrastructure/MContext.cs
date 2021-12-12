@@ -1,6 +1,7 @@
 using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
+using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
@@ -20,6 +21,7 @@ public class MContext : DbContext
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
     #endregion
 
@@ -43,12 +45,14 @@ public class MContext : DbContext
 
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 
+        modelBuilder.Entity<Order>(e => e.OwnsMany(o => o.Items));
+
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) != null)
             {
                 IMutableProperty? property = entityType.GetProperty("ExternalId");
-                IMutableIndex index = entityType.AddIndex(property, "ExternalId");
+                IMutableIndex index = entityType.AddIndex(property, $"UNIQUE_INDEX_ExternalId");
                 index.IsUnique = true;
             }
 

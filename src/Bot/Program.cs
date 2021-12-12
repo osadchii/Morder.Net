@@ -1,10 +1,8 @@
 using System.Globalization;
-using Bot.Services;
 using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Telegram.Bot;
 
 namespace Bot;
 
@@ -43,27 +41,12 @@ public class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         builder.Services.AddMorder(builder.Configuration);
+        builder.Services.AddMorderBot(builder.Configuration);
         builder.Services.AddMemoryCache();
 
-        var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
-
-        builder.Services.AddHostedService<ConfigureWebhook>();
-        builder.Services.AddHttpClient("tgwebhook")
-            .AddTypedClient<ITelegramBotClient>(httpClient
-                => new TelegramBotClient(config.BotToken, httpClient));
-
-        builder.Services.AddScoped<HandleUpdateService>();
-
         WebApplication? app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
 
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
@@ -73,9 +56,11 @@ public class Program
         app.UseRouting();
         app.UseHttpsRedirection();
 
+        var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+
         app.UseEndpoints(endpoints =>
         {
-            var token = config.BotToken;
+            string token = config.BotToken;
             endpoints.MapControllerRoute(name: "tgwebhook",
                 pattern: $"bot/{token}",
                 new { controller = "Webhook", action = "Post" });

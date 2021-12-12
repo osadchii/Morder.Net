@@ -14,9 +14,15 @@ public class BotUser : BaseEntity, IHasId
 
     [MaxLength(Limits.BotUserUserName)] public string? UserName { get; set; }
 
-    [MaxLength(Limits.BotFirstName)] public string? FirstName { get; set; }
+    [MaxLength(Limits.BotUserFirstName)] public string? FirstName { get; set; }
 
-    [MaxLength(Limits.BotLastName)] public string? LastName { get; set; }
+    [MaxLength(Limits.BotUserLastName)] public string? LastName { get; set; }
+
+    [MaxLength(Limits.BotUserCurrentState)]
+    public string? CurrentState { get; set; }
+
+    [MaxLength(Limits.BotUserCurrentStateKey)]
+    public string? CurrentStateKey { get; set; }
 
     public bool Verified { get; set; }
 

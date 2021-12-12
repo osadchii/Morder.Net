@@ -15,21 +15,23 @@ public class MessageHandler
     protected readonly ITelegramBotClient Client;
     protected readonly Message Message;
     protected readonly BotUser User;
+    protected readonly ILogger Logger;
     protected long ChatId => Message.Chat.Id;
     protected string Text => Message.Text!;
 
-    public MessageHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user)
+    public MessageHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger)
     {
         Client = client;
         Mediator = mediator;
         Message = message;
         User = user;
+        Logger = logger;
     }
 
     public virtual async Task Handle()
     {
-        await Client.SendReplyKeyboard(ChatId, BotMenus.MainMenu);
-        await SetUserState(StateIds.MainMenu);
+        await ToMainMenu(Client, Mediator, Message, User);
+        LogRouting("Default route");
     }
 
     protected Task SetUserState(string state, string? key = null)
@@ -43,13 +45,28 @@ public class MessageHandler
         await mediator.Send(request);
     }
 
+    private static async Task ToMainMenu(ITelegramBotClient client, IMediator mediator, Message message, BotUser user)
+    {
+        await client.SendReplyKeyboard(message.Chat.Id, BotMenus.MainMenu);
+        await SetUserState(mediator, user, StateIds.MainMenu);
+    }
+
+    protected void LogRouting(string routedTo)
+    {
+        Logger.LogInformation(
+            $@"User: {User}" +
+            $"\nText: {Text}" +
+            $"\nState: {User.CurrentState}" +
+            $"\nState key: {User.CurrentStateKey}" +
+            $"\nRouted to: {routedTo}");
+    }
+
     public static async Task<bool> IsToMainMenu(
         ITelegramBotClient client, IMediator mediator, Message message, BotUser user)
     {
         if (message.Text == MenuTexts.ToMainMenu)
         {
-            await client.SendReplyKeyboard(message.Chat.Id, BotMenus.MainMenu);
-            await SetUserState(mediator, user, StateIds.MainMenu);
+            await ToMainMenu(client, mediator, message, user);
 
             return true;
         }

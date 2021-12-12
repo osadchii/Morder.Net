@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
+using Infrastructure.Extensions;
 using Infrastructure.Models.Interfaces;
 
 namespace Infrastructure.Models.BotUsers;
@@ -27,4 +28,11 @@ public class BotUser : BaseEntity, IHasId
     public bool Verified { get; set; }
 
     public bool Administrator { get; set; }
+
+    public override string ToString()
+    {
+        return UserName.IsNullOrEmpty()
+            ? $"{FirstName} {LastName}"
+            : $"{FirstName} {LastName} ({UserName})";
+    }
 }

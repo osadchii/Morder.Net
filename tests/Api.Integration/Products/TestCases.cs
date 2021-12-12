@@ -21,6 +21,7 @@ public static class TestCases
         Vendor = "Test vendor",
         VendorCode = "TestVendorCode",
         Barcode = "123456789012",
-        Vat = Vat.Vat_20
+        Vat = Vat.Vat_20,
+        ProductType = ProductType.Piece
     };
 }

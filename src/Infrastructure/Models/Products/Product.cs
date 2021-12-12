@@ -47,4 +47,6 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
     [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
 
     public Vat? Vat { get; set; }
+
+    public ProductType? ProductType { get; set; }
 }

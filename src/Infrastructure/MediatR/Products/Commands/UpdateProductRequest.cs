@@ -44,4 +44,6 @@ public class UpdateProductRequest : IRequest<Unit>
     [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
 
     [EnumDataType(typeof(Vat))] public Vat? Vat { get; set; }
+
+    [EnumDataType(typeof(ProductType))] public ProductType ProductType { get; set; }
 }

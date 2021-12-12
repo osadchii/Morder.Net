@@ -29,4 +29,6 @@ public class ProductDto
     public string? Barcode { get; set; }
 
     public Vat? Vat { get; set; }
+
+    public ProductType? ProductType { get; set; }
 }

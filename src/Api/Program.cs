@@ -2,6 +2,7 @@ using System.Globalization;
 using Api.Filters;
 using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -67,6 +68,14 @@ public class Program
 
         app.MapControllers();
 
+        InitializeDatabase(app);
+
         app.Run();
+    }
+
+    private static void InitializeDatabase(IApplicationBuilder app)
+    {
+        using IServiceScope? scope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+        scope?.ServiceProvider.GetRequiredService<MContext>().Database.Migrate();
     }
 }

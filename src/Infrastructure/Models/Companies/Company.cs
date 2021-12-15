@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
 using Infrastructure.Models.Interfaces;
+using Infrastructure.Models.Prices;
 
 namespace Infrastructure.Models.Companies;
 
@@ -19,4 +20,8 @@ public class Company : BaseEntity, IHasId
     public string Shop { get; set; }
 
     [MaxLength(Limits.ShopUrl)] public string Url { get; set; }
+
+    [ForeignKey("PriceType")] public int? PriceTypeId { get; set; }
+
+    public PriceType? PriceType { get; set; }
 }

@@ -24,7 +24,8 @@ public class UpdatePriceTypeHandler : IRequestHandler<UpdatePriceTypeRequest, Un
     public async Task<Unit> Handle(UpdatePriceTypeRequest request, CancellationToken cancellationToken)
     {
         PriceType? dbEntry =
-            await _context.PriceTypes.SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await _context.PriceTypes
+                .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 
         if (dbEntry is null)
         {

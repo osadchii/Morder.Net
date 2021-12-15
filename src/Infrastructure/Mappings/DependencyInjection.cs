@@ -1,8 +1,7 @@
 using AutoMapper;
-using Infrastructure.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.MediatR;
+namespace Infrastructure.Mappings;
 
 public static class AutoMapperDependencyInjection
 {
@@ -12,6 +11,7 @@ public static class AutoMapperDependencyInjection
         {
             mc.AddProfile(new CompanyProfile());
             mc.AddProfile(new BotProfile());
+            mc.AddProfile(new MarketplaceProfile());
         });
 
         IMapper mapper = mappingConfig.CreateMapper();

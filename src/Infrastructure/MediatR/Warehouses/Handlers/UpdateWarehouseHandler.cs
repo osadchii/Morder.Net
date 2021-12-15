@@ -1,11 +1,8 @@
 using AutoMapper;
-using Infrastructure.Common;
 using Infrastructure.MediatR.Warehouses.Commands;
-using Infrastructure.Models.Companies;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Warehouses.Handlers;
@@ -27,7 +24,9 @@ public class UpdateWarehouseHandler : IRequestHandler<UpdateWarehouseRequest, Un
     public async Task<Unit> Handle(UpdateWarehouseRequest request, CancellationToken cancellationToken)
     {
         Warehouse? dbEntry =
-            await _context.Warehouses.SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await _context.Warehouses
+                .SingleOrDefaultAsync(w => w.ExternalId == request.ExternalId,
+                    cancellationToken: cancellationToken);
 
         if (dbEntry is null)
         {

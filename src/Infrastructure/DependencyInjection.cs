@@ -1,4 +1,5 @@
 using Infrastructure.Cache;
+using Infrastructure.Mappings;
 using Infrastructure.MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

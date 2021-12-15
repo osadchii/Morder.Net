@@ -1,6 +1,7 @@
 using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
+using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
@@ -28,6 +29,12 @@ public class MContext : DbContext
     #region Telegram
 
     public DbSet<BotUser> BotUsers { get; set; }
+
+    #endregion
+
+    #region Marketplace
+
+    public DbSet<Marketplace> Marketplaces { get; set; }
 
     #endregion
 

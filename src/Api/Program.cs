@@ -13,6 +13,9 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            { Converters = { new StringEnumConverter { CamelCaseText = true } } };
+
         IWebHostEnvironment env = builder.Environment;
         string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 

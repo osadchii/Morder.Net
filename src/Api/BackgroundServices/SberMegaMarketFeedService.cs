@@ -80,6 +80,7 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
                 }
 
                 feed.Save(path);
+                _logger.LogInformation($"Saved feed {path}");
             }
         }
         catch (Exception ex)

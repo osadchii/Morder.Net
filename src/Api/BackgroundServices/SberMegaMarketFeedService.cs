@@ -12,7 +12,6 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
 {
     private readonly ILogger<SberMegaMarketFeedService> _logger;
     private readonly int _feedGenerationInterval;
-    private readonly string _staticFilePath;
     private IServiceProvider Services { get; }
     private Task? _task;
 
@@ -25,7 +24,6 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
         Services = services;
 
         _feedGenerationInterval = configuration.GetValue<int>("FeedGenerationInterval");
-        _staticFilePath = configuration.GetValue<string>("StaticFilesPath");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -74,7 +72,7 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
                 var feedBuilder = new FeedBuilder(data, marketplace, _logger);
                 Feed feed = feedBuilder.Build();
 
-                string feedPath = Path.Combine(Environment.CurrentDirectory, _staticFilePath, "feeds");
+                string feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
                 string path = Path.Combine(feedPath, "feed.xml");
                 if (!Directory.Exists(feedPath))
                 {

@@ -70,6 +70,7 @@ public class Program
 
         app.UseRouting();
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
         app.MapControllers();
 

@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MContext))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20211216163409_EntitiesFixes")]
+    partial class EntitiesFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +165,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("MinimalPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("MinimalStock")
                         .HasColumnType("numeric");
 
                     b.Property<string>("Name")

@@ -1,5 +1,3 @@
-using Infrastructure.Enums;
-
 namespace Infrastructure.Common;
 
 [Serializable]

@@ -19,8 +19,19 @@ public class SberMegaMarketController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Result> UpdateSberMegaMarket([Required] [FromBody] UpdateSberMegaMarketRequest command)
+    public async Task<Result> CreateSberMegaMarket([Required] [FromBody] UpdateSberMegaMarketRequest command)
     {
+        command.Id = null;
+        SberMegaMarketDto result = await _mediator.Send(command);
+        return result.AsResult();
+    }
+
+    [HttpPost]
+    [Route("{id:int}")]
+    public async Task<Result> UpdateSberMegaMarket([Required] [FromBody] UpdateSberMegaMarketRequest command,
+        [Required] int id)
+    {
+        command.Id = id;
         SberMegaMarketDto result = await _mediator.Send(command);
         return result.AsResult();
     }

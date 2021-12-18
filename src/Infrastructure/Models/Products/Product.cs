@@ -26,6 +26,9 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     public bool DeletionMark { get; set; }
 
+    [MaxLength(Limits.ProductCountryOfOrigin)]
+    public string? CountryOfOrigin { get; set; }
+
     [Range(Limits.MinimalLength, Limits.MaximalLength)]
     public decimal? Length { get; set; }
 
@@ -44,7 +47,7 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [MaxLength(Limits.ProductVendorCode)] public string? VendorCode { get; set; }
 
-    [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
+    [MaxLength(Limits.ProductBarcode)] public string Barcode { get; set; }
 
     public Vat? Vat { get; set; }
 

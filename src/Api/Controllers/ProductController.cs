@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
-using Infrastructure.Enums;
 using Infrastructure.MediatR.Products.Commands;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Products;

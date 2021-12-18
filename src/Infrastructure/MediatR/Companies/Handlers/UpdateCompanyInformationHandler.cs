@@ -1,9 +1,11 @@
 using AutoMapper;
+using Infrastructure.Cache.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Companies.Commands;
+using Infrastructure.Models.Companies;
+using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Models.Companies;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -14,19 +16,33 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     private readonly MContext _context;
     private readonly IMapper _mapper;
     private readonly IMemoryCache _cache;
+    private readonly IIdExtractor<PriceType> priceTypeIdExtractor;
     private readonly ILogger<UpdateCompanyInformationHandler> _logger;
 
     public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache,
-        ILogger<UpdateCompanyInformationHandler> logger)
+        ILogger<UpdateCompanyInformationHandler> logger, IIdExtractor<PriceType> priceTypeIdExtractor)
     {
         _context = context;
         _mapper = mapper;
         _cache = cache;
         _logger = logger;
+        this.priceTypeIdExtractor = priceTypeIdExtractor;
     }
 
     public async Task<Unit> Handle(UpdateCompanyInformationRequest request, CancellationToken cancellationToken)
     {
+        if (request.PriceTypeExternalid.HasValue)
+        {
+            int? priceTypeId = await priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalid.Value);
+
+            if (!priceTypeId.HasValue)
+            {
+                throw new ArgumentException($@"Wrong price type external id: {request.PriceTypeExternalid.Value}");
+            }
+
+            request.PriceTypeId = priceTypeId.Value;
+        }
+
         _cache.Remove(CacheKeys.CompanyInformation);
 
         Company? dbEntry =

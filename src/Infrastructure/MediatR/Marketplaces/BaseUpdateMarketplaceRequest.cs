@@ -15,6 +15,8 @@ public abstract class BaseUpdateMarketplaceRequest
 
     [Required] public decimal? MinimalPrice { get; set; }
 
+    [Required] public decimal? MinimalStock { get; set; }
+
     [Required] public Guid? WarehouseExternalId { get; set; }
 
     public Warehouse? Warehouse { get; set; }
@@ -22,7 +24,7 @@ public abstract class BaseUpdateMarketplaceRequest
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
 
-    [Required] public Guid? PriceTypeExternalId { get; set; }
+    public Guid? PriceTypeExternalId { get; set; }
 
     public PriceType? PriceType { get; set; }
 }

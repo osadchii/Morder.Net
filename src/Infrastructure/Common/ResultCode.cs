@@ -1,4 +1,4 @@
-namespace Infrastructure.Enums;
+namespace Infrastructure.Common;
 
 public enum ResultCode
 {

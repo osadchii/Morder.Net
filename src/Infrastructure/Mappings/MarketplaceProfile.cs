@@ -18,7 +18,14 @@ public class MarketplaceProfile : Profile
                     => opt.MapFrom(e => e.ProductTypes.FromJson<List<ProductType>>()))
             .ForMember(m => m.Settings,
                 opt =>
-                    opt.MapFrom(e => e.Settings.FromJson<SberMegaMarketSettings>()));
+                    opt.MapFrom(e => e.Settings.FromJson<SberMegaMarketSettings>()))
+            .ForMember(m => m.WarehouseExternalId,
+                opt =>
+                    opt.MapFrom(e => e.Warehouse.ExternalId))
+            .ForMember(m => m.PriceTypeExternalId,
+                opt =>
+                    opt.MapFrom(e => e.PriceType.ExternalId));
+        ;
 
         CreateMap<UpdateSberMegaMarketRequest, Marketplace>()
             .ForMember(m => m.ProductTypes,

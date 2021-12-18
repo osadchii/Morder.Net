@@ -10,10 +10,11 @@ public abstract class MarketplaceDto
     public string Name { get; set; }
     public List<ProductType> ProductTypes { get; set; }
     public decimal MinimalPrice { get; set; }
-    public int WarehouseId { get; set; }
+    public decimal MinimalStock { get; set; }
+    public Guid WarehouseExternalId { get; set; }
     public Warehouse Warehouse { get; set; }
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
-    public int PriceTypeId { get; set; }
-    public PriceType PriceType { get; set; }
+    public Guid? PriceTypeExternalId { get; set; }
+    public PriceType? PriceType { get; set; }
 }

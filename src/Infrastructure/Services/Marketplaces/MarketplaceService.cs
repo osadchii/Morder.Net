@@ -49,26 +49,31 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
             throw new ArgumentException($"Wrong warehouse external id: {request.WarehouseExternalId}");
         }
 
-        int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId!.Value);
-
-        if (!priceTypeId.HasValue)
-        {
-            throw new ArgumentException($"Wrong price type external id: {request.WarehouseExternalId}");
-        }
-
         request.Warehouse = await _context.Warehouses
             .AsNoTracking()
             .SingleAsync(w => w.Id == warehouseId, cancellationToken);
 
-        request.PriceType = await _context.PriceTypes
-            .AsNoTracking()
-            .SingleAsync(w => w.Id == priceTypeId, cancellationToken);
+        if (request.PriceTypeExternalId.HasValue)
+        {
+            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
+
+            if (!priceTypeId.HasValue)
+            {
+                throw new ArgumentException($"Wrong price type external id: {request.WarehouseExternalId}");
+            }
+
+            request.PriceType = await _context.PriceTypes
+                .AsNoTracking()
+                .SingleAsync(w => w.Id == priceTypeId, cancellationToken);
+        }
 
         Marketplace? marketplace;
 
         if (request.Id.HasValue)
         {
             marketplace = await _context.Marketplaces
+                .Include(m => m.Warehouse)
+                .Include(m => m.PriceType)
                 .SingleAsync(m => m.Id == request.Id.Value, cancellationToken);
         }
         else
@@ -91,7 +96,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Created marketplace {request.Name}");
+        _logger.LogInformation($@"Created marketplace {request.Name}");
 
         return _mapper.Map<TDto>(dbEntry);
     }

@@ -22,6 +22,7 @@ public class Marketplace : BaseEntity, IHasId
     [Required] public string ProductTypes { get; set; }
 
     [Required] public decimal MinimalPrice { get; set; }
+    [Required] public decimal MinimalStock { get; set; }
 
     [Required] public string Settings { get; set; }
 
@@ -31,6 +32,6 @@ public class Marketplace : BaseEntity, IHasId
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
 
-    [ForeignKey("PriceType")] public int PriceTypeId { get; set; }
-    public PriceType PriceType { get; set; }
+    [ForeignKey("PriceType")] public int? PriceTypeId { get; set; }
+    public PriceType? PriceType { get; set; }
 }

@@ -10,6 +10,7 @@ public static class Limits
     public const int ProductBarcode = 200;
     public const int ProductVendor = 256;
     public const int ProductVendorCode = 100;
+    public const int ProductCountryOfOrigin = 128;
 
     public const int MinimalLength = 0;
     public const int MaximalLength = 1_000_000;

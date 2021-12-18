@@ -36,7 +36,7 @@ public static class FeedExtensions
             Price = price,
             Vendor = product.Vendor,
             VendorCode = product.VendorCode,
-            Outlets = new List<Outlet>()
+            Outlets = new List<Outlet>
             {
                 new(warehouseId, stock)
             },

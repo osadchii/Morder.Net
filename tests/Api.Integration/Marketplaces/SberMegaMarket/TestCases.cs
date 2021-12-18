@@ -7,11 +7,11 @@ namespace Api.Integration.Marketplaces.SberMegaMarket;
 
 public static class TestCases
 {
-    public static UpdateSberMegaMarketRequest UpdateSberMegaMarketRequest => new UpdateSberMegaMarketRequest()
+    public static UpdateSberMegaMarketRequest UpdateSberMegaMarketRequest => new()
     {
         Id = 1,
         Name = "Test Sber",
-        Settings = new SberMegaMarketSettings()
+        Settings = new SberMegaMarketSettings
         {
             Token = "Test token"
         },
@@ -19,7 +19,7 @@ public static class TestCases
         IsActive = true,
         MinimalPrice = 100,
         NullifyStocks = false,
-        ProductTypes = new List<ProductType>()
+        ProductTypes = new List<ProductType>
         {
             ProductType.Piece,
             ProductType.Weight

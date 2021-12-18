@@ -42,7 +42,7 @@ public class Shop
 
     public Shop()
     {
-        Currencies = new List<Currency>()
+        Currencies = new List<Currency>
         {
             new("RUR", 1)
         };
@@ -121,15 +121,7 @@ public class Category
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
     public int ParentIdSerialised
     {
-        get
-        {
-            if (ParentId.HasValue)
-            {
-                return ParentId.Value;
-            }
-
-            return 0;
-        }
+        get => ParentId ?? 0;
         set => ParentId = value;
     }
 

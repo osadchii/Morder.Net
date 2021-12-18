@@ -9,7 +9,7 @@ public class UpdateCategoryRequest : IRequest
 {
     [Required]
     [MaxLength(Limits.CategoryName)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     public Guid? ParentId { get; set; }
 

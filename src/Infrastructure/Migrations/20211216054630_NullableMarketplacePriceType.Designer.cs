@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MContext))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20211216054630_NullableMarketplacePriceType")]
+    partial class NullableMarketplacePriceType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +165,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("MinimalPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("MinimalStock")
                         .HasColumnType("numeric");
 
                     b.Property<string>("Name")
@@ -338,7 +337,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Barcode")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -348,10 +346,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("CountryOfOrigin")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()

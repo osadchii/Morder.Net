@@ -1,4 +1,5 @@
 using System.Globalization;
+using Api.BackgroundServices;
 using Api.Filters;
 using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -50,6 +51,7 @@ public class Program
 
         builder.Services.AddMorder(builder.Configuration);
         builder.Services.AddMemoryCache();
+        builder.Services.AddHostedService<SberMegaMarketFeedService>();
 
         WebApplication app = builder.Build();
 

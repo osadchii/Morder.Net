@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MContext))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20211215192730_AddMarketplaceCategoryProductSettings")]
+    partial class AddMarketplaceCategoryProductSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,9 +167,6 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("MinimalPrice")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("MinimalStock")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -176,7 +175,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("NullifyStocks")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("PriceTypeId")
+                    b.Property<int>("PriceTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProductTypes")
@@ -338,7 +337,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Barcode")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -348,10 +346,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("CountryOfOrigin")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -511,7 +505,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Infrastructure.Models.Prices.PriceType", "PriceType")
                         .WithMany()
-                        .HasForeignKey("PriceTypeId");
+                        .HasForeignKey("PriceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Infrastructure.Models.Warehouses.Warehouse", "Warehouse")
                         .WithMany()
@@ -528,6 +524,9 @@ namespace Infrastructure.Migrations
                 {
                     b.OwnsMany("Infrastructure.Models.Orders.Order+OrderItem", "Items", b1 =>
                         {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
@@ -536,9 +535,6 @@ namespace Infrastructure.Migrations
 
                             b1.Property<decimal>("Count")
                                 .HasColumnType("numeric");
-
-                            b1.Property<int>("OrderId")
-                                .HasColumnType("integer");
 
                             b1.Property<decimal>("Price")
                                 .HasColumnType("numeric");
@@ -549,9 +545,7 @@ namespace Infrastructure.Migrations
                             b1.Property<decimal>("Sum")
                                 .HasColumnType("numeric");
 
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("OrderId");
+                            b1.HasKey("OrderId", "Id");
 
                             b1.HasIndex("ProductId");
 

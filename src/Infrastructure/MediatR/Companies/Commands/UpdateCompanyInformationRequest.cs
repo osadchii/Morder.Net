@@ -11,4 +11,8 @@ public class UpdateCompanyInformationRequest : IRequest
     [MaxLength(Limits.ShopName)] public string Shop { get; set; }
 
     [MaxLength(Limits.ShopUrl)] public string Url { get; set; }
+
+    [Required] public Guid? PriceTypeExternalid { get; set; }
+
+    public int? PriceTypeId { get; set; }
 }

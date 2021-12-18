@@ -1,6 +1,9 @@
+using Infrastructure.Marketplaces;
 using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
+using Infrastructure.Models.MarketplaceCategorySettings;
+using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
@@ -8,6 +11,7 @@ using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure;
 
@@ -35,6 +39,8 @@ public class MContext : DbContext
     #region Marketplace
 
     public DbSet<Marketplace> Marketplaces { get; set; }
+    public DbSet<MarketplaceCategorySetting> MarketplaceCategorySettings { get; set; }
+    public DbSet<MarketplaceProductSetting> MarketplaceProductSettings { get; set; }
 
     #endregion
 
@@ -50,9 +56,33 @@ public class MContext : DbContext
 
         modelBuilder.Entity<Stock>(e => { e.HasKey(p => new { p.ProductId, p.WarehouseId }); });
 
+        modelBuilder.Entity<MarketplaceCategorySetting>(e =>
+        {
+            e.HasKey(p => new
+            {
+                p.CategoryId,
+                p.MarketplaceId
+            });
+        });
+
+        modelBuilder.Entity<MarketplaceProductSetting>(e =>
+        {
+            e.HasKey(p => new
+            {
+                p.ProductId,
+                p.MarketplaceId
+            });
+        });
+
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 
         modelBuilder.Entity<Order>(e => e.OwnsMany(o => o.Items));
+
+        modelBuilder.Entity<Marketplace>(e =>
+        {
+            e.Property(p => p.Type)
+                .HasConversion(new EnumToStringConverter<MarketplaceType>());
+        });
 
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
         {

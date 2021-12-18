@@ -25,7 +25,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
     [Owned]
     public class OrderItem
     {
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
 
         [ForeignKey("Product")] public int ProductId { get; set; }
 

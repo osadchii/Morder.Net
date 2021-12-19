@@ -44,6 +44,7 @@ public class Program
         {
             logBuilder.AddConfiguration(builder.Configuration);
             logBuilder.AddConsole();
+            logBuilder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
         });
 
         builder.Services.AddEndpointsApiExplorer();

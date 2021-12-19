@@ -58,12 +58,19 @@ public class Offer
     [XmlAttribute("id")] public int Id { get; set; }
 
     [XmlAttribute("available")] public bool Available { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-    public int CategoryId { get; set; }
+
+    [XmlElement("name")] public string Name { get; set; }
+
+    [XmlElement("price")] public decimal Price { get; set; }
+
+    [XmlElement("categoryId")] public int CategoryId { get; set; }
+
+
     public List<Outlet> Outlets { get; set; }
-    public int? Vat { get; set; }
-    public string Barcode { get; set; }
+
+    [XmlElement("vat")] public int? Vat { get; set; }
+
+    [XmlElement("barcode")] public string Barcode { get; set; }
     public string? Vendor { get; set; }
     public string? VendorCode { get; set; }
     public decimal? Weight { get; set; }
@@ -80,8 +87,9 @@ public class Offer
 
 public class Outlet
 {
-    public int OutletId { get; set; }
-    public decimal InStock { get; set; }
+    [XmlAttribute("outletId")] public int OutletId { get; set; }
+
+    [XmlAttribute("instock")] public decimal InStock { get; set; }
 
     public Outlet()
     {

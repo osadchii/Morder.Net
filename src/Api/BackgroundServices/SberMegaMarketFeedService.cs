@@ -64,6 +64,11 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
 
             foreach (SberMegaMarketDto marketplace in marketplaces)
             {
+                if (!marketplace.Settings.FeedEnabled)
+                {
+                    continue;
+                }
+
                 MarketplaceProductData data = await mediator.Send(new GetMarketplaceProductDataRequest()
                 {
                     MarketplaceId = marketplace.Id
@@ -73,7 +78,7 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
                 Feed feed = feedBuilder.Build();
 
                 string feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-                string path = Path.Combine(feedPath, "feed.xml");
+                string path = Path.Combine(feedPath, $"{marketplace.Settings.FeedName}.xml");
                 if (!Directory.Exists(feedPath))
                 {
                     Directory.CreateDirectory(feedPath);

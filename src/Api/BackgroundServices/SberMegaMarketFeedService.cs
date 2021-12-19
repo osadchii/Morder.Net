@@ -1,5 +1,8 @@
+using System.Diagnostics;
+using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
+using Infrastructure.Models.Companies;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Marketplace.SberMegaMarket.Extensions;
@@ -62,6 +65,8 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
             List<SberMegaMarketDto> marketplaces =
                 await mediator.Send(new GetAllActiveSberMegaMarketSettingsRequest());
 
+            CompanyDto companyInformation = await mediator.Send(new GetCompanyInformationRequest());
+
             foreach (SberMegaMarketDto marketplace in marketplaces)
             {
                 if (!marketplace.Settings.FeedEnabled)
@@ -69,12 +74,17 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
                     continue;
                 }
 
+                var sw = new Stopwatch();
+                sw.Start();
+
                 MarketplaceProductData data = await mediator.Send(new GetMarketplaceProductDataRequest()
                 {
                     MarketplaceId = marketplace.Id
                 });
 
-                var feedBuilder = new FeedBuilder(data, marketplace, _logger);
+                FeedBuilder feedBuilder = new FeedBuilder(data, marketplace, _logger)
+                    .AddCompanyInformation(companyInformation);
+
                 Feed feed = feedBuilder.Build();
 
                 string feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
@@ -85,7 +95,9 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
                 }
 
                 feed.Save(path);
-                _logger.LogInformation($"Saved feed {path}");
+
+                sw.Stop();
+                _logger.LogInformation($"Saved feed {path}. Elapsed: {sw.ElapsedMilliseconds} ms");
             }
         }
         catch (Exception ex)

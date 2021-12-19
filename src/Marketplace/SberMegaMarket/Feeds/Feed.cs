@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Infrastructure.Extensions;
 
 namespace Marketplace.SberMegaMarket.Feeds;
 
@@ -65,7 +66,8 @@ public class Offer
 
     [XmlElement("categoryId")] public int CategoryId { get; set; }
 
-
+    [XmlArray("outlets")]
+    [XmlArrayItem("outlet")]
     public List<Outlet> Outlets { get; set; }
 
     [XmlElement("vat")] public int? Vat { get; set; }
@@ -73,15 +75,74 @@ public class Offer
     [XmlElement("barcode")] public string Barcode { get; set; }
     public string? Vendor { get; set; }
     public string? VendorCode { get; set; }
-    public decimal? Weight { get; set; }
-    public decimal? Width { get; set; }
-    public decimal? Length { get; set; }
-    public decimal? Height { get; set; }
-    public string? Brand { get; set; }
-    public string? CountryOfOrigin { get; set; }
+
+    [XmlIgnore] public decimal? Weight { get; set; }
+
+    [XmlIgnore] public decimal? Width { get; set; }
+
+    [XmlIgnore] public decimal? Length { get; set; }
+
+    [XmlIgnore] public decimal? Height { get; set; }
+
+    [XmlIgnore] public string? Brand { get; set; }
+
+    [XmlIgnore] public string? CountryOfOrigin { get; set; }
+
+    [XmlElement("param")]
+    public List<OfferParam> Params
+    {
+        get
+        {
+            List<OfferParam> offerParams = new();
+
+            if (Weight.HasValue)
+                offerParams.Add(new OfferParam(nameof(Weight), Weight.Value));
+
+            if (Width.HasValue)
+                offerParams.Add(new OfferParam(nameof(Width), Width.Value));
+
+            if (Length.HasValue)
+                offerParams.Add(new OfferParam(nameof(Length), Length.Value));
+
+            if (Height.HasValue)
+                offerParams.Add(new OfferParam(nameof(Height), Height.Value));
+
+            if (!Brand.IsNullOrEmpty())
+                offerParams.Add(new OfferParam("Бренд", Brand!));
+
+            if (!CountryOfOrigin.IsNullOrEmpty())
+                offerParams.Add(new OfferParam("Странаисзготовитель", CountryOfOrigin!));
+
+
+            return offerParams;
+        }
+    }
 
     public Offer()
     {
+    }
+}
+
+public class OfferParam
+{
+    [XmlAttribute("name")] public string Name { get; set; }
+
+    [XmlText] public string Text { get; set; }
+
+    public OfferParam()
+    {
+    }
+
+    public OfferParam(string name, string text)
+    {
+        Name = name;
+        Text = text;
+    }
+
+    public OfferParam(string name, decimal value)
+    {
+        Name = name;
+        Text = value.ToString();
     }
 }
 

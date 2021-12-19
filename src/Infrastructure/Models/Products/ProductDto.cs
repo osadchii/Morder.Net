@@ -22,6 +22,8 @@ public class ProductDto
 
     public string? Brand { get; set; }
 
+    public string? CountryOfOrigin { get; set; }
+
     public string? Vendor { get; set; }
 
     public string? VendorCode { get; set; }

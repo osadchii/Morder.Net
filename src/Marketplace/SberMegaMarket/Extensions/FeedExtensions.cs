@@ -41,7 +41,15 @@ public static class FeedExtensions
                 new(warehouseId, stock)
             },
             CategoryId = product.CategoryId!.Value,
-            Id = articul
+            Id = articul,
+            Vat = product.Vat switch
+            {
+                Vat.Vat_20 => 1,
+                Vat.Vat_20_120 => 1,
+                Vat.Vat_10 => 2,
+                Vat.Vat_10_110 => 2,
+                _ => 5
+            }
         };
 
         return offer;

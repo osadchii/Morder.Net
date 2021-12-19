@@ -15,6 +15,9 @@ public class UpdateProductRequest : IRequest<Unit>
     [MaxLength(Limits.ProductArticul)]
     public string? Articul { get; set; }
 
+    [MaxLength(Limits.ProductCountryOfOrigin)]
+    public string? CountryOfOrigin { get; set; }
+
     [Required] public Guid? ExternalId { get; set; }
 
     public Guid? CategoryId { get; set; }

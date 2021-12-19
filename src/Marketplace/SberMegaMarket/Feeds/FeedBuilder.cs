@@ -20,21 +20,22 @@ public class FeedBuilder
         _logger = logger;
         _feed = new Feed();
 
+        _feed.Shop.ShipmentOptions.Add(new ShipmentOption(sber.Settings.ShippingDays,
+            sber.Settings.OrderBefore));
+
         AddCategories(data.Categories.Values.ToList());
         AddProducts(data.Products, data);
     }
 
-    private FeedBuilder AddCategories(List<DbCategory> categories)
+    private void AddCategories(List<DbCategory> categories)
     {
         foreach (DbCategory category in categories)
         {
             _feed.Shop.Categories.Add(category.ToCategory());
         }
-
-        return this;
     }
 
-    private FeedBuilder AddProducts(List<Product> products, MarketplaceProductData marketplaceProductData)
+    private void AddProducts(List<Product> products, MarketplaceProductData marketplaceProductData)
     {
         foreach (Product product in products)
         {
@@ -47,8 +48,6 @@ public class FeedBuilder
                 _logger?.LogError(ex, "Error while adding product to feed");
             }
         }
-
-        return this;
     }
 
     public FeedBuilder AddCompanyInformation(CompanyDto companyDto)

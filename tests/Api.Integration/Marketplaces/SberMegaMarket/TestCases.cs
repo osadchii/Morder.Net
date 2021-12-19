@@ -13,11 +13,13 @@ public static class TestCases
         Name = "Test Sber",
         Settings = new SberMegaMarketSettings
         {
-            Token = "Test token"
+            Token = "Test token",
+            FeedName = "test feed"
         },
         WarehouseExternalId = Warehouses.TestCases.UpdateWarehouseRequest.ExternalId,
         IsActive = true,
         MinimalPrice = 100,
+        MinimalStock = 2,
         NullifyStocks = false,
         ProductTypes = new List<ProductType>
         {

@@ -8,6 +8,7 @@ public static class TestCases
     {
         Name = "Test company",
         Shop = "Test shop",
-        Url = "http://test.url"
+        Url = "http://test.url",
+        PriceTypeExternalid = PriceTypes.TestCases.UpdatePriceTypeRequest.ExternalId
     };
 }

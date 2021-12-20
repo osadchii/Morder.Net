@@ -2,7 +2,7 @@ using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.Prices.Commands;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
-using Infrastructure.Models.Warehouses;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,14 +15,17 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
     private readonly ILogger<UpdatePriceHandler> _logger;
     private readonly IIdExtractor<Product> _productIdExtractor;
     private readonly IIdExtractor<PriceType> _priceTypeIdExtractor;
+    private readonly IChangeTrackingService _changeTrackingService;
 
     public UpdatePriceHandler(MContext context, ILogger<UpdatePriceHandler> logger,
-        IIdExtractor<Product> productIdExtractor, IIdExtractor<PriceType> priceTypeIdExtractor)
+        IIdExtractor<Product> productIdExtractor, IIdExtractor<PriceType> priceTypeIdExtractor,
+        IChangeTrackingService changeTrackingService)
     {
         _context = context;
         _logger = logger;
         _productIdExtractor = productIdExtractor;
         _priceTypeIdExtractor = priceTypeIdExtractor;
+        _changeTrackingService = changeTrackingService;
     }
 
     public async Task<Unit> Handle(UpdatePriceRequest request, CancellationToken cancellationToken)
@@ -54,8 +57,10 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
             throw new ArgumentException(message);
         }
 
+        await TrackPriceChanges(priceTypeId.Value, productId.Value, cancellationToken);
+
         Price? dbEntry = await _context.Prices
-            .SingleOrDefaultAsync(s => s.ProductId == productId && s.PriceTypeId == priceTypeId,
+            .SingleOrDefaultAsync(s => s.ProductId == productId.Value && s.PriceTypeId == priceTypeId.Value,
                 cancellationToken);
 
         if (dbEntry is null)
@@ -70,6 +75,23 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         }
 
         return await UpdatePrice(dbEntry, request.Value.Value, cancellationToken);
+    }
+
+    private async Task TrackPriceChanges(int priceTypeId, int productId, CancellationToken cancellationToken)
+    {
+        IEnumerable<int> marketplaceIds =
+            await _changeTrackingService.GetMarketplaceTrackingPriceIdsAsync(cancellationToken);
+
+        foreach (int marketplaceId in marketplaceIds)
+        {
+            IEnumerable<int> priceTypes =
+                await _changeTrackingService.GetTrackingPriceTypeIds(marketplaceId, cancellationToken);
+
+            if (priceTypes.Contains(priceTypeId))
+            {
+                await _changeTrackingService.TrackPriceChange(marketplaceId, priceTypeId, productId, cancellationToken);
+            }
+        }
     }
 
     private async Task<Unit> CreatePrice(int priceTypeId, int productId, decimal value,

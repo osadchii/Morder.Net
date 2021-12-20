@@ -1,10 +1,13 @@
 using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
+using Infrastructure.MediatR.ChangeTracking.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
+using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
+using Infrastructure.Models.Warehouses;
 
 namespace Infrastructure.Mappings;
 
@@ -47,5 +50,8 @@ public class MarketplaceProfile : Profile
                 opt => opt.Ignore())
             .ForMember(m => m.PriceType,
                 opt => opt.Ignore());
+
+        CreateMap<TrackPriceChangeRequest, PriceChange>();
+        CreateMap<TrackStockChangeRequest, StockChange>();
     }
 }

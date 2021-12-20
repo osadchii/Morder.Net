@@ -1,9 +1,10 @@
 using AutoMapper;
+using Infrastructure.Cache;
 using Infrastructure.Cache.Interfaces;
-using Infrastructure.Common;
 using Infrastructure.MediatR.Companies.Commands;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Prices;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,24 +17,27 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     private readonly MContext _context;
     private readonly IMapper _mapper;
     private readonly IMemoryCache _cache;
-    private readonly IIdExtractor<PriceType> priceTypeIdExtractor;
+    private readonly IIdExtractor<PriceType> _priceTypeIdExtractor;
     private readonly ILogger<UpdateCompanyInformationHandler> _logger;
+    private readonly IChangeTrackingService _changeTrackingService;
 
     public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache,
-        ILogger<UpdateCompanyInformationHandler> logger, IIdExtractor<PriceType> priceTypeIdExtractor)
+        ILogger<UpdateCompanyInformationHandler> logger, IIdExtractor<PriceType> priceTypeIdExtractor,
+        IChangeTrackingService changeTrackingService)
     {
         _context = context;
         _mapper = mapper;
         _cache = cache;
         _logger = logger;
-        this.priceTypeIdExtractor = priceTypeIdExtractor;
+        _priceTypeIdExtractor = priceTypeIdExtractor;
+        _changeTrackingService = changeTrackingService;
     }
 
     public async Task<Unit> Handle(UpdateCompanyInformationRequest request, CancellationToken cancellationToken)
     {
         if (request.PriceTypeExternalid.HasValue)
         {
-            int? priceTypeId = await priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalid.Value);
+            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalid.Value);
 
             if (!priceTypeId.HasValue)
             {
@@ -43,6 +47,7 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
             request.PriceTypeId = priceTypeId.Value;
         }
 
+        _changeTrackingService.ResetTrackingPriceTypeIds();
         _cache.Remove(CacheKeys.CompanyInformation);
 
         Company? dbEntry =

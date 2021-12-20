@@ -2,6 +2,7 @@ using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.Stocks.Commands;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,14 +15,17 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
     private readonly ILogger<UpdateStockHandler> _logger;
     private readonly IIdExtractor<Product> _productIdExtractor;
     private readonly IIdExtractor<Warehouse> _warehouseIdExtractor;
+    private readonly IChangeTrackingService _changeTrackingService;
 
     public UpdateStockHandler(MContext context, ILogger<UpdateStockHandler> logger,
-        IIdExtractor<Product> productIdExtractor, IIdExtractor<Warehouse> warehouseIdExtractor)
+        IIdExtractor<Product> productIdExtractor, IIdExtractor<Warehouse> warehouseIdExtractor,
+        IChangeTrackingService changeTrackingService)
     {
         _context = context;
         _logger = logger;
         _productIdExtractor = productIdExtractor;
         _warehouseIdExtractor = warehouseIdExtractor;
+        _changeTrackingService = changeTrackingService;
     }
 
     public async Task<Unit> Handle(UpdateStockRequest request, CancellationToken cancellationToken)
@@ -53,6 +57,8 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
             throw new ArgumentException(message);
         }
 
+        await TrackStockChanges(warehouseId.Value, productId.Value, cancellationToken);
+
         Stock? dbEntry = await _context.Stocks
             .SingleOrDefaultAsync(s => s.ProductId == productId && s.WarehouseId == warehouseId,
                 cancellationToken);
@@ -69,6 +75,23 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         }
 
         return await UpdateStock(dbEntry, request.Value.Value, cancellationToken);
+    }
+
+    private async Task TrackStockChanges(int warehouseId, int productId, CancellationToken cancellationToken)
+    {
+        IEnumerable<int> marketplaceIds =
+            await _changeTrackingService.GetMarketplaceTrackingStockIdsAsync(cancellationToken);
+
+        foreach (int marketplaceId in marketplaceIds)
+        {
+            int trackingWarehouseId =
+                await _changeTrackingService.GetTrackingWarehouseId(marketplaceId, cancellationToken);
+
+            if (trackingWarehouseId == warehouseId)
+            {
+                await _changeTrackingService.TrackStockChange(marketplaceId, warehouseId, productId, cancellationToken);
+            }
+        }
     }
 
     private async Task<Unit> CreateStock(int warehouseId, int productId, decimal value,

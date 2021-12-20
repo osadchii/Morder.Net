@@ -1,5 +1,5 @@
 using AutoMapper;
-using Infrastructure.Common;
+using Infrastructure.Cache;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.Models.Companies;
 using MediatR;
@@ -8,28 +8,33 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.MediatR.Companies.Handlers;
 
-public class GetCompanyInformationHandler : BaseRequestHandler,
-    IRequestHandler<GetCompanyInformationRequest, CompanyDto>
+public class GetCompanyInformationHandler : IRequestHandler<GetCompanyInformationRequest, CompanyDto>
 {
-    public GetCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache) : base(context, mapper,
-        cache)
+    private readonly MContext _context;
+    private readonly IMapper _mapper;
+    private readonly IMemoryCache _cache;
+
+    public GetCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache)
     {
+        _context = context;
+        _mapper = mapper;
+        _cache = cache;
     }
 
     public async Task<CompanyDto> Handle(GetCompanyInformationRequest request, CancellationToken cancellationToken)
     {
-        if (Cache.TryGetValue(CacheKeys.CompanyInformation, out CompanyDto result))
+        if (_cache.TryGetValue(CacheKeys.CompanyInformation, out CompanyDto result))
         {
             return result;
         }
 
-        Company? dbEntry = await Context.Companies
+        Company? dbEntry = await _context.Companies
             .AsNoTracking()
             .SingleOrDefaultAsync(cancellationToken);
 
-        result = Mapper.Map<CompanyDto>(dbEntry);
+        result = _mapper.Map<CompanyDto>(dbEntry);
 
-        Cache.Set(CacheKeys.CompanyInformation, result);
+        _cache.Set(CacheKeys.CompanyInformation, result);
 
         return result;
     }

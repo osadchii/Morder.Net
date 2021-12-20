@@ -42,6 +42,9 @@ public class MContext : DbContext
     public DbSet<MarketplaceCategorySetting> MarketplaceCategorySettings { get; set; }
     public DbSet<MarketplaceProductSetting> MarketplaceProductSettings { get; set; }
 
+    public DbSet<PriceChange> PriceChanges { get; set; }
+    public DbSet<StockChange> StockChanges { get; set; }
+
     #endregion
 
 #pragma warning disable CS8618
@@ -72,6 +75,28 @@ public class MContext : DbContext
                 p.ProductId,
                 p.MarketplaceId
             });
+        });
+
+        modelBuilder.Entity<PriceChange>(e =>
+        {
+            e.HasKey(p => new
+            {
+                p.MarketplaceId,
+                p.PriceTypeId,
+                p.ProductId
+            });
+            e.HasIndex(p => p.MarketplaceId);
+        });
+
+        modelBuilder.Entity<StockChange>(e =>
+        {
+            e.HasKey(p => new
+            {
+                p.MarketplaceId,
+                p.WarehouseId,
+                p.ProductId
+            });
+            e.HasIndex(p => p.MarketplaceId);
         });
 
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });

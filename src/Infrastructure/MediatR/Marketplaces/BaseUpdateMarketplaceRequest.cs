@@ -23,6 +23,8 @@ public abstract class BaseUpdateMarketplaceRequest
 
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
+    public bool StockChangesTracking { get; set; }
+    public bool PriceChangesTracking { get; set; }
 
     public Guid? PriceTypeExternalId { get; set; }
 

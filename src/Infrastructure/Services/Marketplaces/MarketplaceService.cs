@@ -26,18 +26,21 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
     private readonly ILogger<MarketplaceUpdateService<TRequest, TDto>> _logger;
     private readonly IIdExtractor<Warehouse> _warehouseIdExtractor;
     private readonly IIdExtractor<PriceType> _priceTypeIdExtractor;
+    private readonly IChangeTrackingService _changeTrackingService;
 
     public MarketplaceUpdateService(MContext context,
         IMapper mapper,
         ILogger<MarketplaceUpdateService<TRequest, TDto>> logger,
         IIdExtractor<Warehouse> warehouseIdExtractor,
-        IIdExtractor<PriceType> priceTypeIdExtractor)
+        IIdExtractor<PriceType> priceTypeIdExtractor,
+        IChangeTrackingService changeTrackingService)
     {
         _context = context;
         _mapper = mapper;
         _logger = logger;
         _warehouseIdExtractor = warehouseIdExtractor;
         _priceTypeIdExtractor = priceTypeIdExtractor;
+        _changeTrackingService = changeTrackingService;
     }
 
     public async Task<TDto> UpdateMarketplaceAsync(TRequest request, CancellationToken cancellationToken)
@@ -66,6 +69,8 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
                 .AsNoTracking()
                 .SingleAsync(w => w.Id == priceTypeId, cancellationToken);
         }
+
+        _changeTrackingService.ResetCaches();
 
         Marketplace? marketplace;
 

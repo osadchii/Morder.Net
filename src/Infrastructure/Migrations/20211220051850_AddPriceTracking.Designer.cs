@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MContext))]
-    partial class MContextModelSnapshot : ModelSnapshot
+    [Migration("20211220051850_AddPriceTracking")]
+    partial class AddPriceTracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -455,28 +457,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Stock", "dbo");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.Warehouses.StockChange", b =>
-                {
-                    b.Property<int>("MarketplaceId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WarehouseId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("MarketplaceId", "WarehouseId", "ProductId");
-
-                    b.HasIndex("MarketplaceId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("StockChange", "dbo");
-                });
-
             modelBuilder.Entity("Infrastructure.Models.Warehouses.Warehouse", b =>
                 {
                     b.Property<int>("Id")
@@ -699,33 +679,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Warehouse");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Warehouses.StockChange", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Marketplaces.Marketplace", "Marketplace")
-                        .WithMany()
-                        .HasForeignKey("MarketplaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Models.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Models.Warehouses.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Marketplace");
 
                     b.Navigation("Product");
 

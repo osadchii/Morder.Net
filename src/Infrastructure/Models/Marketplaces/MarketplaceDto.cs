@@ -15,6 +15,8 @@ public abstract class MarketplaceDto
     public Warehouse Warehouse { get; set; }
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
+    public bool StockChangesTracking { get; set; }
+    public bool PriceChangesTracking { get; set; }
     public Guid? PriceTypeExternalId { get; set; }
     public PriceType? PriceType { get; set; }
 }

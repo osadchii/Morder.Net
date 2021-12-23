@@ -2,11 +2,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
-using Marketplace.SberMegaMarket.Feeds;
-using Category = Marketplace.SberMegaMarket.Feeds.Category;
+using Integration.SberMegaMarket.Feeds;
 using CategoryDb = Infrastructure.Models.Products.Category;
 
-namespace Marketplace.SberMegaMarket.Extensions;
+namespace Integration.SberMegaMarket.Extensions;
 
 public static class FeedExtensions
 {
@@ -55,9 +54,9 @@ public static class FeedExtensions
         return offer;
     }
 
-    public static Category ToCategory(this CategoryDb category)
+    public static Feeds.Category ToCategory(this CategoryDb category)
     {
-        return new Category(category.Id, category.Name!, category.ParentId);
+        return new Feeds.Category(category.Id, category.Name!, category.ParentId);
     }
 
     public static void Save(this Feed feed, string fileName)

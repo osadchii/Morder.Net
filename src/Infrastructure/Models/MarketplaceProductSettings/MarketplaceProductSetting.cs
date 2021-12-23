@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Infrastructure.Common;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 
@@ -11,9 +13,12 @@ public class MarketplaceProductSetting : BaseEntity
 
     public Product Product { get; set; }
 
-    [ForeignKey("MarketplaceId")] public int MarketplaceId { get; set; }
+    [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
     public Marketplace Marketplace { get; set; }
 
     public bool NullifyStock { get; set; }
     public bool IgnoreRestrictions { get; set; }
+
+    [MaxLength(Limits.MarketplaceProductSettingExternalId)]
+    public string? ExternalId { get; set; }
 }

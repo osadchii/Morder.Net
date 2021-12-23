@@ -82,7 +82,6 @@ public class MContext : DbContext
             e.HasKey(p => new
             {
                 p.MarketplaceId,
-                p.PriceTypeId,
                 p.ProductId
             });
             e.HasIndex(p => p.MarketplaceId);
@@ -93,7 +92,6 @@ public class MContext : DbContext
             e.HasKey(p => new
             {
                 p.MarketplaceId,
-                p.WarehouseId,
                 p.ProductId
             });
             e.HasIndex(p => p.MarketplaceId);

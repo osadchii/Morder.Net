@@ -42,4 +42,6 @@ public static class Limits
     public const int OrderNumber = 36;
 
     public const int MarketplaceName = 128;
+
+    public const int MarketplaceProductSettingExternalId = 128;
 }

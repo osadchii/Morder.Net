@@ -2,9 +2,9 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Infrastructure.Extensions;
 
-namespace Marketplace.SberMegaMarket.Feeds;
+namespace Integration.SberMegaMarket.Feeds;
 
-[XmlRootAttribute("yml_catalog")]
+[XmlRoot("yml_catalog")]
 public class Feed
 {
     [XmlAttribute("date")] public string Date { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm");

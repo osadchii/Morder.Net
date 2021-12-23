@@ -89,7 +89,7 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
 
             if (priceTypes.Contains(priceTypeId))
             {
-                await _changeTrackingService.TrackPriceChange(marketplaceId, priceTypeId, productId, cancellationToken);
+                await _changeTrackingService.TrackPriceChange(marketplaceId, productId, cancellationToken);
             }
         }
     }

@@ -89,7 +89,7 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
 
             if (trackingWarehouseId == warehouseId)
             {
-                await _changeTrackingService.TrackStockChange(marketplaceId, warehouseId, productId, cancellationToken);
+                await _changeTrackingService.TrackStockChange(marketplaceId, productId, cancellationToken);
             }
         }
     }

@@ -25,6 +25,8 @@ public abstract class BaseUpdateMarketplaceRequest
     public bool NullifyStocks { get; set; }
     public bool StockChangesTracking { get; set; }
     public bool PriceChangesTracking { get; set; }
+    public int StockSendLimit { get; set; }
+    public int PriceSendLimit { get; set; }
 
     public Guid? PriceTypeExternalId { get; set; }
 

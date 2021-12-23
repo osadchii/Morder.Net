@@ -33,6 +33,8 @@ public class Marketplace : BaseEntity, IHasId
     public bool NullifyStocks { get; set; }
     public bool StockChangesTracking { get; set; }
     public bool PriceChangesTracking { get; set; }
+    public int StockSendLimit { get; set; }
+    public int PriceSendLimit { get; set; }
 
     [ForeignKey("PriceType")] public int? PriceTypeId { get; set; }
     public PriceType? PriceType { get; set; }

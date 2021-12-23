@@ -12,8 +12,8 @@ public interface IChangeTrackingService
     Task<IEnumerable<int>> GetMarketplaceTrackingStockIdsAsync(CancellationToken cancellationToken);
     Task<IEnumerable<int>> GetTrackingPriceTypeIds(int marketplaceId, CancellationToken cancellationToken);
     Task<int> GetTrackingWarehouseId(int marketplaceId, CancellationToken cancellationToken);
-    Task TrackStockChange(int marketplaceId, int warehouseId, int productId, CancellationToken cancellationToken);
-    Task TrackPriceChange(int marketplaceId, int priceTypeId, int productId, CancellationToken cancellationToken);
+    Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken);
+    Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken);
     void ResetMarketplaceTrackingPriceIds();
     void ResetMarketplaceTrackingStockIds();
     void ResetTrackingPriceTypeIds();
@@ -121,14 +121,14 @@ public class ChangeTrackingService : IChangeTrackingService
         return warehouseId;
     }
 
-    public Task TrackStockChange(int marketplaceId, int warehouseId, int productId, CancellationToken cancellationToken)
+    public Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        return _mediator.Send(new TrackStockChangeRequest(marketplaceId, warehouseId, productId), cancellationToken);
+        return _mediator.Send(new TrackStockChangeRequest(marketplaceId, productId), cancellationToken);
     }
 
-    public Task TrackPriceChange(int marketplaceId, int priceTypeId, int productId, CancellationToken cancellationToken)
+    public Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        return _mediator.Send(new TrackPriceChangeRequest(marketplaceId, priceTypeId, productId), cancellationToken);
+        return _mediator.Send(new TrackPriceChangeRequest(marketplaceId, productId), cancellationToken);
     }
 
     public void ResetMarketplaceTrackingPriceIds()

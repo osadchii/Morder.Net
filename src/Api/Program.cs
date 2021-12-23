@@ -1,11 +1,14 @@
 using System.Globalization;
-using Api.BackgroundServices;
+using Api.BackgroundServices.Marketplaces;
+using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 using Api.Filters;
 using Infrastructure;
+using Integration.SberMegaMarket;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Api;
 
@@ -16,7 +19,16 @@ public class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            { Converters = { new StringEnumConverter { CamelCaseText = true } } };
+        {
+            Converters =
+            {
+                new StringEnumConverter
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy(),
+                    AllowIntegerValues = false
+                }
+            }
+        };
 
         IWebHostEnvironment env = builder.Environment;
         string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
@@ -48,19 +60,14 @@ public class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         builder.Services.AddMorder(builder.Configuration);
+        builder.Services.AddSberMegaMarket();
         builder.Services.AddMemoryCache();
         builder.Services.AddHostedService<SberMegaMarketFeedService>();
+        builder.Services.AddHostedService<SendStockService>();
 
         WebApplication app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
 
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {

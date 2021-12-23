@@ -10,11 +10,8 @@ public class PriceChange : BaseEntity
 {
     [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    [Required] [ForeignKey("PriceType")] public int PriceTypeId { get; set; }
-
     [Required] [ForeignKey("Product")] public int ProductId { get; set; }
 
     public Marketplace Marketplace { get; set; }
-    public PriceType PriceType { get; set; }
     public Product Product { get; set; }
 }

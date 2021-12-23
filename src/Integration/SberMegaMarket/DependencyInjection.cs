@@ -9,5 +9,6 @@ public static class DependencyInjection
     public static void AddSberMegaMarket(this IServiceCollection services)
     {
         services.AddTransient<ISberMegaMarketStockClient, SberMegaMarketStockClient>();
+        services.AddTransient<ISberMegaMarketPriceClient, SberMegaMarketPriceClient>();
     }
 }

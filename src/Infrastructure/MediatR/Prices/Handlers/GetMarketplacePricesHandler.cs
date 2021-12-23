@@ -1,47 +1,45 @@
 using System.Diagnostics;
 using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.Companies.Queries;
-using Infrastructure.MediatR.Stocks.Queries;
+using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Companies;
-using Infrastructure.Models.MarketplaceCategorySettings;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
-using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.MediatR.Stocks.Handlers;
+namespace Infrastructure.MediatR.Prices.Handlers;
 
 public class
-    GetMarketplaceStocksHandler : IRequestHandler<GetMarketplaceStocksRequest, IEnumerable<MarketplaceStockDto>>
+    GetMarketplacePricesHandler : IRequestHandler<GetMarketplacePricesRequest, IEnumerable<MarketplacePriceDto>>
 {
     private readonly MContext _context;
-    private readonly ILogger<GetMarketplaceStocksHandler> _logger;
+    private readonly ILogger<GetMarketplacePricesHandler> _logger;
     private readonly IMediator _mediator;
 
-    public GetMarketplaceStocksHandler(MContext context, ILogger<GetMarketplaceStocksHandler> logger,
-        IMediator mediator)
+    public GetMarketplacePricesHandler(MContext context, IMediator mediator,
+        ILogger<GetMarketplacePricesHandler> logger)
     {
         _context = context;
-        _logger = logger;
         _mediator = mediator;
+        _logger = logger;
     }
 
-    public async Task<IEnumerable<MarketplaceStockDto>> Handle(GetMarketplaceStocksRequest request,
+    public async Task<IEnumerable<MarketplacePriceDto>> Handle(GetMarketplacePricesRequest request,
         CancellationToken cancellationToken)
     {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        var result = new List<MarketplaceStockDto>();
+        var result = new List<MarketplacePriceDto>();
 
-        List<Product> products = await _context.StockChanges
+        List<Product> products = await _context.PriceChanges
             .AsNoTracking()
             .Where(s => s.MarketplaceId == request.MarketplaceId)
             .Include(s => s.Product)
-            .ThenInclude(p => p.Category)
             .OrderBy(p => p.ProductId)
             .Take(request.Limit)
             .Select(c => c.Product)
@@ -53,27 +51,15 @@ public class
         }
 
         IEnumerable<int> productIds = products.Select(p => p.Id);
-        IEnumerable<int> categoryIds = products
-            .Where(p => p.CategoryId.HasValue).Select(p => p.CategoryId!.Value);
 
         Dictionary<int, MarketplaceProductSetting> productSettings = await _context.MarketplaceProductSettings
             .AsNoTracking()
             .Where(ps => ps.MarketplaceId == request.MarketplaceId && productIds.Contains(ps.ProductId))
             .ToDictionaryAsync(ps => ps.ProductId, ps => ps, cancellationToken);
 
-        Dictionary<int, MarketplaceCategorySetting> categorySettings = await _context.MarketplaceCategorySettings
-            .AsNoTracking()
-            .Where(cs => cs.MarketplaceId == request.MarketplaceId && categoryIds.Contains(cs.CategoryId))
-            .ToDictionaryAsync(cs => cs.CategoryId, cs => cs, cancellationToken);
-
         CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
         Marketplace marketplace =
             await _context.Marketplaces.SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
-
-        Dictionary<int, decimal> stocks = await _context.Stocks
-            .AsNoTracking()
-            .Where(s => s.WarehouseId == marketplace.WarehouseId && productIds.Contains(s.ProductId))
-            .ToDictionaryAsync(s => s.ProductId, s => s.Value, cancellationToken);
 
         Dictionary<int, decimal> basePrices = await _context.Prices
             .AsNoTracking()
@@ -93,7 +79,6 @@ public class
         foreach (Product product in products)
         {
             productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting);
-            categorySettings.TryGetValue(product.CategoryId ?? 0, out MarketplaceCategorySetting? categorySetting);
 
             string? externalId = marketplace.Type switch
             {
@@ -101,76 +86,23 @@ public class
                 MarketplaceType.YandexMarket => productSetting?.ExternalId,
                 _ => product.Articul
             };
-
-            decimal value = GetStocks(product, productSetting, categorySetting);
-
-            var stock = new MarketplaceStockDto
+            result.Add(new MarketplacePriceDto()
             {
-                MarketplaceId = request.MarketplaceId,
+                MarketplaceId = marketplace.Id,
                 ProductId = product.Id,
-                ProductExternalId = externalId ?? string.Empty,
-                Value = value
-            };
-
-            result.Add(stock);
+                Value = GetPrice(product),
+                ProductExternalId = externalId ?? string.Empty
+            });
         }
 
         stopwatch.Stop();
 
-        _logger.LogInformation($"Handled stock request for " +
+        _logger.LogInformation($"Handled price request for " +
                                $"{request.MarketplaceId} with " +
                                $"{products.Count} elapsed " +
                                $"{stopwatch.ElapsedMilliseconds} ms");
 
         return result;
-
-        decimal GetStocks(Product product, MarketplaceProductSetting? productSetting,
-            MarketplaceCategorySetting? categorySetting)
-        {
-            if (product.Category is null || product.Category.DeletionMark)
-            {
-                return 0;
-            }
-
-            if (!stocks.TryGetValue(product.Id, out decimal value))
-            {
-                return 0;
-            }
-
-            if (value < marketplace.MinimalStock)
-            {
-                return 0;
-            }
-
-            decimal price = GetPrice(product);
-
-            if (price == 0)
-            {
-                return 0;
-            }
-
-            if (productSetting is not null && productSetting.IgnoreRestrictions)
-            {
-                return value;
-            }
-
-            if (price < marketplace.MinimalPrice)
-            {
-                return 0;
-            }
-
-            if (productSetting is not null && productSetting.NullifyStock)
-            {
-                return 0;
-            }
-
-            if (categorySetting is not null && categorySetting.Blocked)
-            {
-                return 0;
-            }
-
-            return value;
-        }
 
         decimal GetPrice(Product product)
         {

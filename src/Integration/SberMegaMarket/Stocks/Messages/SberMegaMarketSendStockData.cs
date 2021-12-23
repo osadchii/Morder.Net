@@ -11,6 +11,7 @@ public class SberMegaMarketSendStockData : SberMegaMarketMessageData
 
     public SberMegaMarketSendStockData() : base("")
     {
+        Stocks = new List<SberMegaMarketStock>();
     }
 
     [JsonProperty("stocks")] public List<SberMegaMarketStock> Stocks { get; set; }

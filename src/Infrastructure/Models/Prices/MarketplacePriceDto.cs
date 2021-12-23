@@ -1,6 +1,6 @@
-namespace Infrastructure.Models.Warehouses;
+namespace Infrastructure.Models.Prices;
 
-public class MarketplaceStockDto
+public class MarketplacePriceDto
 {
     public int ProductId { get; set; }
     public int MarketplaceId { get; set; }

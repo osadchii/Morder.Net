@@ -3,7 +3,7 @@ using Api.BackgroundServices.Marketplaces;
 using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 using Api.Filters;
 using Infrastructure;
-using Integration.SberMegaMarket;
+using Integration;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -62,10 +62,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddMorder(builder.Configuration);
-        builder.Services.AddSberMegaMarket();
+        builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
         builder.Services.AddHostedService<SberMegaMarketFeedService>();
-        builder.Services.AddHostedService<SendStockService>();
+        builder.Services.AddHostedService<SendStockBackgroundService>();
+        builder.Services.AddHostedService<SendPriceBackgroundService>();
 
         WebApplication app = builder.Build();
 

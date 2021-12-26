@@ -1,11 +1,14 @@
 using System.Globalization;
-using Api.BackgroundServices;
+using Api.BackgroundServices.Marketplaces;
+using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 using Api.Filters;
 using Infrastructure;
+using Integration;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Api;
 
@@ -16,7 +19,16 @@ public class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            { Converters = { new StringEnumConverter { CamelCaseText = true } } };
+        {
+            Converters =
+            {
+                new StringEnumConverter
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy(),
+                    AllowIntegerValues = false
+                }
+            }
+        };
 
         IWebHostEnvironment env = builder.Environment;
         string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
@@ -44,23 +56,21 @@ public class Program
         {
             logBuilder.AddConfiguration(builder.Configuration);
             logBuilder.AddConsole();
+#if !DEBUG
             logBuilder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+#endif
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         builder.Services.AddMorder(builder.Configuration);
+        builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
         builder.Services.AddHostedService<SberMegaMarketFeedService>();
+        builder.Services.AddHostedService<SendStockBackgroundService>();
+        builder.Services.AddHostedService<SendPriceBackgroundService>();
 
         WebApplication app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
 
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {

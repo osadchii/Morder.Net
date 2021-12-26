@@ -2,11 +2,11 @@ using Infrastructure.Models.Companies;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Products;
-using Marketplace.SberMegaMarket.Extensions;
+using Integration.SberMegaMarket.Extensions;
 using Microsoft.Extensions.Logging;
 using DbCategory = Infrastructure.Models.Products.Category;
 
-namespace Marketplace.SberMegaMarket.Feeds;
+namespace Integration.SberMegaMarket.Feeds;
 
 public class FeedBuilder
 {

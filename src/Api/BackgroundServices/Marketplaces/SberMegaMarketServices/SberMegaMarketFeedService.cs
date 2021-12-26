@@ -5,11 +5,11 @@ using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
-using Marketplace.SberMegaMarket.Extensions;
-using Marketplace.SberMegaMarket.Feeds;
+using Integration.SberMegaMarket.Extensions;
+using Integration.SberMegaMarket.Feeds;
 using MediatR;
 
-namespace Api.BackgroundServices;
+namespace Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 
 public class SberMegaMarketFeedService : IHostedService, IDisposable
 {
@@ -42,16 +42,9 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
     private void DoWork(object? state)
     {
         if (_task is null
-            || _task.Status == TaskStatus.Canceled
-            || _task.Status == TaskStatus.Faulted
-            || _task.Status == TaskStatus.RanToCompletion)
+            || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion)
         {
             _task = GenerateFeeds();
-            _logger.LogInformation("Task started");
-        }
-        else
-        {
-            _logger.LogInformation("Skip starting");
         }
     }
 

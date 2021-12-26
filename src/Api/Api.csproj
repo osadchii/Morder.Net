@@ -36,7 +36,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
-        <ProjectReference Include="..\Marketplace\Marketplace.csproj"/>
+        <ProjectReference Include="..\Integration\Integration.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

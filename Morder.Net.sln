@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Integration", "tests\Api.Integration\Api.Integration.csproj", "{CE9ED0E6-19DD-49B1-9311-B57065828260}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace", "src\Marketplace\Marketplace.csproj", "{103438A1-0C23-4CC8-9F70-60F7545DF710}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{103438A1-0C23-4CC8-9F70-60F7545DF710}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

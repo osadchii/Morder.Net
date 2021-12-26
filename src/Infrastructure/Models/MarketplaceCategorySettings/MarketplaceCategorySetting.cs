@@ -11,7 +11,7 @@ public class MarketplaceCategorySetting : BaseEntity
 
     public Category Category { get; set; }
 
-    [ForeignKey("MarketplaceId")] public int MarketplaceId { get; set; }
+    [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
     public Marketplace Marketplace { get; set; }
 
     public bool Blocked { get; set; }

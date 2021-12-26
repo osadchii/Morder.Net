@@ -1,7 +1,7 @@
 using Infrastructure.Cache;
 using Infrastructure.Mappings;
 using Infrastructure.MediatR;
-using Infrastructure.Services.Marketplaces;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,6 @@ public static class DependencyInjection
         services.AddMorderAutoMapper();
         services.AddMorderMediatR();
         services.AddCacheServices();
-
-        services.AddTransient<IChangeTrackingService, ChangeTrackingService>();
+        services.AddServices();
     }
 }

@@ -4,7 +4,6 @@ using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.Companies.Commands;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Prices;
-using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,18 +18,15 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     private readonly IMemoryCache _cache;
     private readonly IIdExtractor<PriceType> _priceTypeIdExtractor;
     private readonly ILogger<UpdateCompanyInformationHandler> _logger;
-    private readonly IChangeTrackingService _changeTrackingService;
 
     public UpdateCompanyInformationHandler(MContext context, IMapper mapper, IMemoryCache cache,
-        ILogger<UpdateCompanyInformationHandler> logger, IIdExtractor<PriceType> priceTypeIdExtractor,
-        IChangeTrackingService changeTrackingService)
+        ILogger<UpdateCompanyInformationHandler> logger, IIdExtractor<PriceType> priceTypeIdExtractor)
     {
         _context = context;
         _mapper = mapper;
         _cache = cache;
         _logger = logger;
         _priceTypeIdExtractor = priceTypeIdExtractor;
-        _changeTrackingService = changeTrackingService;
     }
 
     public async Task<Unit> Handle(UpdateCompanyInformationRequest request, CancellationToken cancellationToken)
@@ -47,7 +43,6 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
             request.PriceTypeId = priceTypeId.Value;
         }
 
-        _changeTrackingService.ResetTrackingPriceTypeIds();
         _cache.Remove(CacheKeys.CompanyInformation);
 
         Company? dbEntry =

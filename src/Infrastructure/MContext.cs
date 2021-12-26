@@ -82,7 +82,6 @@ public class MContext : DbContext
             e.HasKey(p => new
             {
                 p.MarketplaceId,
-                p.PriceTypeId,
                 p.ProductId
             });
             e.HasIndex(p => p.MarketplaceId);
@@ -93,10 +92,16 @@ public class MContext : DbContext
             e.HasKey(p => new
             {
                 p.MarketplaceId,
-                p.WarehouseId,
                 p.ProductId
             });
             e.HasIndex(p => p.MarketplaceId);
+        });
+
+        modelBuilder.Entity<Category>(e =>
+        {
+            e.HasOne(c => c.Parent)
+                .WithMany(c => c.Children)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });

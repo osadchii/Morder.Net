@@ -23,7 +23,6 @@ public class TrackPriceChangeHandler : IRequestHandler<TrackPriceChangeRequest, 
             .AsNoTracking()
             .AnyAsync(t =>
                 t.MarketplaceId == request.MarketplaceId
-                && t.PriceTypeId == request.PriceTypeId
                 && t.ProductId == request.ProductId, cancellationToken);
 
         if (tracked)

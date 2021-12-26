@@ -133,6 +133,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MarketplaceId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ExternalId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
                     b.Property<bool>("IgnoreRestrictions")
                         .HasColumnType("boolean");
 
@@ -179,6 +183,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("PriceChangesTracking")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("PriceSendLimit")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("PriceTypeId")
                         .HasColumnType("integer");
 
@@ -192,6 +199,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("StockChangesTracking")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("StockSendLimit")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -264,17 +274,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MarketplaceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PriceTypeId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
-                    b.HasKey("MarketplaceId", "PriceTypeId", "ProductId");
+                    b.HasKey("MarketplaceId", "ProductId");
 
                     b.HasIndex("MarketplaceId");
-
-                    b.HasIndex("PriceTypeId");
 
                     b.HasIndex("ProductId");
 
@@ -460,19 +465,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MarketplaceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("WarehouseId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
-                    b.HasKey("MarketplaceId", "WarehouseId", "ProductId");
+                    b.HasKey("MarketplaceId", "ProductId");
 
                     b.HasIndex("MarketplaceId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("StockChange", "dbo");
                 });
@@ -649,12 +649,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Models.Prices.PriceType", "PriceType")
-                        .WithMany()
-                        .HasForeignKey("PriceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Infrastructure.Models.Products.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -663,15 +657,13 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Marketplace");
 
-                    b.Navigation("PriceType");
-
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Products.Category", b =>
                 {
                     b.HasOne("Infrastructure.Models.Products.Category", "Parent")
-                        .WithMany()
+                        .WithMany("Children")
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
@@ -719,17 +711,14 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Models.Warehouses.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Marketplace");
 
                     b.Navigation("Product");
+                });
 
-                    b.Navigation("Warehouse");
+            modelBuilder.Entity("Infrastructure.Models.Products.Category", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

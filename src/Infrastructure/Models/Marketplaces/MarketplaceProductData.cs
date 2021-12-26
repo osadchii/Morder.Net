@@ -64,18 +64,18 @@ public class MarketplaceProductData
             return 0;
         }
 
+        if (_productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting)
+            && productSetting.NullifyStock)
+        {
+            return 0;
+        }
+
         if (price == 0)
         {
             price = GetProductPrice(product);
         }
 
-        if (price < _marketplace.MinimalPrice || price == 0)
-        {
-            return 0;
-        }
-
-        if (_productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting)
-            && productSetting.NullifyStock)
+        if (price == 0)
         {
             return 0;
         }
@@ -83,6 +83,11 @@ public class MarketplaceProductData
         if (productSetting is null || !productSetting.IgnoreRestrictions)
         {
             return stock;
+        }
+
+        if (price < _marketplace.MinimalPrice)
+        {
+            return 0;
         }
 
         if (Categories.TryGetValue(product.CategoryId!.Value, out Category? categoryInfo))

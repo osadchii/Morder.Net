@@ -17,7 +17,7 @@ public class GetMarketplaceTrackingStockIdsHandler : IRequestHandler<GetMarketpl
     {
         return _context.Marketplaces
             .AsNoTracking()
-            .Where(m => m.IsActive && m.StockChangesTracking)
+            .Where(m => m.IsActive && m.StockChangesTracking && !request.Type.HasValue || m.Type == request.Type)
             .Select(m => m.Id)
             .ToListAsync(cancellationToken);
     }

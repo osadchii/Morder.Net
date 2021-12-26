@@ -57,7 +57,8 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
             throw new ArgumentException(message);
         }
 
-        await TrackPriceChanges(priceTypeId.Value, productId.Value, cancellationToken);
+        await _changeTrackingService.TrackPriceChange(productId.Value, cancellationToken);
+        await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
         Price? dbEntry = await _context.Prices
             .SingleOrDefaultAsync(s => s.ProductId == productId.Value && s.PriceTypeId == priceTypeId.Value,
@@ -75,23 +76,6 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         }
 
         return await UpdatePrice(dbEntry, request.Value.Value, cancellationToken);
-    }
-
-    private async Task TrackPriceChanges(int priceTypeId, int productId, CancellationToken cancellationToken)
-    {
-        IEnumerable<int> marketplaceIds =
-            await _changeTrackingService.GetMarketplaceTrackingPriceIdsAsync(cancellationToken);
-
-        foreach (int marketplaceId in marketplaceIds)
-        {
-            IEnumerable<int> priceTypes =
-                await _changeTrackingService.GetTrackingPriceTypeIds(marketplaceId, cancellationToken);
-
-            if (priceTypes.Contains(priceTypeId))
-            {
-                await _changeTrackingService.TrackPriceChange(marketplaceId, priceTypeId, productId, cancellationToken);
-            }
-        }
     }
 
     private async Task<Unit> CreatePrice(int priceTypeId, int productId, decimal value,

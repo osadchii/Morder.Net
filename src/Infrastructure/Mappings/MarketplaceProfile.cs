@@ -2,7 +2,9 @@ using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
+using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Prices;
@@ -53,5 +55,6 @@ public class MarketplaceProfile : Profile
 
         CreateMap<TrackPriceChangeRequest, PriceChange>();
         CreateMap<TrackStockChangeRequest, StockChange>();
+        CreateMap<SetMarketplaceProductSettingsRequest, MarketplaceProductSetting>();
     }
 }

@@ -57,7 +57,7 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
             throw new ArgumentException(message);
         }
 
-        await TrackStockChanges(warehouseId.Value, productId.Value, cancellationToken);
+        await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
         Stock? dbEntry = await _context.Stocks
             .SingleOrDefaultAsync(s => s.ProductId == productId && s.WarehouseId == warehouseId,
@@ -75,23 +75,6 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         }
 
         return await UpdateStock(dbEntry, request.Value.Value, cancellationToken);
-    }
-
-    private async Task TrackStockChanges(int warehouseId, int productId, CancellationToken cancellationToken)
-    {
-        IEnumerable<int> marketplaceIds =
-            await _changeTrackingService.GetMarketplaceTrackingStockIdsAsync(cancellationToken);
-
-        foreach (int marketplaceId in marketplaceIds)
-        {
-            int trackingWarehouseId =
-                await _changeTrackingService.GetTrackingWarehouseId(marketplaceId, cancellationToken);
-
-            if (trackingWarehouseId == warehouseId)
-            {
-                await _changeTrackingService.TrackStockChange(marketplaceId, warehouseId, productId, cancellationToken);
-            }
-        }
     }
 
     private async Task<Unit> CreateStock(int warehouseId, int productId, decimal value,

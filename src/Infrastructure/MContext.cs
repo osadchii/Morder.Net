@@ -97,6 +97,13 @@ public class MContext : DbContext
             e.HasIndex(p => p.MarketplaceId);
         });
 
+        modelBuilder.Entity<Category>(e =>
+        {
+            e.HasOne(c => c.Parent)
+                .WithMany(c => c.Children)
+                .IsRequired(false);
+        });
+
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 
         modelBuilder.Entity<Order>(e => e.OwnsMany(o => o.Items));

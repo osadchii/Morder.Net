@@ -46,13 +46,13 @@ public class SendPriceService : ISendPriceService
 
             foreach (Marketplace marketplace in marketplaces)
             {
-                MarketplacePriceDto[] stocks = (await _mediator.Send(new GetMarketplacePricesRequest()
+                MarketplacePriceDto[] prices = (await _mediator.Send(new GetMarketplacePricesRequest()
                 {
                     MarketplaceId = marketplace.Id,
                     Limit = marketplace.PriceSendLimit
                 })).ToArray();
 
-                if (!stocks.Any())
+                if (!prices.Any())
                 {
                     continue;
                 }
@@ -66,12 +66,12 @@ public class SendPriceService : ISendPriceService
 
                 if (sendService is not null)
                 {
-                    await sendService.SendPricesAsync(marketplace, stocks);
+                    await sendService.SendPricesAsync(marketplace, prices);
                 }
 
                 await _mediator.Send(new DeletePriceChangesRequest(marketplace.Id,
-                    stocks.Select(s => s.ProductId).ToList()));
-                _logger.LogInformation($"Sent {stocks.Length} prices to {marketplace.Name}");
+                    prices.Select(s => s.ProductId).ToList()));
+                _logger.LogInformation($"Sent {prices.Length} prices to {marketplace.Name}");
             }
         }
         catch (Exception ex)

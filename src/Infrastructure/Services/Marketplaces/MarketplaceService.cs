@@ -101,6 +101,16 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
+        if (dbEntry.IsActive && dbEntry.PriceChangesTracking)
+        {
+            await _changeTrackingService.TrackAllPrices(dbEntry.Id, cancellationToken);
+        }
+
+        if (dbEntry.IsActive && dbEntry.StockChangesTracking)
+        {
+            await _changeTrackingService.TrackAllStocks(dbEntry.Id, cancellationToken);
+        }
+
         _logger.LogInformation($@"Created marketplace {request.Name}");
 
         return _mapper.Map<TDto>(dbEntry);
@@ -109,9 +119,38 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
     private async Task<TDto> UpdateMarketplace(Marketplace dbEntry, TRequest request,
         CancellationToken cancellationToken)
     {
+        decimal oldMinimalPrice = dbEntry.MinimalPrice;
+        decimal oldMinimalStock = dbEntry.MinimalStock;
+
+        bool oldIsActive = dbEntry.IsActive;
+        bool oldTrackPrices = dbEntry.PriceChangesTracking;
+        bool oldTrackStocks = dbEntry.StockChangesTracking;
+
         _mapper.Map(request, dbEntry);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        if (request.PriceChangesTracking && request.IsActive)
+        {
+            if (!oldIsActive || !oldTrackPrices)
+            {
+                await _changeTrackingService.TrackAllPrices(dbEntry.Id, cancellationToken);
+            }
+        }
+
+        if (request.StockChangesTracking && request.IsActive)
+        {
+            if (!oldIsActive || !oldTrackStocks || oldMinimalStock != request.MinimalStock)
+            {
+                await _changeTrackingService.TrackAllStocks(dbEntry.Id, cancellationToken);
+            }
+            else if (oldMinimalPrice != request.MinimalPrice)
+            {
+                await _changeTrackingService.TrackStockChangeByMinMaxPrice(dbEntry.Id,
+                    Math.Min(oldMinimalPrice, request.MinimalPrice!.Value),
+                    Math.Max(oldMinimalPrice, request.MinimalPrice!.Value), cancellationToken);
+            }
+        }
 
         _logger.LogInformation($"Updated marketplace {request.Name}");
 

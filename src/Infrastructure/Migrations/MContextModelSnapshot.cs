@@ -663,7 +663,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Models.Products.Category", b =>
                 {
                     b.HasOne("Infrastructure.Models.Products.Category", "Parent")
-                        .WithMany()
+                        .WithMany("Children")
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
@@ -714,6 +714,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Marketplace");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Products.Category", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

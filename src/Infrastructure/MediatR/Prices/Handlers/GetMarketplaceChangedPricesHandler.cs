@@ -58,8 +58,9 @@ public class
             .ToDictionaryAsync(ps => ps.ProductId, ps => ps, cancellationToken);
 
         CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
-        Marketplace marketplace =
-            await _context.Marketplaces.SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
+        Marketplace marketplace = await _context.Marketplaces
+            .AsNoTracking()
+            .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         Dictionary<int, decimal> basePrices = await _context.Prices
             .AsNoTracking()

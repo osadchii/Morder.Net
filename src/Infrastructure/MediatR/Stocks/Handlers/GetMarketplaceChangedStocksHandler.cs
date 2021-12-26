@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Stocks.Queries;
@@ -37,11 +38,20 @@ public class
 
         var result = new List<MarketplaceStockDto>();
 
+        CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
+        Marketplace marketplace = await _context.Marketplaces
+            .AsNoTracking()
+            .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
+
+        var productTypes = marketplace.ProductTypes.FromJson<List<ProductType>>();
+
         List<Product> products = await _context.StockChanges
             .AsNoTracking()
-            .Where(s => s.MarketplaceId == request.MarketplaceId)
             .Include(s => s.Product)
             .ThenInclude(p => p.Category)
+            .Where(s => s.MarketplaceId == request.MarketplaceId
+                        && s.Product.ProductType.HasValue
+                        && productTypes!.Contains(s.Product.ProductType!.Value))
             .OrderBy(p => p.ProductId)
             .Take(request.Limit)
             .Select(c => c.Product)
@@ -65,10 +75,6 @@ public class
             .AsNoTracking()
             .Where(cs => cs.MarketplaceId == request.MarketplaceId && categoryIds.Contains(cs.CategoryId))
             .ToDictionaryAsync(cs => cs.CategoryId, cs => cs, cancellationToken);
-
-        CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
-        Marketplace marketplace =
-            await _context.Marketplaces.SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         Dictionary<int, decimal> stocks = await _context.Stocks
             .AsNoTracking()

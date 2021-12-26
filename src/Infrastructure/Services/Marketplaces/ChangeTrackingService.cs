@@ -1,6 +1,8 @@
 using Infrastructure.Cache;
 using Infrastructure.MediatR.ChangeTracking.Commands;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
+using Infrastructure.MediatR.Prices.Queries;
+using Infrastructure.MediatR.Products.Queries;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -10,19 +12,23 @@ public interface IChangeTrackingService
 {
     Task<IEnumerable<int>> GetMarketplaceTrackingPriceIdsAsync(CancellationToken cancellationToken);
     Task<IEnumerable<int>> GetMarketplaceTrackingStockIdsAsync(CancellationToken cancellationToken);
-    Task<IEnumerable<int>> GetTrackingPriceTypeIds(int marketplaceId, CancellationToken cancellationToken);
-    Task<int> GetTrackingWarehouseId(int marketplaceId, CancellationToken cancellationToken);
     Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken);
     Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken);
+    Task TrackStocksChange(int marketplaceId, IEnumerable<int> productIds, CancellationToken cancellationToken);
+    Task TrackPricesChange(int marketplaceId, IEnumerable<int> productIds, CancellationToken cancellationToken);
+    Task TrackStockChange(int productId, CancellationToken cancellationToken);
+    Task TrackPriceChange(int productId, CancellationToken cancellationToken);
+    Task TrackAllPrices(int marketplaceId, CancellationToken cancellationToken);
+    Task TrackAllStocks(int marketplaceId, CancellationToken cancellationToken);
+
+    Task TrackStockChangeByMinMaxPrice(int marketplaceId, decimal minimalPrice, decimal maximalPrice,
+        CancellationToken cancellationToken);
+
     void ResetMarketplaceTrackingPriceIds();
     void ResetMarketplaceTrackingStockIds();
-    void ResetTrackingPriceTypeIds();
-    void ResetTrackingWarehouseIds();
 
     void ResetCaches()
     {
-        ResetTrackingPriceTypeIds();
-        ResetTrackingWarehouseIds();
         ResetMarketplaceTrackingPriceIds();
         ResetMarketplaceTrackingStockIds();
     }
@@ -65,70 +71,99 @@ public class ChangeTrackingService : IChangeTrackingService
         return ids;
     }
 
-    public async Task<IEnumerable<int>> GetTrackingPriceTypeIds(int marketplaceId, CancellationToken cancellationToken)
+    public async Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        List<int>? priceTypeIds;
-        if (_cache.TryGetValue(CacheKeys.MarketplaceTrackingPriceTypeIds, out Dictionary<int, List<int>> ids))
+        bool isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
         {
-            if (ids.TryGetValue(marketplaceId, out priceTypeIds))
-            {
-                return priceTypeIds;
-            }
+            MarketplaceId = marketplaceId,
+            ProductId = productId
+        }, cancellationToken);
 
-            priceTypeIds = await _mediator.Send(new GetMarketplaceTrackingPriceTypeIdsRequest(marketplaceId),
-                cancellationToken);
-            ids.Add(marketplaceId, priceTypeIds);
-            _cache.Set(CacheKeys.MarketplaceTrackingPriceTypeIds, ids);
-
-            return priceTypeIds;
+        if (!isProductTrackable)
+        {
+            return;
         }
 
-        priceTypeIds = await _mediator.Send(new GetMarketplaceTrackingPriceTypeIdsRequest(marketplaceId),
-            cancellationToken);
-        var cachedDictionary = new Dictionary<int, List<int>>
-        {
-            [marketplaceId] = priceTypeIds
-        };
-        _cache.Set(CacheKeys.MarketplaceTrackingPriceTypeIds, cachedDictionary);
-
-        return priceTypeIds;
+        await _mediator.Send(new TrackStockChangeRequest(marketplaceId, productId), cancellationToken);
     }
 
-    public async Task<int> GetTrackingWarehouseId(int marketplaceId, CancellationToken cancellationToken)
+    public async Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        int warehouseId;
-        if (_cache.TryGetValue(CacheKeys.MarketplaceTrackingWarehouseIds, out Dictionary<int, int> ids))
+        bool isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
         {
-            if (ids.TryGetValue(marketplaceId, out warehouseId))
-            {
-                return warehouseId;
-            }
+            MarketplaceId = marketplaceId,
+            ProductId = productId
+        }, cancellationToken);
 
-            warehouseId = await _mediator.Send(new GetMarketplaceWarehouseIdRequest(marketplaceId), cancellationToken);
-            ids.Add(marketplaceId, warehouseId);
-            _cache.Set(CacheKeys.MarketplaceTrackingWarehouseIds, ids);
-
-            return warehouseId;
+        if (!isProductTrackable)
+        {
+            return;
         }
 
-        warehouseId = await _mediator.Send(new GetMarketplaceWarehouseIdRequest(marketplaceId), cancellationToken);
-        var cachedDictionary = new Dictionary<int, int>
+        await _mediator.Send(new TrackPriceChangeRequest(marketplaceId, productId), cancellationToken);
+    }
+
+    public Task TrackStocksChange(int marketplaceId, IEnumerable<int> productIds, CancellationToken cancellationToken)
+    {
+        return _mediator.Send(new TrackStocksChangeRequest
         {
-            [marketplaceId] = warehouseId
-        };
-        _cache.Set(CacheKeys.MarketplaceTrackingWarehouseIds, cachedDictionary);
-
-        return warehouseId;
+            MarketplaceId = marketplaceId,
+            ProductIds = productIds
+        }, cancellationToken);
     }
 
-    public Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken)
+    public Task TrackPricesChange(int marketplaceId, IEnumerable<int> productIds, CancellationToken cancellationToken)
     {
-        return _mediator.Send(new TrackStockChangeRequest(marketplaceId, productId), cancellationToken);
+        return _mediator.Send(new TrackPricesChangeRequest
+        {
+            MarketplaceId = marketplaceId,
+            ProductIds = productIds
+        }, cancellationToken);
     }
 
-    public Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken)
+    public async Task TrackStockChange(int productId, CancellationToken cancellationToken)
     {
-        return _mediator.Send(new TrackPriceChangeRequest(marketplaceId, productId), cancellationToken);
+        IEnumerable<int> marketplaceIds =
+            await GetMarketplaceTrackingStockIdsAsync(cancellationToken);
+
+        foreach (int marketplaceId in marketplaceIds)
+        {
+            await TrackStockChange(marketplaceId, productId, cancellationToken);
+        }
+    }
+
+    public async Task TrackPriceChange(int productId, CancellationToken cancellationToken)
+    {
+        IEnumerable<int> marketplaceIds =
+            await GetMarketplaceTrackingPriceIdsAsync(cancellationToken);
+
+        foreach (int marketplaceId in marketplaceIds)
+        {
+            await TrackPriceChange(marketplaceId, productId, cancellationToken);
+        }
+    }
+
+    public Task TrackAllPrices(int marketplaceId, CancellationToken cancellationToken)
+    {
+        return _mediator.Send(new TrackAllPricesRequest { MarketplaceId = marketplaceId }, cancellationToken);
+    }
+
+    public Task TrackAllStocks(int marketplaceId, CancellationToken cancellationToken)
+    {
+        return _mediator.Send(new TrackAllStocksRequest { MarketplaceId = marketplaceId }, cancellationToken);
+    }
+
+    public async Task TrackStockChangeByMinMaxPrice(int marketplaceId, decimal minimalPrice, decimal maximalPrice,
+        CancellationToken token)
+    {
+        IEnumerable<int> productIds = await _mediator.Send(new GetProductIdsInMarketplacePriceRangeRequest
+        {
+            MarketplaceId = marketplaceId,
+            MinimalPrice = minimalPrice,
+            MaximalPrice = maximalPrice
+        }, token);
+
+        await TrackStocksChange(marketplaceId, productIds, token);
     }
 
     public void ResetMarketplaceTrackingPriceIds()
@@ -139,15 +174,5 @@ public class ChangeTrackingService : IChangeTrackingService
     public void ResetMarketplaceTrackingStockIds()
     {
         _cache.Remove(CacheKeys.MarketplaceTrackingStockIds);
-    }
-
-    public void ResetTrackingPriceTypeIds()
-    {
-        _cache.Remove(CacheKeys.MarketplaceTrackingPriceTypeIds);
-    }
-
-    public void ResetTrackingWarehouseIds()
-    {
-        _cache.Remove(CacheKeys.MarketplaceTrackingWarehouseIds);
     }
 }

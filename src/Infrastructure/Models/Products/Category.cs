@@ -21,4 +21,6 @@ public class Category : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
     public bool DeletionMark { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
+
+    public ICollection<Category>? Children { get; set; }
 }

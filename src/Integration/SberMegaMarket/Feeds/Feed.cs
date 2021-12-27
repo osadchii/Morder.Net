@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Xml.Serialization;
 using Infrastructure.Extensions;
 
@@ -27,18 +28,23 @@ public class Shop
 
     [XmlArray("currencies")]
     [XmlArrayItem("currency")]
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public List<Currency> Currencies { get; set; }
 
     [XmlArray("shipment-options")]
     [XmlArrayItem("option")]
+    // ReSharper disable once CollectionNeverQueried.Global
     public List<ShipmentOption> ShipmentOptions { get; set; }
 
     [XmlArray("categories")]
     [XmlArrayItem("category")]
+    // ReSharper disable once CollectionNeverQueried.Global
     public List<Category> Categories { get; set; }
 
     [XmlArray("offers")]
     [XmlArrayItem("offer")]
+    // ReSharper disable once CollectionNeverQueried.Global
     public List<Offer> Offers { get; set; }
 
     public Shop()
@@ -68,12 +74,17 @@ public class Offer
 
     [XmlArray("outlets")]
     [XmlArrayItem("outlet")]
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public List<Outlet> Outlets { get; set; }
 
     [XmlElement("vat")] public int? Vat { get; set; }
 
     [XmlElement("barcode")] public string Barcode { get; set; }
+
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string? Vendor { get; set; }
+
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string? VendorCode { get; set; }
 
     [XmlIgnore] public decimal? Weight { get; set; }
@@ -111,14 +122,17 @@ public class Offer
                 offerParams.Add(new OfferParam("Бренд", Brand!));
 
             if (!CountryOfOrigin.IsNullOrEmpty())
-                offerParams.Add(new OfferParam("Странаисзготовитель", CountryOfOrigin!));
+                offerParams.Add(new OfferParam("СтранаИзготовитель", CountryOfOrigin!));
 
 
             return offerParams;
         }
     }
 
+    // ReSharper disable once EmptyConstructor
+#pragma warning disable CS8618
     public Offer()
+#pragma warning restore CS8618
     {
     }
 }
@@ -129,7 +143,9 @@ public class OfferParam
 
     [XmlText] public string Text { get; set; }
 
+#pragma warning disable CS8618
     public OfferParam()
+#pragma warning restore CS8618
     {
     }
 
@@ -142,7 +158,7 @@ public class OfferParam
     public OfferParam(string name, decimal value)
     {
         Name = name;
-        Text = value.ToString();
+        Text = value.ToString(CultureInfo.InvariantCulture);
     }
 }
 
@@ -202,7 +218,9 @@ public class Category
 
     [XmlText] public string Name { get; set; }
 
+#pragma warning disable CS8618
     public Category()
+#pragma warning restore CS8618
     {
     }
 
@@ -220,7 +238,9 @@ public class Currency
 
     [XmlAttribute("rate")] public int Rate { get; set; }
 
+#pragma warning disable CS8618
     public Currency()
+#pragma warning restore CS8618
     {
     }
 

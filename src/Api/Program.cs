@@ -70,6 +70,7 @@ public class Program
         builder.Services.AddHostedService<SberMegaMarketFeedService>();
         builder.Services.AddHostedService<SendStockBackgroundService>();
         builder.Services.AddHostedService<SendPriceBackgroundService>();
+        builder.Services.AddHostedService<LoadProductIdsBackgroundService>();
 
         WebApplication app = builder.Build();
 

@@ -1,4 +1,5 @@
 using Integration.Common;
+using Integration.Ozon;
 using Integration.SberMegaMarket;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,5 +11,6 @@ public static class DependencyInjection
     {
         services.AddMarketplaceServices();
         services.AddSberMegaMarket();
+        services.AddOzon();
     }
 }

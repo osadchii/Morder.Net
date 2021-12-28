@@ -9,5 +9,6 @@ public static class DependencyInjection
     {
         services.AddTransient<ISendStockService, SendStockService>();
         services.AddTransient<ISendPriceService, SendPriceService>();
+        services.AddTransient<ILoadProductIdService, LoadProductIdService>();
     }
 }

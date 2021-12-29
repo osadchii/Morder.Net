@@ -41,6 +41,7 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         if (priceTypeId is null)
         {
             string message = $"Price type with external id {request.PriceTypeExternalId} not found";
+            _logger.LogInformation(message);
             return ResultCode.Error.AsResult(message);
         }
 
@@ -49,12 +50,14 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         if (productId is null)
         {
             string message = $"Product with external id {request.ProductExternalId} not found";
+            _logger.LogInformation(message);
             return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
             string message = $"Empty price for product {productId.Value} at price type {priceTypeId.Value}";
+            _logger.LogInformation(message);
             return ResultCode.Error.AsResult(message);
         }
 

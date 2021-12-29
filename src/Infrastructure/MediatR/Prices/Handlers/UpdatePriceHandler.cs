@@ -1,4 +1,5 @@
 using Infrastructure.Cache.Interfaces;
+using Infrastructure.Common;
 using Infrastructure.MediatR.Prices.Commands;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Prices.Handlers;
 
-public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
+public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
 {
     private readonly MContext _context;
     private readonly ILogger<UpdatePriceHandler> _logger;
@@ -28,11 +29,11 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         _changeTrackingService = changeTrackingService;
     }
 
-    public async Task<Unit> Handle(UpdatePriceRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdatePriceRequest request, CancellationToken cancellationToken)
     {
         if (!request.PriceTypeExternalId.HasValue || !request.ProductExternalId.HasValue)
         {
-            return Unit.Value;
+            return ResultCode.Error.AsResult("Bad request");
         }
 
         int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
@@ -40,7 +41,7 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         if (priceTypeId is null)
         {
             string message = $"Price type with external id {request.PriceTypeExternalId} not found";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
@@ -48,13 +49,13 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         if (productId is null)
         {
             string message = $"Product with external id {request.ProductExternalId} not found";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
             string message = $"Empty price for product {productId.Value} at price type {priceTypeId.Value}";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         await _changeTrackingService.TrackPriceChange(productId.Value, cancellationToken);
@@ -72,13 +73,13 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
 
         if (dbEntry.Value == request.Value.Value)
         {
-            return Unit.Value;
+            return dbEntry.AsResult();
         }
 
         return await UpdatePrice(dbEntry, request.Value.Value, cancellationToken);
     }
 
-    private async Task<Unit> CreatePrice(int priceTypeId, int productId, decimal value,
+    private async Task<Result> CreatePrice(int priceTypeId, int productId, decimal value,
         CancellationToken cancellationToken)
     {
         var stock = new Price
@@ -93,10 +94,10 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
 
         _logger.LogInformation($"Created price for product {productId} at price type {priceTypeId} to {value}");
 
-        return Unit.Value;
+        return stock.AsResult();
     }
 
-    private async Task<Unit> UpdatePrice(Price dbEntry, decimal value,
+    private async Task<Result> UpdatePrice(Price dbEntry, decimal value,
         CancellationToken cancellationToken)
     {
         dbEntry.Value = value;
@@ -106,6 +107,6 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Unit>
         _logger.LogInformation(
             $"Updated stock for product {dbEntry.ProductId} at price type {dbEntry.PriceTypeId} to {value}");
 
-        return Unit.Value;
+        return dbEntry.AsResult();
     }
 }

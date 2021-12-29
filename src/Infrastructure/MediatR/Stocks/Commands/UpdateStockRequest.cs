@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Infrastructure.MediatR.Stocks.Commands;
 
-public class UpdateStockRequest : IRequest<Unit>
+public class UpdateStockRequest : IRequest<Result>
 {
     [Required] public Guid? ProductExternalId { get; set; }
 

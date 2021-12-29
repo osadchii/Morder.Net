@@ -1,4 +1,5 @@
 using Infrastructure.Cache.Interfaces;
+using Infrastructure.Common;
 using Infrastructure.MediatR.Stocks.Commands;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Stocks.Handlers;
 
-public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
+public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Result>
 {
     private readonly MContext _context;
     private readonly ILogger<UpdateStockHandler> _logger;
@@ -28,11 +29,11 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         _changeTrackingService = changeTrackingService;
     }
 
-    public async Task<Unit> Handle(UpdateStockRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateStockRequest request, CancellationToken cancellationToken)
     {
         if (!request.WarehouseExternalId.HasValue || !request.ProductExternalId.HasValue)
         {
-            return Unit.Value;
+            return ResultCode.Error.AsResult("Bad request");
         }
 
         int? warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId.Value);
@@ -40,7 +41,7 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         if (warehouseId is null)
         {
             string message = $"Warehouse with external id {request.WarehouseExternalId} not found";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
@@ -48,13 +49,13 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         if (productId is null)
         {
             string message = $"Product with external id {request.ProductExternalId} not found";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
             string message = $"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}";
-            throw new ArgumentException(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
@@ -71,13 +72,13 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
 
         if (dbEntry.Value == request.Value.Value)
         {
-            return Unit.Value;
+            return dbEntry.AsResult();
         }
 
         return await UpdateStock(dbEntry, request.Value.Value, cancellationToken);
     }
 
-    private async Task<Unit> CreateStock(int warehouseId, int productId, decimal value,
+    private async Task<Result> CreateStock(int warehouseId, int productId, decimal value,
         CancellationToken cancellationToken)
     {
         var stock = new Stock
@@ -92,10 +93,10 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
 
         _logger.LogInformation($"Created stock for product {productId} at warehouse {warehouseId} to {value}");
 
-        return Unit.Value;
+        return stock.AsResult();
     }
 
-    private async Task<Unit> UpdateStock(Stock dbEntry, decimal value,
+    private async Task<Result> UpdateStock(Stock dbEntry, decimal value,
         CancellationToken cancellationToken)
     {
         dbEntry.Value = value;
@@ -105,6 +106,6 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Unit>
         _logger.LogInformation(
             $"Updated stock for product {dbEntry.ProductId} at warehouse {dbEntry.WarehouseId} to {value}");
 
-        return Unit.Value;
+        return dbEntry.AsResult();
     }
 }

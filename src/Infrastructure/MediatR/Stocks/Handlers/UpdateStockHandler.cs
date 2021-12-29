@@ -41,7 +41,7 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Result>
         if (warehouseId is null)
         {
             string message = $"Warehouse with external id {request.WarehouseExternalId} not found";
-            _logger.LogInformation(message);
+            _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
@@ -50,14 +50,14 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Result>
         if (productId is null)
         {
             string message = $"Product with external id {request.ProductExternalId} not found";
-            _logger.LogInformation(message);
+            _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
             string message = $"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}";
-            _logger.LogInformation(message);
+            _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Infrastructure.MediatR.Prices.Commands;
 
-public class UpdatePriceRequest : IRequest<Unit>
+public class UpdatePriceRequest : IRequest<Result>
 {
     [Required] public Guid? ProductExternalId { get; set; }
 

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Api.Extensions;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Stocks.Commands;
 using MediatR;
@@ -18,9 +19,8 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Result> UpdateStock([Required] [FromBody] UpdateStockRequest command)
+    public async Task<ActionResult<Result>> UpdateStock([Required] [FromBody] UpdateStockRequest command)
     {
-        await _mediator.Send(command);
-        return Result.Ok;
+        return (await _mediator.Send(command)).ToActionResult();
     }
 }

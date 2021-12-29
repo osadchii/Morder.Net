@@ -1,3 +1,5 @@
+using Infrastructure.Extensions;
+
 namespace Infrastructure.Common;
 
 [Serializable]
@@ -7,7 +9,7 @@ public class Result
 
     public bool IsSucceeded => Status == ResultCode.Success;
 
-    public List<string> Errors;
+    public List<string> Errors = new();
 
     public static Result Ok => new();
 
@@ -24,10 +26,12 @@ public class Result
     public Result(Exception exception)
     {
         Status = ResultCode.Error;
-        Errors = new List<string>
-        {
-            exception.Message
-        };
+        AddError(exception.Message);
+    }
+
+    public void AddError(string message)
+    {
+        Errors.Add(message);
     }
 }
 
@@ -57,5 +61,16 @@ public static class ResultExtensions
     public static Result AsResult(this Exception exception)
     {
         return new Result(exception);
+    }
+
+    public static Result AsResult(this ResultCode code, string? error = null)
+    {
+        var result = new Result(code);
+        if (!error.IsNullOrEmpty())
+        {
+            result.AddError(error!);
+        }
+
+        return result;
     }
 }

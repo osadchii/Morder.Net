@@ -1,7 +1,7 @@
 using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
-using Integration.Common.Services;
+using Integration.Common.Services.Products;
 using Integration.Ozon.Clients.LoadProducts;
 using Microsoft.Extensions.DependencyInjection;
 

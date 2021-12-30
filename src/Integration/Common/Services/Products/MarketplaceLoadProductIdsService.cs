@@ -1,7 +1,7 @@
 using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 
-namespace Integration.Common.Services;
+namespace Integration.Common.Services.Products;
 
 public abstract class MarketplaceLoadProductIdsService
 {

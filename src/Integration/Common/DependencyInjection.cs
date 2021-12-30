@@ -1,4 +1,6 @@
-using Integration.Common.Services;
+using Integration.Common.Services.Prices;
+using Integration.Common.Services.Products;
+using Integration.Common.Services.Stocks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.Common;

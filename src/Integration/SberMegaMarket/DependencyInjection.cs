@@ -1,5 +1,6 @@
-using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Interfaces;
+using Integration.SberMegaMarket.Clients.Prices;
+using Integration.SberMegaMarket.Clients.Stocks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.SberMegaMarket;

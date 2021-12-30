@@ -3,7 +3,7 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
 using MediatR;
 
-namespace Integration.Common.Services;
+namespace Integration.Common.Services.Prices;
 
 public abstract class MarketplaceSendPriceService
 {
@@ -18,5 +18,5 @@ public abstract class MarketplaceSendPriceService
         ServiceProvider = serviceProvider;
     }
 
-    public abstract Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> stocks);
+    public abstract Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> prices);
 }

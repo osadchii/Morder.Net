@@ -42,7 +42,7 @@ public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketpl
         return await _context.MarketplaceProductSettings
             .AsNoTracking()
             .Where(s => products.Contains(s.ProductId) && s.MarketplaceId == request.MarketplaceId &&
-                        !s.ExternalId.IsNullOrEmpty())
+                        s.ExternalId != null && s.ExternalId != string.Empty)
             .Select(s => s.ProductId)
             .ToListAsync(cancellationToken);
     }

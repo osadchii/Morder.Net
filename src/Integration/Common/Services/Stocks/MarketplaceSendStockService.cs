@@ -3,7 +3,7 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 
-namespace Integration.Common.Services;
+namespace Integration.Common.Services.Stocks;
 
 public abstract class MarketplaceSendStockService
 {

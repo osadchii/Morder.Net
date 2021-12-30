@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Http.Json;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Ozon.Clients.LoadProducts.Messages;
@@ -11,15 +9,8 @@ public interface IOzonLoadProductIdsClient
     public Task<Dictionary<string, string>> LoadProductIdsAsync(OzonDto ozon);
 }
 
-public class OzonLoadProductIdsClient : IOzonLoadProductIdsClient
+public class OzonLoadProductIdsClient : BaseOzonClient, IOzonLoadProductIdsClient
 {
-    private readonly HttpClient _client;
-
-    public OzonLoadProductIdsClient()
-    {
-        _client = new HttpClient();
-    }
-
     public async Task<Dictionary<string, string>> LoadProductIdsAsync(OzonDto ozon)
     {
         var result = new Dictionary<string, string>();
@@ -41,32 +32,14 @@ public class OzonLoadProductIdsClient : IOzonLoadProductIdsClient
 
     private async Task<int> LoadProductPageAsync(OzonDto ozon, IDictionary<string, string> result, int page)
     {
-        string url =
-            $"https://{ozon.Settings.Server}:{ozon.Settings.Port}/v1/product/list";
-
         var request = new OzonProductIdsRequest
         {
             Page = page,
             PageSize = ozon.Settings.LoadProductIdsPageSize
         };
 
-        var httpMessage = new HttpRequestMessage(HttpMethod.Post, url);
-
-        httpMessage.Content = JsonContent.Create(request);
-        httpMessage.Headers.Add("Client-Id", ozon.Settings.ClientId);
-        httpMessage.Headers.Add("Api-Key", ozon.Settings.ApiKey);
-
-        HttpResponseMessage httpResponse = await _client.SendAsync(httpMessage);
+        HttpResponseMessage httpResponse = await PostAsync(ozon, "v1/product/list", request);
         string body = await httpResponse.Content.ReadAsStringAsync();
-
-        if (httpResponse.StatusCode != HttpStatusCode.OK)
-        {
-            string message = $"Ozon update product ids error." +
-                             $"{Environment.NewLine}Status code: ${httpResponse.StatusCode}" +
-                             $"{Environment.NewLine}Message: {body}";
-
-            throw new Exception(message);
-        }
 
         var response = body.FromJson<OzonProductIdsResponse>();
 

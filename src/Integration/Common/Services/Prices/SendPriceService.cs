@@ -5,12 +5,13 @@ using Infrastructure.MediatR.ChangeTracking.Commands;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
-using Integration.SberMegaMarket.Stocks.Services;
+using Integration.Ozon.Services;
+using Integration.SberMegaMarket.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Integration.Common.Services;
+namespace Integration.Common.Services.Prices;
 
 public interface ISendPriceService
 {
@@ -61,6 +62,7 @@ public class SendPriceService : ISendPriceService
                 {
                     MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mediator, _mapper,
                         _serviceProvider),
+                    MarketplaceType.Ozon => new OzonSendPriceService(_mediator, _mapper, _serviceProvider),
                     _ => null
                 };
 

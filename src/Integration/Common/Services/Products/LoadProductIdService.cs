@@ -9,7 +9,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Integration.Common.Services;
+namespace Integration.Common.Services.Products;
 
 public interface ILoadProductIdService
 {

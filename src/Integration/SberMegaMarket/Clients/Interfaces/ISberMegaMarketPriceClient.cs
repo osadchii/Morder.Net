@@ -1,5 +1,5 @@
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
-using Integration.SberMegaMarket.Stocks.Messages;
+using Integration.SberMegaMarket.Clients.Prices.Messages;
 
 namespace Integration.SberMegaMarket.Clients.Interfaces;
 

@@ -2,13 +2,14 @@ using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Prices;
-using Integration.Common.Services;
+using Integration.Common.Services.Prices;
+using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Interfaces;
-using Integration.SberMegaMarket.Stocks.Messages;
+using Integration.SberMegaMarket.Clients.Prices.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Integration.SberMegaMarket.Stocks.Services;
+namespace Integration.SberMegaMarket.Services;
 
 public class SberMegaMarketSendPriceService : MarketplaceSendPriceService
 {
@@ -17,13 +18,13 @@ public class SberMegaMarketSendPriceService : MarketplaceSendPriceService
     {
     }
 
-    public override Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> stocks)
+    public override Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> prices)
     {
         var client = ServiceProvider.GetRequiredService<ISberMegaMarketPriceClient>();
         var sber = Mapper.Map<SberMegaMarketDto>(marketplace);
         var request = new SberMegaMarketMessage<SberMegaMarketSendPriceData>(sber.Settings.Token);
 
-        foreach (MarketplacePriceDto stock in stocks)
+        foreach (MarketplacePriceDto stock in prices)
         {
             request.Data.Prices.Add(new SberMegaMarketPrice(stock.ProductExternalId, stock.Value));
         }

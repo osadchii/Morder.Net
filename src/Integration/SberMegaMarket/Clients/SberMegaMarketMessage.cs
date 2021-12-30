@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Integration.SberMegaMarket;
+namespace Integration.SberMegaMarket.Clients;
 
 public class SberMegaMarketMessage<T> where T : SberMegaMarketMessageData, new()
 {

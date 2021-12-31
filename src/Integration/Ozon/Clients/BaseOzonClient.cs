@@ -1,36 +1,30 @@
 using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 
 namespace Integration.Ozon.Clients;
 
 public abstract class BaseOzonClient
 {
-    private readonly HttpClient _client;
-
     protected BaseOzonClient()
     {
-        _client = new HttpClient();
     }
 
-    protected async Task<HttpResponseMessage> PostAsync(OzonDto ozon, string url, object obj)
+    protected static async Task<HttpResponseMessage> PostAsync(OzonDto ozon, string url, object obj)
     {
+        var client = new HttpClient();
+
         string fullUrl =
             $"https://{ozon.Settings.Server}:{ozon.Settings.Port}/{url}";
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
-        var jsonOptions = new JsonSerializerOptions
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
 
-        httpMessage.Content = JsonContent.Create(obj, options: jsonOptions);
+        httpMessage.Content = new StringContent(obj.ToJson());
         httpMessage.Headers.Add("Client-Id", ozon.Settings.ClientId);
         httpMessage.Headers.Add("Api-Key", ozon.Settings.ApiKey);
+        httpMessage.Headers.Add("cache-disable", Guid.NewGuid().ToString());
 
-        HttpResponseMessage httpResponse = await _client.SendAsync(httpMessage);
+        HttpResponseMessage httpResponse = await client.SendAsync(httpMessage);
 
         if (httpResponse.StatusCode != HttpStatusCode.OK)
         {

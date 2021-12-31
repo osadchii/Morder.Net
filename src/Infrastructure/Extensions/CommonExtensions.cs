@@ -6,7 +6,11 @@ public static class CommonExtensions
 {
     public static string ToJson(this object obj)
     {
-        return JsonConvert.SerializeObject(obj);
+        var settings = new JsonSerializerSettings()
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+        return JsonConvert.SerializeObject(obj, settings);
     }
 
     public static T? FromJson<T>(this string s)

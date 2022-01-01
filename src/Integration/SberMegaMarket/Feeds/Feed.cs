@@ -8,7 +8,10 @@ namespace Integration.SberMegaMarket.Feeds;
 [XmlRoot("yml_catalog")]
 public class Feed
 {
-    [XmlAttribute("date")] public string Date { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+    [XmlAttribute("date")]
+    public string Date { get; set; }
+        = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"))
+            .ToString("yyyy-MM-dd HH:mm");
 
     [XmlElement("shop")] public Shop Shop { get; set; }
 

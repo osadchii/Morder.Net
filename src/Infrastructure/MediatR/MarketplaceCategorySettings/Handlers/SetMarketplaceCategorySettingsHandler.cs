@@ -26,21 +26,32 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
 
     public async Task<Unit> Handle(SetMarketplaceCategorySettingsRequest request, CancellationToken cancellationToken)
     {
-        List<Category> categories = await _context.Categories
-            .AsNoTracking()
-            .Where(c => c.Id == request.CategoryId)
-            .Include(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ThenInclude(c => c.Children)
-            .ToListAsync(cancellationToken);
+        List<Category> categories;
+        if (request.Recursive)
+        {
+            categories = await _context.Categories
+                .AsNoTracking()
+                .Where(c => c.Id == request.CategoryId)
+                .Include(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ThenInclude(c => c.Children)
+                .ToListAsync(cancellationToken);
+        }
+        else
+        {
+            categories = await _context.Categories
+                .AsNoTracking()
+                .Where(c => c.Id == request.CategoryId)
+                .ToListAsync(cancellationToken);
+        }
 
         List<int> categoryIds = new();
         FillCategoryIds(categories, categoryIds);

@@ -10,4 +10,6 @@ public class SetMarketplaceCategorySettingsRequest : IRequest<Unit>
     [Required] public int? CategoryId { get; set; }
 
     [Required] public bool? Blocked { get; set; }
+
+    public bool Recursive { get; set; } = true;
 }

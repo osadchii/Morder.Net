@@ -80,7 +80,7 @@ public class MarketplaceProductData
             return 0;
         }
 
-        if (productSetting is null || !productSetting.IgnoreRestrictions)
+        if (productSetting is null || productSetting.IgnoreRestrictions)
         {
             return stock;
         }

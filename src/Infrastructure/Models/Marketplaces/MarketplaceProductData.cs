@@ -54,6 +54,11 @@ public class MarketplaceProductData
 
     public decimal GetProductStock(Product product, decimal price = 0)
     {
+        if (_marketplace.NullifyStocks)
+        {
+            return 0;
+        }
+
         if (!_stocks.TryGetValue(product.Id, out decimal stock))
         {
             return 0;

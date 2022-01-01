@@ -37,16 +37,11 @@ public class FeedBuilder
 
     private void AddProducts(List<Product> products, MarketplaceProductData marketplaceProductData)
     {
-        foreach (Product product in products)
+        foreach (Offer? offer in products
+                     .Select(product => product.ToOffer(marketplaceProductData, _sber.Settings.WarehouseId))
+                     .Where(offer => offer is not null && offer.Price != 0))
         {
-            try
-            {
-                _feed.Shop.Offers.Add(product.ToOffer(marketplaceProductData, _sber.Settings.WarehouseId));
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error while adding product to feed");
-            }
+            _feed.Shop.Offers.Add(offer!);
         }
     }
 

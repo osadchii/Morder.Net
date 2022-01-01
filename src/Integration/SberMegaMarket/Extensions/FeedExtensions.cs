@@ -9,14 +9,14 @@ namespace Integration.SberMegaMarket.Extensions;
 
 public static class FeedExtensions
 {
-    public static Offer ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
+    public static Offer? ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
     {
         decimal price = productData.GetProductPrice(product);
         decimal stock = productData.GetProductStock(product, price);
 
         if (!int.TryParse(product.Articul, out int articul))
         {
-            throw new ArgumentException("Wrong articul");
+            return null;
         }
 
         bool available = stock > 0;

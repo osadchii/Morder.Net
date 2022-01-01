@@ -1,5 +1,6 @@
 using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
 using Infrastructure.Models.MarketplaceProductSettings;
+using Infrastructure.Models.Marketplaces;
 using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,14 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
     public async Task<Unit> Handle(SetMarketplaceProductExternalIdsRequest request, CancellationToken cancellationToken)
     {
         List<string> articuls = request.ExternalIds.Keys.ToList();
+        Marketplace marketplace = await _context.Marketplaces
+            .AsNoTracking()
+            .Where(m => m.Id == request.MarketplaceId)
+            .SingleAsync(cancellationToken);
+
+        bool stockTracking = marketplace.IsActive && marketplace.StockChangesTracking;
+        bool priceTracking = marketplace.IsActive && marketplace.PriceChangesTracking;
+
         Dictionary<string, int> productIds = await _context.Products
             .AsNoTracking()
             .Where(p => articuls.Contains(p.Articul!))
@@ -38,10 +47,7 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
                 if (setting.ExternalId != keyValue.Value)
                 {
                     setting.ExternalId = keyValue.Value;
-                    await _trackingService.TrackPriceChange(request.MarketplaceId, setting.ProductId,
-                        cancellationToken);
-                    await _trackingService.TrackStockChange(request.MarketplaceId, setting.ProductId,
-                        cancellationToken);
+                    await TrackChanges(setting.ProductId);
                 }
             }
             else if (productIds.TryGetValue(keyValue.Key, out int productId))
@@ -54,10 +60,7 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
                 };
 
                 await _context.MarketplaceProductSettings.AddAsync(setting, cancellationToken);
-                await _trackingService.TrackPriceChange(request.MarketplaceId, setting.ProductId,
-                    cancellationToken);
-                await _trackingService.TrackStockChange(request.MarketplaceId, setting.ProductId,
-                    cancellationToken);
+                await TrackChanges(setting.ProductId);
             }
         }
 
@@ -67,13 +70,23 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
         foreach (KeyValuePair<string, MarketplaceProductSetting> clearItem in toClear)
         {
             clearItem.Value.ExternalId = null;
-            await _trackingService.TrackPriceChange(request.MarketplaceId, clearItem.Value.ProductId,
-                cancellationToken);
-            await _trackingService.TrackStockChange(request.MarketplaceId, clearItem.Value.ProductId,
-                cancellationToken);
+            await TrackChanges(clearItem.Value.ProductId);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
+
+        async Task TrackChanges(int productId)
+        {
+            if (priceTracking)
+            {
+                await _trackingService.TrackPriceChange(request.MarketplaceId, productId, cancellationToken);
+            }
+
+            if (stockTracking)
+            {
+                await _trackingService.TrackStockChange(request.MarketplaceId, productId, cancellationToken);
+            }
+        }
     }
 }

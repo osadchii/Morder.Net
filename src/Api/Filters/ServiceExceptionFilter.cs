@@ -1,3 +1,4 @@
+using System.Net;
 using Infrastructure.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,6 +25,12 @@ public class ServiceExceptionFilter : IActionFilter, IOrderedFilter
         context.HttpContext.Response.StatusCode = 400;
         context.Result = new JsonResult(context.Exception.AsResult());
         context.ExceptionHandled = true;
+
+        if (context.Exception is HttpRequestException exception
+            && exception?.StatusCode == HttpStatusCode.NotFound)
+        {
+            context.HttpContext.Response.StatusCode = 404;
+        }
 
         _logger.LogError(context.Exception, "Api Error");
     }

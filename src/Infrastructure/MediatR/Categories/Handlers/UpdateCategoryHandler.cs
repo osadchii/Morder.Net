@@ -34,7 +34,7 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryRequest, Unit
 
         Category? dbEntry = await _context.Categories
             .Include(c => c.Parent)
-            .SingleOrDefaultAsync(c => c.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
+            .SingleOrDefaultAsync(c => c.ExternalId == request.ExternalId!.Value, cancellationToken: cancellationToken);
 
 
         if (dbEntry is null)

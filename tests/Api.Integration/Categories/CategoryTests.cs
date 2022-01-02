@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
@@ -37,8 +38,9 @@ public class CategoryTests : IClassFixture<MorderWebApplicationFactory>
             ParentId = Guid.NewGuid()
         };
         HttpResponseMessage response = await _client.PostAsync(url, JsonContent.Create(request));
+        string content = await response.Content.ReadAsStringAsync();
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.True(HttpStatusCode.BadRequest == response.StatusCode, content);
     }
 
     [Fact]
@@ -46,10 +48,13 @@ public class CategoryTests : IClassFixture<MorderWebApplicationFactory>
     {
         string url = MorderWebApplicationFactory.ServiceUrl(1, BaseUrl);
 
-        HttpResponseMessage response =
-            await _client.PostAsync(url, JsonContent.Create(TestCases.UpdateParentCategoryRequest));
+        string json = TestCases.UpdateParentCategoryRequest.ToJson();
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        HttpResponseMessage response =
+            await _client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"));
+        string content = await response.Content.ReadAsStringAsync();
+
+        Assert.True(HttpStatusCode.OK == response.StatusCode, content);
     }
 
     [Fact]
@@ -59,8 +64,9 @@ public class CategoryTests : IClassFixture<MorderWebApplicationFactory>
 
         HttpResponseMessage response =
             await _client.PostAsync(url, JsonContent.Create(TestCases.UpdateChildCategoryRequest));
+        string content = await response.Content.ReadAsStringAsync();
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(HttpStatusCode.OK == response.StatusCode, content);
     }
 
     [Fact]
@@ -75,10 +81,11 @@ public class CategoryTests : IClassFixture<MorderWebApplicationFactory>
         string content = await response.Content.ReadAsStringAsync();
         var result = content.FromJson<Result<List<CategoryDto>>>();
 
-        Assert.NotNull(result);
+        Assert.True(result is not null, content);
 
         CategoryDto? entry =
             result?.Value.FirstOrDefault(c => c.ExternalId == TestCases.UpdateParentCategoryRequest.ExternalId);
-        Assert.NotNull(entry);
+
+        Assert.True(entry is not null, content);
     }
 }

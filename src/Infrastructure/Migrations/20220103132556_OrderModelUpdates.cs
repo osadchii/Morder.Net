@@ -94,16 +94,17 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderChanges",
+                name: "OrderChange",
+                schema: "dbo",
                 columns: table => new
                 {
                     OrderId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderChanges", x => x.OrderId);
+                    table.PrimaryKey("PK_OrderChange", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_OrderChanges_Order_OrderId",
+                        name: "FK_OrderChange_Order_OrderId",
                         column: x => x.OrderId,
                         principalSchema: "dbo",
                         principalTable: "Order",
@@ -172,7 +173,8 @@ namespace Infrastructure.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "OrderChanges");
+                name: "OrderChange",
+                schema: "dbo");
 
             migrationBuilder.DropIndex(
                 name: "IX_Order_ExternalId",

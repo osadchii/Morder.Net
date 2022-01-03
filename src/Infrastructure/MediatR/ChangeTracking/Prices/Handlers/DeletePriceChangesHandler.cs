@@ -1,8 +1,8 @@
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.Models.Prices;
 using MediatR;
 
-namespace Infrastructure.MediatR.ChangeTracking.Handlers;
+namespace Infrastructure.MediatR.ChangeTracking.Prices.Handlers;
 
 public class DeletePriceChangesHandler : IRequestHandler<DeletePriceChangesRequest, Unit>
 {

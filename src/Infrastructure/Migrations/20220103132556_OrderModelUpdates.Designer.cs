@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MContext))]
-    [Migration("20220103114933_OrderModelUpdates")]
+    [Migration("20220103132556_OrderModelUpdates")]
     partial class OrderModelUpdates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,7 +283,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("OrderChanges");
+                    b.ToTable("OrderChange", "dbo");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Prices.Price", b =>

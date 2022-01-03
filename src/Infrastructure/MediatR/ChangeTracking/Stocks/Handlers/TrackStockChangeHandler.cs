@@ -1,10 +1,10 @@
 using AutoMapper;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.ChangeTracking.Handlers;
+namespace Infrastructure.MediatR.ChangeTracking.Stocks.Handlers;
 
 public class TrackStockChangeHandler : IRequestHandler<TrackStockChangeRequest, Unit>
 {

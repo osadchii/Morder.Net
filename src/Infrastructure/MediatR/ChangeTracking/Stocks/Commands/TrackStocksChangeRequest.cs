@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Infrastructure.MediatR.ChangeTracking.Commands;
+namespace Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 
 public class TrackStocksChangeRequest : IRequest<Unit>
 {

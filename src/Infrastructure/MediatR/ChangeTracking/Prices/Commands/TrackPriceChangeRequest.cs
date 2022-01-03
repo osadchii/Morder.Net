@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Infrastructure.MediatR.ChangeTracking.Commands;
+namespace Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 
 public class TrackPriceChangeRequest : IRequest<Unit>
 {

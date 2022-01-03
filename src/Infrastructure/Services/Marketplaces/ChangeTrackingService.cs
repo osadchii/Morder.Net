@@ -1,5 +1,6 @@
 using Infrastructure.Cache;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
+using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.MediatR.Products.Queries;

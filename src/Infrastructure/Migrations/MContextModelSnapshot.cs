@@ -281,7 +281,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("OrderChanges");
+                    b.ToTable("OrderChange", "dbo");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Prices.Price", b =>

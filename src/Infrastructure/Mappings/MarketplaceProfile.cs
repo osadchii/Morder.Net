@@ -1,7 +1,8 @@
 using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
+using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
 using Infrastructure.MediatR.Marketplaces.Ozon.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;

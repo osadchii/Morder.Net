@@ -1,4 +1,5 @@
 using System.Net;
+using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
 using Infrastructure.MediatR.Orders.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
@@ -9,10 +10,12 @@ namespace Infrastructure.MediatR.Orders.Handlers;
 public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderItemsByExternalIdRequest, Unit>
 {
     private readonly MContext _context;
+    private readonly IMediator _mediator;
 
-    public CancelOrderItemsByExternalIdHandler(MContext context)
+    public CancelOrderItemsByExternalIdHandler(MContext context, IMediator mediator)
     {
         _context = context;
+        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(CancelOrderItemsByExternalIdRequest request, CancellationToken cancellationToken)
@@ -40,6 +43,7 @@ public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderIt
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+        await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
 
         return Unit.Value;
     }

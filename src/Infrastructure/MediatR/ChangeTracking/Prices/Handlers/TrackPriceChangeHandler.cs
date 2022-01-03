@@ -1,10 +1,10 @@
 using AutoMapper;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.ChangeTracking.Handlers;
+namespace Infrastructure.MediatR.ChangeTracking.Prices.Handlers;
 
 public class TrackPriceChangeHandler : IRequestHandler<TrackPriceChangeRequest, Unit>
 {

@@ -1,3 +1,4 @@
+using Integration.Common.Services.Orders;
 using Integration.Common.Services.Prices;
 using Integration.Common.Services.Products;
 using Integration.Common.Services.Stocks;
@@ -12,5 +13,6 @@ public static class DependencyInjection
         services.AddTransient<ISendStockService, SendStockService>();
         services.AddTransient<ISendPriceService, SendPriceService>();
         services.AddTransient<ILoadProductIdService, LoadProductIdService>();
+        services.AddTransient<ITaskHandleService, TaskHandleService>();
     }
 }

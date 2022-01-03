@@ -1,5 +1,5 @@
 using AutoMapper;
-using Infrastructure.MediatR.Orders.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Commands;
 using Infrastructure.Models.Orders;
 
 namespace Infrastructure.Mappings;

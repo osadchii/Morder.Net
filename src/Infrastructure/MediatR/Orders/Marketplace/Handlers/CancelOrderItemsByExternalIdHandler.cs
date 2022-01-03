@@ -1,11 +1,11 @@
 using System.Net;
 using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
-using Infrastructure.MediatR.Orders.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.Orders.Handlers;
+namespace Infrastructure.MediatR.Orders.Marketplace.Handlers;
 
 public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderItemsByExternalIdRequest, Unit>
 {

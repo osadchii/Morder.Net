@@ -1,31 +1,34 @@
-using Integration.Common.Services.Prices;
+using Integration.Common.Services.Orders;
 
 namespace Api.BackgroundServices.Marketplaces;
 
-public class SendPriceBackgroundService : IHostedService, IDisposable
+public class MarketplaceOrderTaskExecutorService : IHostedService, IDisposable
 {
-    private readonly ILogger<SendPriceBackgroundService> _logger;
-    private readonly int _sendPriceInterval;
+    private readonly ILogger<MarketplaceOrderTaskExecutorService> _logger;
+    private readonly int _taskExecutorInterval;
+    private readonly int _maxTryCount;
     private readonly IServiceProvider _services;
     private Task? _task;
 
     private Timer _timer = null!;
 
-    public SendPriceBackgroundService(IServiceProvider services, ILogger<SendPriceBackgroundService> logger,
+    public MarketplaceOrderTaskExecutorService(IServiceProvider services,
+        ILogger<MarketplaceOrderTaskExecutorService> logger,
         IConfiguration configuration)
     {
         _logger = logger;
         _services = services;
 
-        _sendPriceInterval = configuration.GetValue<int>("SendPriceInterval");
+        _taskExecutorInterval = configuration.GetValue<int>("MarketplaceOrderTask:ExecutionInterval");
+        _maxTryCount = configuration.GetValue<int>("MarketplaceOrderTask:MaxTryCount");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Marketplace send price service running.");
+        _logger.LogInformation("Marketplace order task service running.");
 
         _timer = new Timer(DoWork, null, TimeSpan.Zero,
-            TimeSpan.FromMinutes(_sendPriceInterval));
+            TimeSpan.FromMinutes(_taskExecutorInterval));
 
         return Task.CompletedTask;
     }
@@ -42,14 +45,14 @@ public class SendPriceBackgroundService : IHostedService, IDisposable
     private async Task SendPrices()
     {
         await using AsyncServiceScope scope = _services.CreateAsyncScope();
-        var sendPriceService = scope.ServiceProvider.GetRequiredService<ISendPriceService>();
+        var taskHandler = scope.ServiceProvider.GetRequiredService<ITaskHandleService>();
 
-        await sendPriceService.SendMarketplacePrices();
+        await taskHandler.HandleTasks(_maxTryCount);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Marketplace send price service is stopping.");
+        _logger.LogInformation("Marketplace order task service is stopping.");
 
         _timer?.Change(Timeout.Infinite, 0);
 

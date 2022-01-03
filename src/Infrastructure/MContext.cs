@@ -45,6 +45,8 @@ public class MContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderChange> OrderChanges { get; set; }
 
+    public DbSet<MarketplaceOrderTask> MarketplaceOrderTasks { get; set; }
+
     #endregion
 
 #pragma warning disable CS8618
@@ -125,6 +127,13 @@ public class MContext : DbContext
         {
             e.Property(p => p.Type)
                 .HasConversion(new EnumToStringConverter<MarketplaceType>());
+        });
+
+        modelBuilder.Entity<MarketplaceOrderTask>(e =>
+        {
+            e.HasIndex(t => t.MarketplaceId);
+            e.Property(t => t.Type)
+                .HasConversion(new EnumToStringConverter<TaskType>());
         });
 
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())

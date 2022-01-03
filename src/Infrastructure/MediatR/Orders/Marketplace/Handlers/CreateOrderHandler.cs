@@ -1,10 +1,10 @@
 using AutoMapper;
 using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
-using Infrastructure.MediatR.Orders.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
 
-namespace Infrastructure.MediatR.Orders.Handlers;
+namespace Infrastructure.MediatR.Orders.Marketplace.Handlers;
 
 public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
 {

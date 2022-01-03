@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
@@ -13,10 +8,6 @@ using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Integration.SberMegaMarket.Extensions;
 using Integration.SberMegaMarket.Feeds;
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 

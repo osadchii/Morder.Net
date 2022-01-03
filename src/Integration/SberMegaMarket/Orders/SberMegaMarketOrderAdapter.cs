@@ -3,7 +3,7 @@ using AutoMapper;
 using Infrastructure;
 using Infrastructure.Cache.Interfaces;
 using Infrastructure.Marketplaces;
-using Infrastructure.MediatR.Orders.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Orders;

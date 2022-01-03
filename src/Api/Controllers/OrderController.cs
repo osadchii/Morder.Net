@@ -24,4 +24,12 @@ public class OrderController : ControllerBase
         await _mediator.Send(request);
         return Result.Ok;
     }
+
+    [HttpPost]
+    [Route("pack")]
+    public async Task<Result> Pack([Required] [FromBody] PackOrderRequest request)
+    {
+        await _mediator.Send(request);
+        return Result.Ok;
+    }
 }

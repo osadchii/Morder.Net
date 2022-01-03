@@ -15,5 +15,6 @@ public static class DependencyInjection
         services.AddTransient<ISberMegaMarketPriceClient, SberMegaMarketPriceClient>();
         services.AddTransient<ISberMegaMarketOrderAdapter, SberMegaMarketOrderAdapter>();
         services.AddTransient<ISberMegaMarketOrderConfirmClient, SberMegaMarketOrderConfirmClient>();
+        services.AddTransient<ISberMegaMarketOrderPackingClient, SberMegaMarketOrderPackingClient>();
     }
 }

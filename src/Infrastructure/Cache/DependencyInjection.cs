@@ -16,6 +16,7 @@ public static class MediatRDependencyInjection
         services.AddEntityCache<Warehouse>();
         services.AddEntityCache<PriceType>();
         services.AddEntityCache<Category>();
+        services.AddTransient<IProductCache, ProductCache>();
     }
 
     private static void AddEntityCache<T>(this IServiceCollection services) where T : BaseEntity, IHasId, IHasExternalId

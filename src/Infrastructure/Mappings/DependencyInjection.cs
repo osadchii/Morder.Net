@@ -12,6 +12,7 @@ public static class AutoMapperDependencyInjection
             mc.AddProfile(new CompanyProfile());
             mc.AddProfile(new BotProfile());
             mc.AddProfile(new MarketplaceProfile());
+            mc.AddProfile(new OrderProfile());
         });
 
         IMapper mapper = mappingConfig.CreateMapper();

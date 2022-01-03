@@ -40,6 +40,11 @@ public static class Limits
     public const int BotUserCurrentStateKey = 36;
 
     public const int OrderNumber = 36;
+    public const int OrderCustomer = 256;
+    public const int OrderMinimalPrice = 0;
+    public const int OrderMaximalPrice = int.MaxValue;
+    public const int OrderMinimalCount = 0;
+    public const int OrderMaximalCount = int.MaxValue;
 
     public const int MarketplaceName = 128;
 

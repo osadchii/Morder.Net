@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
 using Infrastructure.Models.Interfaces;
+using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,15 +13,30 @@ namespace Infrastructure.Models.Orders;
 public class Order : BaseEntity, IHasId, IHasExternalId
 {
     [Key] public int Id { get; set; }
-    public Guid ExternalId { get; set; }
 
-    [MaxLength(Limits.OrderNumber)] public string Number { get; set; }
+    [Required] public Guid ExternalId { get; set; }
 
-    public DateTime Date { get; set; }
+    [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    public decimal Sum => Items.Sum(i => i.Sum);
+    public Marketplace Marketplace { get; set; }
+
+    [Required]
+    [MaxLength(Limits.OrderNumber)]
+    public string Number { get; set; }
+
+    [Required] public OrderStatus Status { get; set; }
+
+    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }
+
+    [Required] public DateTime Date { get; set; }
+
+    [Required] public DateTime ShippingDate { get; set; }
+
+    public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 
     public Collection<OrderItem> Items { get; set; }
+
+    public Collection<OrderBox> Boxes { get; set; }
 
     [Owned]
     public class OrderItem
@@ -31,8 +47,32 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         [Required] public Product Product { get; set; }
 
+        [Required]
+        [Range(Limits.OrderMinimalPrice, Limits.OrderMaximalPrice)]
         public decimal Price { get; set; }
+
+        [Required]
+        [Range(Limits.OrderMinimalCount, Limits.OrderMaximalCount)]
         public decimal Count { get; set; }
+
         public decimal Sum { get; set; }
+
+        public string? ExternalId { get; set; }
+
+        public bool Canceled { get; set; }
+    }
+
+    [Owned]
+    public class OrderBox
+    {
+        [Key] public int Id { get; set; }
+
+        [ForeignKey("Product")] public int ProductId { get; set; }
+
+        [Required] public Product Product { get; set; }
+
+        [Required]
+        [Range(Limits.OrderMinimalCount, Limits.OrderMaximalCount)]
+        public decimal Count { get; set; }
     }
 }

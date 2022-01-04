@@ -13,7 +13,11 @@ public static class DependencyInjection
     public static void AddMorder(this IServiceCollection services, IConfiguration configuration)
     {
         string? connectionString = configuration.GetConnectionString("DefaultConnectionString");
-        services.AddDbContext<MContext>((provider, options) => { options.UseNpgsql(connectionString); });
+        services.AddDbContext<MContext>((provider, options) =>
+        {
+            options.UseNpgsql(connectionString,
+                builder => { builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); });
+        });
 
         services.AddMorderAutoMapper();
         services.AddMorderMediatR();

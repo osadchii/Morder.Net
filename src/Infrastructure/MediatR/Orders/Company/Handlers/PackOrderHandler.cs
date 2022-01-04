@@ -63,7 +63,8 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             order.Boxes.Add(new Order.OrderBox()
             {
                 Count = item.Count!.Value,
-                ProductId = productId.Value
+                ProductId = productId.Value,
+                Number = item.Number!.Value
             });
         }
 

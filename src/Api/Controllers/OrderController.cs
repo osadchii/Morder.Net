@@ -32,4 +32,12 @@ public class OrderController : ControllerBase
         await _mediator.Send(request);
         return Result.Ok;
     }
+
+    [HttpPost]
+    [Route("ship")]
+    public async Task<Result> Ship([Required] [FromBody] ShipOrderRequest request)
+    {
+        await _mediator.Send(request);
+        return Result.Ok;
+    }
 }

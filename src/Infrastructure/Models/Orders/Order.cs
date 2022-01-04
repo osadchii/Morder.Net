@@ -74,5 +74,9 @@ public class Order : BaseEntity, IHasId, IHasExternalId
         [Required]
         [Range(Limits.OrderMinimalCount, Limits.OrderMaximalCount)]
         public decimal Count { get; set; }
+
+        [Required]
+        [Range(Limits.OrderBoxMinimalNumber, Limits.OrderBoxMaximalNumber)]
+        public int Number { get; set; }
     }
 }

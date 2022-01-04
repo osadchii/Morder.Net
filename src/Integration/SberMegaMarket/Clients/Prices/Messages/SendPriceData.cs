@@ -2,14 +2,14 @@ using Newtonsoft.Json;
 
 namespace Integration.SberMegaMarket.Clients.Prices.Messages;
 
-public class SberMegaMarketSendPriceData : SberMegaMarketMessageData
+public class SendPriceData : SberMegaMarketMessageData
 {
-    public SberMegaMarketSendPriceData(string token) : base(token)
+    public SendPriceData(string token) : base(token)
     {
         Prices = new List<SberMegaMarketPrice>();
     }
 
-    public SberMegaMarketSendPriceData() : base("")
+    public SendPriceData() : base("")
     {
         Prices = new List<SberMegaMarketPrice>();
     }

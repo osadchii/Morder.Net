@@ -24,6 +24,8 @@ public class Order : BaseEntity, IHasId, IHasExternalId
     [MaxLength(Limits.OrderNumber)]
     public string Number { get; set; }
 
+    public bool Archived { get; set; }
+
     [Required] public OrderStatus Status { get; set; }
 
     [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }

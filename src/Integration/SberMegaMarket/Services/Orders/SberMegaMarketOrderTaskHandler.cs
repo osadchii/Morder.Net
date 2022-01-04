@@ -172,8 +172,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
                         Boxes = GetShippingBoxes(),
                         Shipping = new OrderShippingShipmentShipping()
                         {
-                            ShippingDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow,
-                                    TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"))
+                            ShippingDate = DateTime.UtcNow.ToMoscowTime()
                                 .ToString("yyyy-MM-ddTHH:mm:ss")
                         }
                     }

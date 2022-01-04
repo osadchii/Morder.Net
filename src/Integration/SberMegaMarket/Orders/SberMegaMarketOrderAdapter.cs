@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Cache.Interfaces;
+using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.Orders.Marketplace.Commands;
 using Infrastructure.Models.Marketplaces;
@@ -28,6 +29,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     private readonly MContext _context;
     private readonly IMapper _mapper;
     private readonly IProductCache _productCache;
+    private const string Customer = "SberMegaMarket Customer";
 
     public SberMegaMarketOrderAdapter(IMemoryCache cache, MContext context, IMapper mapper, IProductCache productCache)
     {
@@ -51,13 +53,13 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
 
         return data.Shipments.Select(s => new CreateOrderRequest()
         {
-            Customer = "SberMegaMarket Customer",
-            Date = DateTime.SpecifyKind(s.ShipmentDate, DateTimeKind.Utc),
+            Customer = Customer,
+            Date = s.ShipmentDate.ToUtcTime(),
             Number = s.ShipmentId,
             Status = OrderStatus.Created,
             ExternalId = Guid.NewGuid(),
             MarketplaceId = sber.Id,
-            ShippingDate = DateTime.SpecifyKind(s.Shipping.ShippingDate, DateTimeKind.Utc),
+            ShippingDate = s.Shipping.ShippingDate.ToUtcTime(),
             Items = s.Items.Select(i => new CreateOrderItem()
             {
                 Count = i.Quantity,

@@ -15,6 +15,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
     private readonly MContext _context;
     private readonly IMediator _mediator;
     private readonly ILogger<RejectOrderHandler> _logger;
+    private const OrderStatus Status = OrderStatus.Canceled;
 
     public RejectOrderHandler(MContext context, IMediator mediator, ILogger<RejectOrderHandler> logger)
     {
@@ -93,7 +94,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
 
         if (order.Items.All(i => i.Canceled))
         {
-            order.Status = OrderStatus.Canceled;
+            order.Status = Status;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -104,6 +105,15 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             MarketplaceId = order.MarketplaceId,
             OrderId = order.Id
         }, cancellationToken);
+
+        if (order.Status == OrderStatus.Canceled)
+        {
+            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            {
+                Status = Status,
+                OrderId = order.Id
+            }, cancellationToken);
+        }
 
         _logger.LogInformation($"Packed order {order.Number} with {order.ExternalId} external id");
 

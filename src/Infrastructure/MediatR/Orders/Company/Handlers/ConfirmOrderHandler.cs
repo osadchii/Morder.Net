@@ -15,6 +15,7 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
     private readonly MContext _context;
     private readonly IMediator _mediator;
     private readonly ILogger<ConfirmOrderHandler> _logger;
+    private const OrderStatus Status = OrderStatus.Reserved;
 
     public ConfirmOrderHandler(MContext context, IMediator mediator, ILogger<ConfirmOrderHandler> logger)
     {
@@ -39,7 +40,7 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
             throw new HttpRequestException($"Order can be confirmed only in {nameof(OrderStatus.Created)} status");
         }
 
-        order.Status = OrderStatus.Reserved;
+        order.Status = Status;
 
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
@@ -47,6 +48,11 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
         {
             Type = TaskType.Confirm,
             MarketplaceId = order.MarketplaceId,
+            OrderId = order.Id
+        }, cancellationToken);
+        await _mediator.Send(new SaveOrderStatusHistoryRequest()
+        {
+            Status = Status,
             OrderId = order.Id
         }, cancellationToken);
 

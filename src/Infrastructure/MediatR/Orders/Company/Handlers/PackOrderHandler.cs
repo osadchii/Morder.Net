@@ -15,6 +15,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
     private readonly MContext _context;
     private readonly IMediator _mediator;
     private readonly ILogger<PackOrderHandler> _logger;
+    private const OrderStatus Status = OrderStatus.Packed;
 
     public PackOrderHandler(MContext context, ILogger<PackOrderHandler> logger, IMediator mediator)
     {
@@ -30,7 +31,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             throw new HttpRequestException("Need one or more boxes");
         }
 
-        List<int> numbers = request.Items.Select(i => i.Number!.Value).Distinct().ToList();
+        List<int> numbers = request.Items!.Select(i => i.Number!.Value).Distinct().ToList();
         numbers.Sort();
 
         if (numbers[0] != 1 || numbers.Where((t, i) => t != i + 1).Any())
@@ -56,7 +57,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
 
         order.Boxes.Clear();
 
-        foreach (PackOrderItem item in request.Items)
+        foreach (PackOrderItem item in request.Items!)
         {
             int? productId = order.Items
                 .Where(p => p.Product.ExternalId == item.ProductExternalId)
@@ -99,7 +100,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             throw new HttpRequestException("Count in no cancelled items differs from count items in boxes");
         }
 
-        order.Status = OrderStatus.Packed;
+        order.Status = Status;
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
         await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
@@ -113,6 +114,11 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
         {
             Type = TaskType.Sticker,
             MarketplaceId = order.MarketplaceId,
+            OrderId = order.Id
+        }, cancellationToken);
+        await _mediator.Send(new SaveOrderStatusHistoryRequest()
+        {
+            Status = Status,
             OrderId = order.Id
         }, cancellationToken);
 

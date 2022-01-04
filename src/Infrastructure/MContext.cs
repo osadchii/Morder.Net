@@ -46,6 +46,7 @@ public class MContext : DbContext
     public DbSet<OrderChange> OrderChanges { get; set; }
     public DbSet<MarketplaceOrderTask> MarketplaceOrderTasks { get; set; }
     public DbSet<OrderSticker> OrderStickers { get; set; }
+    public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
 
     #endregion
 
@@ -102,6 +103,12 @@ public class MContext : DbContext
         });
 
         modelBuilder.Entity<OrderChange>(e => { e.HasKey(o => o.OrderId); });
+
+        modelBuilder.Entity<OrderStatusHistory>(e =>
+        {
+            e.Property(o => o.Status)
+                .HasConversion(new EnumToStringConverter<OrderStatus>());
+        });
 
         modelBuilder.Entity<OrderSticker>(e => { e.HasKey(o => o.OrderId); });
 

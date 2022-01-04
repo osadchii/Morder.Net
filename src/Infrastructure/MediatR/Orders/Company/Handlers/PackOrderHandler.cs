@@ -25,9 +25,17 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
 
     public async Task<Unit> Handle(PackOrderRequest request, CancellationToken cancellationToken)
     {
-        if (!request.Items.Any())
+        if (!request.Items!.Any())
         {
             throw new HttpRequestException("Need one or more boxes");
+        }
+
+        List<int> numbers = request.Items.Select(i => i.Number!.Value).Distinct().ToList();
+        numbers.Sort();
+
+        if (numbers[0] != 1 || numbers.Where((t, i) => t != i + 1).Any())
+        {
+            throw new HttpRequestException("Box numbers are out of order");
         }
 
         Order? order = await _context.Orders

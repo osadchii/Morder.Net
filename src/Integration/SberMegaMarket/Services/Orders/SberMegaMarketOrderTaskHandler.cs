@@ -33,10 +33,42 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
             case TaskType.Ship:
                 return HandleShippingTask();
             case TaskType.Reject:
+                return HandleRejectingTask();
             case TaskType.Sticker:
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    private async Task HandleRejectingTask()
+    {
+        var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<OrderRejectingData>>();
+
+        var request = new SberMegaMarketMessage<OrderRejectingData>(_sberMegaMarketDto.Settings.Token)
+        {
+            Data =
+            {
+                Shipments = new List<OrderRejectingShipment>()
+                {
+                    new()
+                    {
+                        ShipmentId = Order.Number,
+                        Items = Order.Items.Where(i => i.Canceled)
+                            .Select(i => new OrderRejectingShipmentItem()
+                            {
+                                ItemIndex = i.ExternalId!,
+                                OfferId = i.Product.Articul!
+                            }),
+                        Reason = new OrderRejectingShipmentReason()
+                        {
+                            Type = RejectingReason.OutOfStock
+                        }
+                    }
+                }
+            }
+        };
+
+        await client.SendRequest(ApiUrls.RejectOrder, _sberMegaMarketDto, request);
     }
 
     private async Task HandlePackingTask()
@@ -98,7 +130,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         {
             Data =
             {
-                Shipments = new List<ConfirmOrderShipment>()
+                Shipments = new ConfirmOrderShipment[]
                 {
                     new()
                     {

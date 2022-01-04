@@ -8,7 +8,7 @@ public class PackOrderRequest : IRequest<Unit>
 {
     [Required] public Guid? ExternalId { get; set; }
 
-    [Required] public IEnumerable<PackOrderItem> Items { get; set; }
+    [Required] public IEnumerable<PackOrderItem>? Items { get; set; }
 }
 
 public class PackOrderItem

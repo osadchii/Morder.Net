@@ -40,4 +40,12 @@ public class OrderController : ControllerBase
         await _mediator.Send(request);
         return Result.Ok;
     }
+
+    [HttpPost]
+    [Route("reject")]
+    public async Task<Result> Reject([Required] [FromBody] RejectOrderRequest request)
+    {
+        await _mediator.Send(request);
+        return Result.Ok;
+    }
 }

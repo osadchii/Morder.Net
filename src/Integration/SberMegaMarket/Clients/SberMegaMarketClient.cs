@@ -1,5 +1,6 @@
 using System.Net;
-using System.Net.Http.Json;
+using System.Text;
+using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Integration.SberMegaMarket.Clients.Interfaces;
 
@@ -18,7 +19,10 @@ public class SberMegaMarketClient<T> : ISberMegaMarketClient<T> where T : SberMe
     {
         string fullUrl =
             $"https://{sber.Settings.Server}:{sber.Settings.Port}{url}";
-        HttpResponseMessage responseMessage = await _client.PostAsync(fullUrl, JsonContent.Create(request));
+
+        string json = request.ToJson();
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpResponseMessage responseMessage = await _client.PostAsync(fullUrl, content);
 
         if (responseMessage.StatusCode != HttpStatusCode.OK)
         {

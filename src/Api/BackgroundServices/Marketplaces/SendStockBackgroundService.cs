@@ -17,7 +17,7 @@ public class SendStockBackgroundService : IHostedService, IDisposable
         _logger = logger;
         _services = services;
 
-        _sendStockInterval = configuration.GetValue<int>("SendStockInterval");
+        _sendStockInterval = configuration.GetValue<int>("MarketplaceSettings:SendStockInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

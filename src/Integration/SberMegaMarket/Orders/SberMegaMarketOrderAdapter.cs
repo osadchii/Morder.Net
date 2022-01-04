@@ -4,7 +4,7 @@ using Infrastructure;
 using Infrastructure.Cache.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.Marketplaces;
-using Infrastructure.MediatR.Orders.Marketplace.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Orders;
@@ -54,12 +54,12 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         return data.Shipments.Select(s => new CreateOrderRequest()
         {
             Customer = Customer,
-            Date = s.ShipmentDate.ToUtcTime(),
+            Date = s.ShipmentDate.ToCommonTime().ToUtcTime(),
             Number = s.ShipmentId,
             Status = OrderStatus.Created,
             ExternalId = Guid.NewGuid(),
             MarketplaceId = sber.Id,
-            ShippingDate = s.Shipping.ShippingDate.ToUtcTime(),
+            ShippingDate = s.Shipping.ShippingDate.ToCommonTime().ToUtcTime(),
             Items = s.Items.Select(i => new CreateOrderItem()
             {
                 Count = i.Quantity,

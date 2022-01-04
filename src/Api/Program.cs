@@ -72,6 +72,7 @@ public class Program
         builder.Services.AddHostedService<SendPriceBackgroundService>();
         builder.Services.AddHostedService<LoadProductIdsBackgroundService>();
         builder.Services.AddHostedService<MarketplaceOrderTaskExecutorService>();
+        builder.Services.AddHostedService<LoadOrdersBackgroundService>();
 
         WebApplication app = builder.Build();
 

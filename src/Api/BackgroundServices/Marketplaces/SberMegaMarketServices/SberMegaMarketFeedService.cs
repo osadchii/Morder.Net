@@ -26,7 +26,7 @@ public class SberMegaMarketFeedService : IHostedService, IDisposable
         _logger = logger;
         Services = services;
 
-        _feedGenerationInterval = configuration.GetValue<int>("FeedGenerationInterval");
+        _feedGenerationInterval = configuration.GetValue<int>("MarketplaceSettings:FeedGenerationInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

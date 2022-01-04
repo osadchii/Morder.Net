@@ -28,11 +28,20 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     [Required] public OrderStatus Status { get; set; }
 
-    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }
-
     [Required] public DateTime Date { get; set; }
 
     [Required] public DateTime ShippingDate { get; set; }
+
+    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }
+
+    [MaxLength(Limits.OrderCustomerAddress)]
+    public string? CustomerAddress { get; set; }
+
+    public DateTime? ConfirmedTimeLimit { get; set; }
+
+    public DateTime? PackingTimeLimit { get; set; }
+
+    public DateTime? ShippingTimeLimit { get; set; }
 
     public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 

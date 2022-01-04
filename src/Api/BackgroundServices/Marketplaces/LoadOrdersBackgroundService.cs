@@ -1,31 +1,31 @@
-using Integration.Common.Services.Prices;
+using Integration.Common.Services.Orders;
 
 namespace Api.BackgroundServices.Marketplaces;
 
-public class SendPriceBackgroundService : IHostedService, IDisposable
+public class LoadOrdersBackgroundService : IHostedService, IDisposable
 {
-    private readonly ILogger<SendPriceBackgroundService> _logger;
-    private readonly int _sendPriceInterval;
+    private readonly ILogger<LoadOrdersBackgroundService> _logger;
+    private readonly int _loadOrdersInterval;
     private readonly IServiceProvider _services;
     private Task? _task;
 
     private Timer _timer = null!;
 
-    public SendPriceBackgroundService(IServiceProvider services, ILogger<SendPriceBackgroundService> logger,
+    public LoadOrdersBackgroundService(IServiceProvider services, ILogger<LoadOrdersBackgroundService> logger,
         IConfiguration configuration)
     {
         _logger = logger;
         _services = services;
 
-        _sendPriceInterval = configuration.GetValue<int>("MarketplaceSettings:SendPriceInterval");
+        _loadOrdersInterval = configuration.GetValue<int>("MarketplaceSettings:LoadOrdersInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Marketplace send price service running.");
+        _logger.LogInformation("Marketplace load orders service running.");
 
         _timer = new Timer(DoWork, null, TimeSpan.Zero,
-            TimeSpan.FromMinutes(_sendPriceInterval));
+            TimeSpan.FromMinutes(_loadOrdersInterval));
 
         return Task.CompletedTask;
     }
@@ -35,21 +35,21 @@ public class SendPriceBackgroundService : IHostedService, IDisposable
         if (_task is null
             || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion)
         {
-            _task = SendPrices();
+            _task = LoadProductIds();
         }
     }
 
-    private async Task SendPrices()
+    private async Task LoadProductIds()
     {
         await using AsyncServiceScope scope = _services.CreateAsyncScope();
-        var sendPriceService = scope.ServiceProvider.GetRequiredService<ISendPriceService>();
+        var loadProductIdService = scope.ServiceProvider.GetRequiredService<ILoadOrdersService>();
 
-        await sendPriceService.SendMarketplacePrices();
+        await loadProductIdService.LoadOrders();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Marketplace send price service is stopping.");
+        _logger.LogInformation("MMarketplace load orders service is stopping.");
 
         _timer?.Change(Timeout.Infinite, 0);
 

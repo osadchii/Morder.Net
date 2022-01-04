@@ -1,12 +1,12 @@
 using AutoMapper;
 using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
 using Infrastructure.MediatR.Orders.Company.Commands;
-using Infrastructure.MediatR.Orders.Marketplace.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.MediatR.Orders.Marketplace.Handlers;
+namespace Infrastructure.MediatR.Orders.Marketplace.Common.Handlers;
 
 public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
 {

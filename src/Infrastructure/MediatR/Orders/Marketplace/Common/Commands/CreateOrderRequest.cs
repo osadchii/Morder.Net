@@ -1,7 +1,7 @@
 using Infrastructure.Models.Orders;
 using MediatR;
 
-namespace Infrastructure.MediatR.Orders.Marketplace.Commands;
+namespace Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 
 public class CreateOrderRequest : IRequest<Order>
 {

@@ -1,4 +1,4 @@
-using Infrastructure.MediatR.Orders.Marketplace.Commands;
+using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Integration.SberMegaMarket.Orders;
 using Integration.SberMegaMarket.Orders.Messages;
 using MediatR;

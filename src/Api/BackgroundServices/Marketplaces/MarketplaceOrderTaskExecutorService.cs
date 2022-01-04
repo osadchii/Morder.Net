@@ -19,8 +19,8 @@ public class MarketplaceOrderTaskExecutorService : IHostedService, IDisposable
         _logger = logger;
         _services = services;
 
-        _taskExecutorInterval = configuration.GetValue<int>("MarketplaceOrderTask:ExecutionInterval");
-        _maxTryCount = configuration.GetValue<int>("MarketplaceOrderTask:MaxTryCount");
+        _taskExecutorInterval = configuration.GetValue<int>("MarketplaceSettings:Tasks:ExecutionInterval");
+        _maxTryCount = configuration.GetValue<int>("MarketplaceSettings:Tasks:MaxTryCount");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

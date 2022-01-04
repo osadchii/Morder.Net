@@ -17,7 +17,7 @@ public class LoadProductIdsBackgroundService : IHostedService, IDisposable
         _logger = logger;
         _services = services;
 
-        _loadProductIdsInterval = configuration.GetValue<int>("LoadProductIdsInterval");
+        _loadProductIdsInterval = configuration.GetValue<int>("MarketplaceSettings:LoadProductIdsInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

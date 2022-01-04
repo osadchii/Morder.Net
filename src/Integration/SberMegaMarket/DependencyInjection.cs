@@ -19,6 +19,8 @@ public static class DependencyInjection
         services.AddTransient<ISberMegaMarketClient<OrderShippingData>, SberMegaMarketClient<OrderShippingData>>();
         services.AddTransient<ISberMegaMarketClient<OrderRejectingData>, SberMegaMarketClient<OrderRejectingData>>();
         services.AddTransient<ISberMegaMarketClient<StickerPrintData>, SberMegaMarketClient<StickerPrintData>>();
+        services.AddTransient<ISberMegaMarketClient<LoadOrdersData>, SberMegaMarketClient<LoadOrdersData>>();
+
         services.AddTransient<ISberMegaMarketOrderAdapter, SberMegaMarketOrderAdapter>();
     }
 }

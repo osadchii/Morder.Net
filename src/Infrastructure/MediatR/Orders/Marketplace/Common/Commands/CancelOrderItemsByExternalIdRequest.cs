@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Infrastructure.MediatR.Orders.Marketplace.Commands;
+namespace Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 
 public class CancelOrderItemsByExternalIdRequest : IRequest<Unit>
 {

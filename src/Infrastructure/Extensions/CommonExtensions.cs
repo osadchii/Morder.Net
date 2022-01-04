@@ -37,6 +37,12 @@ public static class CommonExtensions
             TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
     }
 
+    public static DateTime ToCommonTime(this DateTime dateTime)
+    {
+        return TimeZoneInfo.ConvertTime(dateTime,
+            TimeZoneInfo.Utc);
+    }
+
     public static DateTime ToUtcTime(this DateTime dateTime)
     {
         return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);

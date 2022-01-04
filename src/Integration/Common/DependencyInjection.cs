@@ -14,5 +14,6 @@ public static class DependencyInjection
         services.AddTransient<ISendPriceService, SendPriceService>();
         services.AddTransient<ILoadProductIdService, LoadProductIdService>();
         services.AddTransient<ITaskHandleService, TaskHandleService>();
+        services.AddTransient<ILoadOrdersService, LoadOrdersService>();
     }
 }

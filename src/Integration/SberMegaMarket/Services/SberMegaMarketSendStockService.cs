@@ -20,15 +20,15 @@ public class SberMegaMarketSendStockService : MarketplaceSendStockService
 
     public override Task SendStocksAsync(Marketplace marketplace, IEnumerable<MarketplaceStockDto> stocks)
     {
-        var client = ServiceProvider.GetRequiredService<ISberMegaMarketStockClient>();
+        var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<SendStockData>>();
         var sber = Mapper.Map<SberMegaMarketDto>(marketplace);
-        var request = new SberMegaMarketMessage<SberMegaMarketSendStockData>(sber.Settings.Token);
+        var request = new SberMegaMarketMessage<SendStockData>(sber.Settings.Token);
 
         foreach (MarketplaceStockDto stock in stocks)
         {
             request.Data.Stocks.Add(new SberMegaMarketStock(stock.ProductExternalId, stock.Value));
         }
 
-        return client.SendStocks(sber, request);
+        return client.SendRequest(ApiUrls.SendStocks, sber, request);
     }
 }

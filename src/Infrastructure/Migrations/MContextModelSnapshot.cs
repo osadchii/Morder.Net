@@ -145,7 +145,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("ProductId", "MarketplaceId");
 
-                    b.HasIndex("MarketplaceId");
+                    b.HasIndex("MarketplaceId", "ExternalId");
 
                     b.ToTable("MarketplaceProductSetting", "dbo");
                 });
@@ -219,7 +219,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Marketplace", "dbo");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.Orders.Order", b =>
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.MarketplaceOrderTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,20 +235,156 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("MarketplaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketplaceId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("MarketplaceOrderTask", "dbo");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Archived")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ConfirmedTimeLimit")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
+
+                    b.Property<string>("Customer")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("CustomerAddress")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("ExternalId")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("MarketplaceId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("character varying(36)");
 
+                    b.Property<DateTime?>("PackingTimeLimit")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ShippingDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ShippingTimeLimit")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.HasIndex("MarketplaceId");
+
+                    b.HasIndex("MarketplaceId", "Number")
+                        .IsUnique();
 
                     b.HasIndex(new[] { "ExternalId" }, "UNIQUE_INDEX_ExternalId")
                         .IsUnique();
 
                     b.ToTable("Order", "dbo");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderChange", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("OrderChange", "dbo");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderStatusHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStatusHistory", "dbo");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderSticker", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<byte[]>("StickerData")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("OrderSticker", "dbo");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Prices.Price", b =>
@@ -574,9 +710,34 @@ namespace Infrastructure.Migrations
                     b.Navigation("Warehouse");
                 });
 
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.MarketplaceOrderTask", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Marketplaces.Marketplace", "Marketplace")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infrastructure.Models.Orders.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Marketplace");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Infrastructure.Models.Orders.Order", b =>
                 {
-                    b.OwnsMany("Infrastructure.Models.Orders.Order+OrderItem", "Items", b1 =>
+                    b.HasOne("Infrastructure.Models.Marketplaces.Marketplace", "Marketplace")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("Infrastructure.Models.Orders.Order+OrderBox", "Boxes", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -586,6 +747,52 @@ namespace Infrastructure.Migrations
 
                             b1.Property<decimal>("Count")
                                 .HasColumnType("numeric");
+
+                            b1.Property<int>("Number")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("ProductId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("OrderId");
+
+                            b1.HasIndex("ProductId");
+
+                            b1.ToTable("OrderBox", "dbo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+
+                            b1.HasOne("Infrastructure.Models.Products.Product", "Product")
+                                .WithMany()
+                                .HasForeignKey("ProductId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.Navigation("Product");
+                        });
+
+                    b.OwnsMany("Infrastructure.Models.Orders.Order+OrderItem", "Items", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<bool>("Canceled")
+                                .HasColumnType("boolean");
+
+                            b1.Property<decimal>("Count")
+                                .HasColumnType("numeric");
+
+                            b1.Property<string>("ExternalId")
+                                .HasColumnType("text");
 
                             b1.Property<int>("OrderId")
                                 .HasColumnType("integer");
@@ -619,7 +826,44 @@ namespace Infrastructure.Migrations
                             b1.Navigation("Product");
                         });
 
+                    b.Navigation("Boxes");
+
                     b.Navigation("Items");
+
+                    b.Navigation("Marketplace");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderChange", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Orders.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderStatusHistory", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Orders.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Orders.OrderSticker", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Orders.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Prices.Price", b =>

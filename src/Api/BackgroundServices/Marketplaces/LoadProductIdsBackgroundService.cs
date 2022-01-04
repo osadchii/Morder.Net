@@ -1,11 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Integration.Common.Services.Products;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Api.BackgroundServices.Marketplaces;
 
@@ -24,7 +17,7 @@ public class LoadProductIdsBackgroundService : IHostedService, IDisposable
         _logger = logger;
         _services = services;
 
-        _loadProductIdsInterval = configuration.GetValue<int>("LoadProductIdsInterval");
+        _loadProductIdsInterval = configuration.GetValue<int>("MarketplaceSettings:LoadProductIdsInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

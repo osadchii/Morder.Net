@@ -1,7 +1,7 @@
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Marketplaces;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
@@ -60,9 +60,9 @@ public class SendPriceService : ISendPriceService
 
                 MarketplaceSendPriceService? sendService = marketplace.Type switch
                 {
-                    MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mediator, _mapper,
+                    MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mapper,
                         _serviceProvider),
-                    MarketplaceType.Ozon => new OzonSendPriceService(_mediator, _mapper, _serviceProvider),
+                    MarketplaceType.Ozon => new OzonSendPriceService(_mapper, _serviceProvider),
                     _ => null
                 };
 

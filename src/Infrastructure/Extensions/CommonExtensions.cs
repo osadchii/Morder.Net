@@ -30,4 +30,21 @@ public static class CommonExtensions
     {
         return string.IsNullOrEmpty(value);
     }
+
+    public static DateTime ToMoscowTime(this DateTime dateTime)
+    {
+        return TimeZoneInfo.ConvertTime(dateTime,
+            TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+    }
+
+    public static DateTime ToCommonTime(this DateTime dateTime)
+    {
+        return TimeZoneInfo.ConvertTime(dateTime,
+            TimeZoneInfo.Utc);
+    }
+
+    public static DateTime ToUtcTime(this DateTime dateTime)
+    {
+        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+    }
 }

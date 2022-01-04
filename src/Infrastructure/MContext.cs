@@ -26,7 +26,6 @@ public class MContext : DbContext
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<Company> Companies { get; set; }
-    public DbSet<Order> Orders { get; set; }
 
     #endregion
 
@@ -41,9 +40,13 @@ public class MContext : DbContext
     public DbSet<Marketplace> Marketplaces { get; set; }
     public DbSet<MarketplaceCategorySetting> MarketplaceCategorySettings { get; set; }
     public DbSet<MarketplaceProductSetting> MarketplaceProductSettings { get; set; }
-
     public DbSet<PriceChange> PriceChanges { get; set; }
     public DbSet<StockChange> StockChanges { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderChange> OrderChanges { get; set; }
+    public DbSet<MarketplaceOrderTask> MarketplaceOrderTasks { get; set; }
+    public DbSet<OrderSticker> OrderStickers { get; set; }
+    public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
 
     #endregion
 
@@ -75,6 +78,8 @@ public class MContext : DbContext
                 p.ProductId,
                 p.MarketplaceId
             });
+
+            e.HasIndex(s => new { s.MarketplaceId, s.ExternalId });
         });
 
         modelBuilder.Entity<PriceChange>(e =>
@@ -97,6 +102,16 @@ public class MContext : DbContext
             e.HasIndex(p => p.MarketplaceId);
         });
 
+        modelBuilder.Entity<OrderChange>(e => { e.HasKey(o => o.OrderId); });
+
+        modelBuilder.Entity<OrderStatusHistory>(e =>
+        {
+            e.Property(o => o.Status)
+                .HasConversion(new EnumToStringConverter<OrderStatus>());
+        });
+
+        modelBuilder.Entity<OrderSticker>(e => { e.HasKey(o => o.OrderId); });
+
         modelBuilder.Entity<Category>(e =>
         {
             e.HasOne(c => c.Parent)
@@ -106,12 +121,28 @@ public class MContext : DbContext
 
         modelBuilder.Entity<Product>(e => { e.HasIndex(p => p.Articul).IsUnique(); });
 
-        modelBuilder.Entity<Order>(e => e.OwnsMany(o => o.Items));
+        modelBuilder.Entity<Order>(e =>
+        {
+            e.OwnsMany(o => o.Items);
+            e.OwnsMany(o => o.Boxes);
+            e.HasIndex(o => o.ExternalId).IsUnique();
+            e.HasIndex(o => new { o.MarketplaceId, o.Number }).IsUnique();
+            e.HasIndex(o => o.MarketplaceId);
+            e.Property(o => o.Status)
+                .HasConversion(new EnumToStringConverter<OrderStatus>());
+        });
 
         modelBuilder.Entity<Marketplace>(e =>
         {
             e.Property(p => p.Type)
                 .HasConversion(new EnumToStringConverter<MarketplaceType>());
+        });
+
+        modelBuilder.Entity<MarketplaceOrderTask>(e =>
+        {
+            e.HasIndex(t => t.MarketplaceId);
+            e.Property(t => t.Type)
+                .HasConversion(new EnumToStringConverter<TaskType>());
         });
 
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())

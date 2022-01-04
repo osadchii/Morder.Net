@@ -1,17 +1,11 @@
 using System.Globalization;
-using System.IO;
 using Api.BackgroundServices.Marketplaces;
 using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 using Api.Filters;
 using Infrastructure;
 using Integration;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -77,6 +71,8 @@ public class Program
         builder.Services.AddHostedService<SendStockBackgroundService>();
         builder.Services.AddHostedService<SendPriceBackgroundService>();
         builder.Services.AddHostedService<LoadProductIdsBackgroundService>();
+        builder.Services.AddHostedService<MarketplaceOrderTaskExecutorService>();
+        builder.Services.AddHostedService<LoadOrdersBackgroundService>();
 
         WebApplication app = builder.Build();
 

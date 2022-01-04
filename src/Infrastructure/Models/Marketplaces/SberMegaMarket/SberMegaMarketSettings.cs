@@ -3,6 +3,7 @@ namespace Infrastructure.Models.Marketplaces.SberMegaMarket;
 public class SberMegaMarketSettings
 {
     public string Token { get; set; } = "";
+    public int MerchantId { get; set; } = 0;
     public bool FeedEnabled { get; set; } = false;
     public string FeedName { get; set; }
     public string Server { get; set; } = "";

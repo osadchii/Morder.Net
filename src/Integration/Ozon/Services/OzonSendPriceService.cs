@@ -6,15 +6,13 @@ using Infrastructure.Models.Prices;
 using Integration.Common.Services.Prices;
 using Integration.Ozon.Clients.Prices;
 using Integration.Ozon.Clients.Prices.Messages;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.Ozon.Services;
 
 public class OzonSendPriceService : MarketplaceSendPriceService
 {
-    public OzonSendPriceService(IMediator mediator, IMapper mapper, IServiceProvider serviceProvider) : base(mediator,
-        mapper, serviceProvider)
+    public OzonSendPriceService(IMapper mapper, IServiceProvider serviceProvider) : base(mapper, serviceProvider)
     {
     }
 

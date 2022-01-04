@@ -10,7 +10,7 @@ public class Feed
 {
     [XmlAttribute("date")]
     public string Date { get; set; }
-        = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"))
+        = DateTime.UtcNow.ToMoscowTime()
             .ToString("yyyy-MM-dd HH:mm");
 
     [XmlElement("shop")] public Shop Shop { get; set; }

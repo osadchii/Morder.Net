@@ -1,7 +1,7 @@
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Marketplaces;
-using Infrastructure.MediatR.ChangeTracking.Commands;
+using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.MediatR.Stocks.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Warehouses;

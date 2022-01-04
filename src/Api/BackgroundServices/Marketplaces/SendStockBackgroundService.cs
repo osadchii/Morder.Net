@@ -1,11 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Integration.Common.Services.Stocks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Api.BackgroundServices.Marketplaces;
 
@@ -24,7 +17,7 @@ public class SendStockBackgroundService : IHostedService, IDisposable
         _logger = logger;
         _services = services;
 
-        _sendStockInterval = configuration.GetValue<int>("SendStockInterval");
+        _sendStockInterval = configuration.GetValue<int>("MarketplaceSettings:SendStockInterval");
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

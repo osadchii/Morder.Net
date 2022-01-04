@@ -109,6 +109,13 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             OrderId = order.Id
         }, cancellationToken);
 
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        {
+            Type = TaskType.Sticker,
+            MarketplaceId = order.MarketplaceId,
+            OrderId = order.Id
+        }, cancellationToken);
+
         _logger.LogInformation($"Packed order {order.Number} with {order.ExternalId} external id");
 
         return Unit.Value;

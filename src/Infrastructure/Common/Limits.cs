@@ -47,6 +47,7 @@ public static class Limits
     public const int OrderMaximalCount = int.MaxValue;
     public const int OrderBoxMinimalNumber = 1;
     public const int OrderBoxMaximalNumber = 1000;
+    public const int OrderStickerName = 256;
 
     public const int MarketplaceName = 128;
 

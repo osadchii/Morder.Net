@@ -1,4 +1,6 @@
 using AutoMapper;
+using Infrastructure.Extensions;
+using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Orders;
@@ -6,6 +8,7 @@ using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.SberMegaMarket.Services.Orders;
@@ -24,20 +27,79 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
 
     public override Task Handle()
     {
-        switch (OrderTask.Type)
+        return OrderTask.Type switch
         {
-            case TaskType.Confirm:
-                return HandleConfirmTask();
-            case TaskType.Pack:
-                return HandlePackingTask();
-            case TaskType.Ship:
-                return HandleShippingTask();
-            case TaskType.Reject:
-                return HandleRejectingTask();
-            case TaskType.Sticker:
-            default:
-                throw new NotImplementedException();
+            TaskType.Confirm => HandleConfirmTask(),
+            TaskType.Pack => HandlePackingTask(),
+            TaskType.Ship => HandleShippingTask(),
+            TaskType.Reject => HandleRejectingTask(),
+            TaskType.Sticker => HandlerStickerTask(),
+            _ => Task.CompletedTask
+        };
+    }
+
+    private async Task HandlerStickerTask()
+    {
+        var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<StickerPrintData>>();
+
+        var request = new SberMegaMarketMessage<StickerPrintData>(_sberMegaMarketDto.Settings.Token)
+        {
+            Data =
+            {
+                Shipments = new List<StickerPrintShipment>()
+                {
+                    new()
+                    {
+                        ShipmentId = Order.Number,
+                        Items = Order.Items.Where(i => i.Canceled)
+                            .Select(i =>
+                            {
+                                Order.OrderBox box = Order.Boxes
+                                    .First(b => b.ProductId == i.ProductId && b.Count > 0);
+
+                                box.Count--;
+
+                                var sberBox = new StickerPrintShipmentItem()
+                                {
+                                    ItemIndex = i.ExternalId!,
+                                    Boxes = new List<StickerPrintShipmentItemBox>()
+                                    {
+                                        new()
+                                        {
+                                            BoxIndex = box.Number.ToString(),
+                                            BoxCode =
+                                                $"{_sberMegaMarketDto.Settings.MerchantId}*{Order.Id}*{box.Number}"
+                                        }
+                                    }
+                                };
+
+                                return sberBox;
+                            }),
+                        BoxCodes = Order.Boxes.Select(b =>
+                            $"{_sberMegaMarketDto.Settings.MerchantId}*{Order.Id}*{b.Number}")
+                    }
+                }
+            }
+        };
+
+        string content = await client.SendRequest(ApiUrls.StickerPrint, _sberMegaMarketDto, request);
+        var response = content.FromJson<StickerPrintResponse>();
+
+        if (response is null || response.Success != 1)
+        {
+            throw new Exception("Unexpected sticker print response." +
+                                $"{Environment.NewLine}Url: {ApiUrls.StickerPrint}" +
+                                $"{Environment.NewLine}Request: {request.ToJson()}" +
+                                $"{Environment.NewLine}Response: {response}");
         }
+
+        var mediator = ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(new SaveOrderStickerFromStringRequest()
+        {
+            Content = response.Data,
+            FileName = "SberMegaMarket Sticker.html",
+            OrderId = Order.Id
+        });
     }
 
     private async Task HandleRejectingTask()

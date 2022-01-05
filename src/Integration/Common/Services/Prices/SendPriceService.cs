@@ -1,6 +1,5 @@
 using AutoMapper;
 using Infrastructure;
-using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Marketplaces;

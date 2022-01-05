@@ -18,17 +18,3 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "api"
           dockerfile: src/Api/Dockerfile
-
-  build-bot:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@3.04
-        with:
-          registry: docker.pkg.github.com
-          name: osadchii/morder.net/bot
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "bot"
-          dockerfile: src/Bot/Dockerfile

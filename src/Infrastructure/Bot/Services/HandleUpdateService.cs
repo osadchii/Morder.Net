@@ -1,10 +1,11 @@
-using Bot.Services.Interfaces;
+using Infrastructure.Bot.Interfaces;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Services;
+namespace Infrastructure.Bot.Services;
 
 public class HandleUpdateService
 {

@@ -1,4 +1,4 @@
-namespace Bot.Services;
+namespace Infrastructure.Bot;
 
 public static class MessageConstants
 {

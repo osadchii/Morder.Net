@@ -1,13 +1,13 @@
-using Bot.Extensions;
-using Bot.Menus;
 using Bot.States;
+using Infrastructure.Bot.Menus;
 using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Services.MessageHandlers;
+namespace Infrastructure.Bot.MessageHandlers;
 
 public class MessageHandler
 {

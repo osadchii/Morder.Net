@@ -1,6 +1,6 @@
 using AutoMapper;
-using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
+using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

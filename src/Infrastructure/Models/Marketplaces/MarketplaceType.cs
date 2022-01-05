@@ -1,4 +1,4 @@
-namespace Infrastructure.Marketplaces;
+namespace Infrastructure.Models.Marketplaces;
 
 public enum MarketplaceType
 {

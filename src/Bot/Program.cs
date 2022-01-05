@@ -43,7 +43,6 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddMorder(builder.Configuration);
-        builder.Services.AddMorderBot(builder.Configuration);
         builder.Services.AddMemoryCache();
 
         WebApplication? app = builder.Build();
@@ -55,17 +54,6 @@ public class Program
 
         app.UseRouting();
         app.UseHttpsRedirection();
-
-        var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
-
-        app.UseEndpoints(endpoints =>
-        {
-            string token = config.BotToken;
-            endpoints.MapControllerRoute(name: "tgwebhook",
-                pattern: $"bot/{token}",
-                new { controller = "Webhook", action = "Post" });
-            endpoints.MapControllers();
-        });
 
         app.Run();
     }

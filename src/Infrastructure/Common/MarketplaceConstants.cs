@@ -1,4 +1,4 @@
-using Infrastructure.Marketplaces;
+using Infrastructure.Models.Marketplaces;
 
 namespace Infrastructure.Common;
 

@@ -1,8 +1,10 @@
 using System.Globalization;
 using Api.BackgroundServices.Marketplaces;
 using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
+using Api.Bot;
 using Api.Filters;
 using Infrastructure;
+using Infrastructure.Bot;
 using Integration;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +67,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddMorder(builder.Configuration);
+        builder.Services.AddMorderBot(builder.Configuration);
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
         builder.Services.AddHostedService<SberMegaMarketFeedService>();
@@ -90,6 +93,17 @@ public class Program
         app.MapControllers();
 
         InitializeDatabase(app);
+
+        var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+
+        app.UseEndpoints(endpoints =>
+        {
+            string token = config.BotToken;
+            endpoints.MapControllerRoute(name: "tgwebhook",
+                pattern: $"bot/{token}",
+                new { controller = "Telegram", action = "Post" });
+            endpoints.MapControllers();
+        });
 
         app.Run();
     }

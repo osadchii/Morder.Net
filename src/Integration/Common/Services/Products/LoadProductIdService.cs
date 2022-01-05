@@ -1,7 +1,6 @@
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Common;
-using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
 using Infrastructure.Models.Marketplaces;
 using Integration.Ozon.Services;

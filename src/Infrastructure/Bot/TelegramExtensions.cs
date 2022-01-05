@@ -1,9 +1,8 @@
 using System.Text;
-using Bot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Extensions;
+namespace Infrastructure.Bot;
 
 public static class TelegramExtensions
 {

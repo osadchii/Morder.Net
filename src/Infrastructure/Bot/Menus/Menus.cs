@@ -1,6 +1,6 @@
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Menus;
+namespace Infrastructure.Bot.Menus;
 
 public static class BotMenus
 {

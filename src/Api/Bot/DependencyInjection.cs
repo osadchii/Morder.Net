@@ -1,8 +1,9 @@
-using Bot.Services;
-using Bot.Services.Interfaces;
+using Infrastructure.Bot;
+using Infrastructure.Bot.Interfaces;
+using Infrastructure.Bot.Services;
 using Telegram.Bot;
 
-namespace Bot;
+namespace Api.Bot;
 
 public static class DependencyInjection
 {
@@ -15,7 +16,7 @@ public static class DependencyInjection
         service.AddHostedService<ConfigureWebhook>();
         service.AddHttpClient("tgwebhook")
             .AddTypedClient<ITelegramBotClient>(httpClient
-                => new TelegramBotClient(config.BotToken, httpClient));
+                => new TelegramBotClient(config.BotToken!, httpClient));
 
         service.AddScoped<HandleUpdateService>();
     }

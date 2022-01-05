@@ -1,4 +1,3 @@
-using Infrastructure.Marketplaces;
 using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;

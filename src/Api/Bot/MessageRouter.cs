@@ -1,14 +1,14 @@
-using Bot.Extensions;
-using Bot.Services.Interfaces;
-using Bot.Services.MessageHandlers;
 using Bot.States;
+using Infrastructure.Bot;
+using Infrastructure.Bot.Interfaces;
+using Infrastructure.Bot.MessageHandlers;
 using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
 using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Services;
+namespace Api.Bot;
 
 public class MessageRouter : IMessageRouter
 {
@@ -24,7 +24,7 @@ public class MessageRouter : IMessageRouter
         _logger = logger;
 
         var config = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
-        _ownerUserName = config.BotOwnerUserName;
+        _ownerUserName = config.BotOwnerUserName!;
     }
 
     public async Task RouteMessageAsync(ITelegramBotClient bot, Message message)

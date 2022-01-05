@@ -1,7 +1,7 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Services.Interfaces;
+namespace Infrastructure.Bot.Interfaces;
 
 public interface IMessageRouter
 {

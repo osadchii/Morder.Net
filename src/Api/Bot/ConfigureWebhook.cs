@@ -1,7 +1,8 @@
+using Infrastructure.Bot;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Services;
+namespace Api.Bot;
 
 public class ConfigureWebhook : IHostedService
 {

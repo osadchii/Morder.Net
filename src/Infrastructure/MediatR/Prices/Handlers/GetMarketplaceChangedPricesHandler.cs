@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Infrastructure.Marketplaces;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Companies;

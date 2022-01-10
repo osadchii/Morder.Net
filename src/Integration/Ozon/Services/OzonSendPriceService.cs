@@ -26,7 +26,7 @@ public class OzonSendPriceService : MarketplaceSendPriceService
             {
                 if (!int.TryParse(s.ProductExternalId, out int productId))
                 {
-                    throw new Exception("Wrong ozon external id");
+                    throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
                 }
 
                 return new OzonPrice

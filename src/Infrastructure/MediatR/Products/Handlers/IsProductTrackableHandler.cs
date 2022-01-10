@@ -1,3 +1,4 @@
+using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Products;
@@ -17,19 +18,35 @@ public class IsProductTrackableHandler : IRequestHandler<IsProductTrackableReque
 
     public async Task<bool> Handle(IsProductTrackableRequest request, CancellationToken cancellationToken)
     {
-        string productTypesStr = await _context.Marketplaces
+        var marketplaceData = await _context.Marketplaces
             .AsNoTracking()
             .Where(m => m.Id == request.MarketplaceId)
-            .Select(m => m.ProductTypes)
+            .Select(m => new { m.ProductTypes, m.Type })
             .SingleAsync(cancellationToken);
 
-        var productTypes = productTypesStr.FromJson<List<ProductType>>();
+        var productTypes = marketplaceData.ProductTypes.FromJson<List<ProductType>>();
 
-        return await _context.Products
+        bool validProductType = await _context.Products
             .AsNoTracking()
             .AnyAsync(p => !p.DeletionMark
                            && p.CategoryId.HasValue
                            && p.ProductType.HasValue
-                           && productTypes.Contains(p.ProductType.Value), cancellationToken);
+                           && productTypes!.Contains(p.ProductType.Value), cancellationToken);
+
+        if (!validProductType)
+        {
+            return validProductType;
+        }
+
+        if (MarketplaceConstants.MarketplacesHasNoExternalProductId.Contains(marketplaceData.Type))
+        {
+            return true;
+        }
+
+        return await _context.MarketplaceProductSettings
+            .AsNoTracking()
+            .AnyAsync(
+                s => s.ProductId == request.ProductId && s.MarketplaceId == request.MarketplaceId &&
+                     s.ExternalId != null, cancellationToken);
     }
 }

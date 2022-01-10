@@ -2,62 +2,20 @@ using Integration.Common.Services.Stocks;
 
 namespace Api.BackgroundServices.Marketplaces;
 
-public class SendStockBackgroundService : IHostedService, IDisposable
+public class SendStockBackgroundService : BackgroundService
 {
-    private readonly ILogger<SendStockBackgroundService> _logger;
-    private readonly int _sendStockInterval;
-    private readonly IServiceProvider _services;
-    private Task? _task;
-
-    private Timer _timer = null!;
-
-    public SendStockBackgroundService(IServiceProvider services, ILogger<SendStockBackgroundService> logger,
+    public SendStockBackgroundService(ILogger<SendStockBackgroundService> logger, IServiceProvider services,
         IConfiguration configuration)
+        : base(logger, services, "Send stocks")
     {
-        _logger = logger;
-        _services = services;
-
-        _sendStockInterval = configuration.GetValue<int>("MarketplaceSettings:SendStockInterval");
+        TimerInterval = configuration.GetValue<int>("MarketplaceSettings:SendStockInterval");
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ServiceWork()
     {
-        _logger.LogInformation("Marketplace send stock service running.");
-
-        _timer = new Timer(DoWork, null, TimeSpan.Zero,
-            TimeSpan.FromMinutes(_sendStockInterval));
-
-        return Task.CompletedTask;
-    }
-
-    private void DoWork(object? state)
-    {
-        if (_task is null
-            || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion)
-        {
-            _task = GenerateFeeds();
-        }
-    }
-
-    private async Task GenerateFeeds()
-    {
-        await using AsyncServiceScope scope = _services.CreateAsyncScope();
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
         var sendStockService = scope.ServiceProvider.GetRequiredService<ISendStockService>();
 
         await sendStockService.SendMarketplaceStocks();
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Marketplace send stock service is stopping.");
-
-        _timer?.Change(Timeout.Infinite, 0);
-
-        return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        _timer?.Dispose();
     }
 }

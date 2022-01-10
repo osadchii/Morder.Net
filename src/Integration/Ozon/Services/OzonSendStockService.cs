@@ -1,4 +1,5 @@
 using AutoMapper;
+using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Warehouses;
@@ -7,6 +8,7 @@ using Integration.Ozon.Clients.Stocks;
 using Integration.Ozon.Clients.Stocks.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Ozon.Services;
 
@@ -17,26 +19,35 @@ public class OzonSendStockService : MarketplaceSendStockService
     {
     }
 
-    public override async Task SendStocksAsync(Marketplace marketplace, IEnumerable<MarketplaceStockDto> stocks)
+    public override async Task SendStocksAsync(Marketplace marketplace, MarketplaceStockDto[] stocks)
     {
         var client = ServiceProvider.GetRequiredService<IOzonStockClient>();
+        var logger = ServiceProvider.GetRequiredService<ILogger<OzonSendStockService>>();
         var ozon = Mapper.Map<OzonDto>(marketplace);
         var request = new OzonStockRequest
         {
-            Stocks = stocks.Select(s =>
-            {
-                if (!int.TryParse(s.ProductExternalId, out int productId))
+            Stocks = stocks
+                .Where(s => !s.ProductExternalId.IsNullOrEmpty()).Select(s =>
                 {
-                    throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
-                }
+                    if (!int.TryParse(s.ProductExternalId, out int productId))
+                    {
+                        throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
+                    }
 
-                return new OzonStock
-                {
-                    Stock = s.Value,
-                    ProductId = productId
-                };
-            })
+                    return new OzonStock
+                    {
+                        Stock = s.Value,
+                        ProductId = productId
+                    };
+                })
         };
+
+        int emptyExternalIdCount = stocks.Count(p => p.ProductExternalId.IsNullOrEmpty());
+
+        if (emptyExternalIdCount > 0)
+        {
+            logger.LogWarning($"Found ${emptyExternalIdCount} products with null or empty external id");
+        }
 
         await client.SendStocks(ozon, request);
     }

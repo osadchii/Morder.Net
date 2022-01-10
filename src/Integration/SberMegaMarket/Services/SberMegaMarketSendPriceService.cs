@@ -17,7 +17,7 @@ public class SberMegaMarketSendPriceService : MarketplaceSendPriceService
     {
     }
 
-    public override Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> prices)
+    public override Task SendPricesAsync(Marketplace marketplace, MarketplacePriceDto[] prices)
     {
         var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<SendPriceData>>();
         var sber = Mapper.Map<SberMegaMarketDto>(marketplace);
@@ -25,7 +25,7 @@ public class SberMegaMarketSendPriceService : MarketplaceSendPriceService
 
         foreach (MarketplacePriceDto stock in prices)
         {
-            request.Data.Prices.Add(new SberMegaMarketPrice(stock.ProductExternalId, stock.Value));
+            request.Data.Prices.Add(new SberMegaMarketPrice(stock.Articul, stock.Value));
         }
 
         return client.SendRequest(ApiUrls.SendPrices, sber, request);

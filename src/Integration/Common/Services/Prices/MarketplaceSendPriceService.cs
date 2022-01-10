@@ -15,5 +15,5 @@ public abstract class MarketplaceSendPriceService
         ServiceProvider = serviceProvider;
     }
 
-    public abstract Task SendPricesAsync(Marketplace marketplace, IEnumerable<MarketplacePriceDto> prices);
+    public abstract Task SendPricesAsync(Marketplace marketplace, MarketplacePriceDto[] prices);
 }

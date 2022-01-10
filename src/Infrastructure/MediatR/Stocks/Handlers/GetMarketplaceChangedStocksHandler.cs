@@ -104,13 +104,14 @@ public class
             {
                 MarketplaceType.Ozon => productSetting?.ExternalId,
                 MarketplaceType.YandexMarket => productSetting?.ExternalId,
-                _ => product.Articul
+                _ => string.Empty
             };
 
             decimal value = GetStocks(product, productSetting, categorySetting);
 
             var stock = new MarketplaceStockDto
             {
+                Articul = product.Articul!,
                 MarketplaceId = request.MarketplaceId,
                 ProductId = product.Id,
                 ProductExternalId = externalId ?? string.Empty,

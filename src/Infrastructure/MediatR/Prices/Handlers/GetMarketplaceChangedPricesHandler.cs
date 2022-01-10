@@ -84,10 +84,11 @@ public class
             {
                 MarketplaceType.Ozon => productSetting?.ExternalId,
                 MarketplaceType.YandexMarket => productSetting?.ExternalId,
-                _ => product.Articul
+                _ => string.Empty
             };
             result.Add(new MarketplacePriceDto()
             {
+                Articul = product.Articul!,
                 MarketplaceId = marketplace.Id,
                 ProductId = product.Id,
                 Value = GetPrice(product),
@@ -98,8 +99,8 @@ public class
         stopwatch.Stop();
 
         _logger.LogInformation($"Handled price request for " +
-                               $"{request.MarketplaceId} with " +
-                               $"{products.Count} elapsed " +
+                               $"{marketplace.Name} with " +
+                               $"{products.Count} products elapsed " +
                                $"{stopwatch.ElapsedMilliseconds} ms");
 
         return result;

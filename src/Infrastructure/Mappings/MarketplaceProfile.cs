@@ -3,10 +3,12 @@ using Infrastructure.Extensions;
 using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
+using Infrastructure.MediatR.Marketplaces.Meso.Commands;
 using Infrastructure.MediatR.Marketplaces.Ozon.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Marketplaces.Meso;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Prices;
@@ -78,6 +80,41 @@ public class MarketplaceProfile : Profile
             .ForMember(m => m.Type,
                 opt =>
                     opt.MapFrom(e => MarketplaceType.Ozon))
+            .ForMember(m => m.PriceTypeId,
+                opt =>
+                    opt.MapFrom(e => e.PriceType!.Id))
+            .ForMember(m => m.WarehouseId,
+                opt =>
+                    opt.MapFrom(e => e.Warehouse!.Id))
+            .ForMember(m => m.Warehouse,
+                opt => opt.Ignore())
+            .ForMember(m => m.PriceType,
+                opt => opt.Ignore());
+
+        CreateMap<Marketplace, MesoDto>()
+            .ForMember(m => m.ProductTypes,
+                opt
+                    => opt.MapFrom(e => e.ProductTypes.FromJson<List<ProductType>>()))
+            .ForMember(m => m.Settings,
+                opt =>
+                    opt.MapFrom(e => e.Settings.FromJson<MesoSettings>()))
+            .ForMember(m => m.WarehouseExternalId,
+                opt =>
+                    opt.MapFrom(e => e.Warehouse.ExternalId))
+            .ForMember(m => m.PriceTypeExternalId,
+                opt =>
+                    opt.MapFrom(e => e.PriceType.ExternalId));
+
+        CreateMap<UpdateMesoRequest, Marketplace>()
+            .ForMember(m => m.ProductTypes,
+                opt =>
+                    opt.MapFrom(e => e.ProductTypes!.ToJson()))
+            .ForMember(m => m.Settings,
+                opt =>
+                    opt.MapFrom(e => e.Settings!.ToJson()))
+            .ForMember(m => m.Type,
+                opt =>
+                    opt.MapFrom(e => MarketplaceType.Meso))
             .ForMember(m => m.PriceTypeId,
                 opt =>
                     opt.MapFrom(e => e.PriceType!.Id))

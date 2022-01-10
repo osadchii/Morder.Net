@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Infrastructure.MediatR.Products.Commands;
 
-public class UpdateProductRequest : IRequest<Unit>
+public class UpdateProductRequest : IRequest<Result>
 {
     [Required]
     [MaxLength(Limits.ProductName)]

@@ -1,23 +1,27 @@
 using AutoMapper;
+using Infrastructure.Common;
 using Infrastructure.MediatR.Products.Commands;
 using Infrastructure.Models.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Products.Handlers;
 
-public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Unit>
+public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
+    private readonly ILogger<UpdateProductHandler> _logger;
 
-    public UpdateProductHandler(MContext context, IMapper mapper)
+    public UpdateProductHandler(MContext context, IMapper mapper, ILogger<UpdateProductHandler> logger)
     {
         _context = context;
         _mapper = mapper;
+        _logger = logger;
     }
 
-    public async Task<Unit> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
     {
         if (request.CategoryId.HasValue && request.CategoryId != Guid.Empty)
         {
@@ -30,6 +34,17 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Unit>
             }
 
             request.Category = parent;
+        }
+
+        bool unUniqueArticul = await _context.Products
+            .AsNoTracking()
+            .AnyAsync(p => p.Articul == request.Articul && p.ExternalId != request.ExternalId, cancellationToken);
+
+        if (unUniqueArticul)
+        {
+            var message = $"Trying to post product with non-unique articul: {request.Articul}";
+            _logger.LogWarning(message);
+            return ResultCode.Error.AsResult(message);
         }
 
         Product? dbEntry = await _context.Products
@@ -45,23 +60,27 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Unit>
         return await UpdateProduct(dbEntry, request, cancellationToken);
     }
 
-    private async Task<Unit> CreateProduct(UpdateProductRequest request, CancellationToken cancellationToken)
+    private async Task<Result> CreateProduct(UpdateProductRequest request, CancellationToken cancellationToken)
     {
         var dbEntry = _mapper.Map<Product>(request);
 
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        _logger.LogInformation($"Created product {dbEntry.Name} ({dbEntry.Articul}) with id {dbEntry.Id}");
+
+        return dbEntry.AsResult();
     }
 
-    private async Task<Unit> UpdateProduct(Product dbEntry, UpdateProductRequest request,
+    private async Task<Result> UpdateProduct(Product dbEntry, UpdateProductRequest request,
         CancellationToken cancellationToken)
     {
         _mapper.Map(request, dbEntry);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        _logger.LogInformation($"Updated product {dbEntry.Name} ({dbEntry.Articul}) with id {dbEntry.Id}");
+
+        return dbEntry.AsResult();
     }
 }

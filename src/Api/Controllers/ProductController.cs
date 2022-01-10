@@ -28,9 +28,8 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Result> UpdateProduct([Required] [FromBody] UpdateProductRequest command)
+    public Task<Result> UpdateProduct([Required] [FromBody] UpdateProductRequest command)
     {
-        await _mediator.Send(command);
-        return Result.Ok;
+        return _mediator.Send(command);
     }
 }

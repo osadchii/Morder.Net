@@ -6,5 +6,6 @@ public enum MarketplaceType
     Ozon,
     YandexMarket,
     Wildberries,
-    Aliexpress
+    Aliexpress,
+    Meso
 }

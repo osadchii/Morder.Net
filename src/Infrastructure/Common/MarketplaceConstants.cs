@@ -8,4 +8,10 @@ public static class MarketplaceConstants
     {
         MarketplaceType.SberMegaMarket
     };
+
+    public static IEnumerable<MarketplaceType> MarketplacesHasFeed => new[]
+    {
+        MarketplaceType.Meso,
+        MarketplaceType.SberMegaMarket
+    };
 }

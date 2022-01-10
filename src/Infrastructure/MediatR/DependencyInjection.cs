@@ -1,6 +1,8 @@
 using Infrastructure.MediatR.Companies.Handlers;
+using Infrastructure.MediatR.Marketplaces.Meso.Commands;
 using Infrastructure.MediatR.Marketplaces.Ozon.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
+using Infrastructure.Models.Marketplaces.Meso;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Services.Marketplaces;
@@ -18,5 +20,7 @@ public static class MediatRDependencyInjection
             MarketplaceUpdateService<UpdateSberMegaMarketRequest, SberMegaMarketDto>>();
         services.AddTransient<IMarketplaceUpdateService<UpdateOzonRequest, OzonDto>,
             MarketplaceUpdateService<UpdateOzonRequest, OzonDto>>();
+        services.AddTransient<IMarketplaceUpdateService<UpdateMesoRequest, MesoDto>,
+            MarketplaceUpdateService<UpdateMesoRequest, MesoDto>>();
     }
 }

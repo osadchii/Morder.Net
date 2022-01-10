@@ -1,6 +1,5 @@
 using System.Globalization;
 using Api.BackgroundServices.Marketplaces;
-using Api.BackgroundServices.Marketplaces.SberMegaMarketServices;
 using Api.Bot;
 using Api.Filters;
 using Infrastructure;
@@ -70,7 +69,7 @@ public class Program
         builder.Services.AddMorderBot(builder.Configuration);
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
-        builder.Services.AddHostedService<SberMegaMarketFeedService>();
+        builder.Services.AddHostedService<MarketplaceFeedBackgroundService>();
         builder.Services.AddHostedService<SendStockBackgroundService>();
         builder.Services.AddHostedService<SendPriceBackgroundService>();
         builder.Services.AddHostedService<LoadProductIdsBackgroundService>();

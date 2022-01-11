@@ -8,12 +8,7 @@
 **/.idea/httpRequests/
 
 # Sensitive or high-churn files
-/.idea/.idea.Morder.Net/.idea/dataSources
-**/.idea/**/dataSources.ids
-/.idea/.idea.Morder.Net/.idea/dataSources.xml
-/.idea/.idea.Morder.Net/.idea/dataSources.local.xml
-**/.idea/**/sqlDataSources.xml
-**/.idea/**/dynamic.xml
+/.idea/.idea.Morder.Net/.idea
 
 # Rider
 # Rider auto-generates .iml files, and contentModel.xml

@@ -45,27 +45,34 @@ public class FeedService : IFeedService
 
             foreach (Marketplace marketplace in marketplaces)
             {
-                MarketplaceFeedService? feedService = marketplace.Type switch
+                try
                 {
-                    MarketplaceType.SberMegaMarket => new SberMegaMarketFeedService(_mapper, _serviceProvider,
-                        marketplace),
-                    MarketplaceType.Meso => new MesoFeedService(_mapper, _serviceProvider, marketplace),
-                    _ => null
-                };
+                    MarketplaceFeedService? feedService = marketplace.Type switch
+                    {
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketFeedService(_mapper, _serviceProvider,
+                            marketplace),
+                        MarketplaceType.Meso => new MesoFeedService(_mapper, _serviceProvider, marketplace),
+                        _ => null
+                    };
 
-                if (feedService is null)
-                {
-                    continue;
+                    if (feedService is null)
+                    {
+                        continue;
+                    }
+
+                    var sw = new Stopwatch();
+                    sw.Start();
+
+                    await feedService.GenerateFeed();
+
+                    sw.Stop();
+                    _logger.LogInformation(
+                        $"Generated {marketplace.Name} ({marketplace.Id}) feed. Elapsed {sw.ElapsedMilliseconds} ms");
                 }
-
-                var sw = new Stopwatch();
-                sw.Start();
-
-                await feedService.GenerateFeed();
-
-                sw.Stop();
-                _logger.LogInformation(
-                    $"Generated {marketplace.Name} ({marketplace.Id}) feed. Elapsed {sw.ElapsedMilliseconds} ms");
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error while generating {marketplace.Name} feed");
+                }
             }
         }
         catch (Exception ex)

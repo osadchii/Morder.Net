@@ -7,9 +7,6 @@
 **/.idea/dictionaries
 **/.idea/httpRequests/
 
-# Sensitive or high-churn files
-/.idea/.idea.Morder.Net/.idea
-
 # Rider
 # Rider auto-generates .iml files, and contentModel.xml
 **/.idea/**/*.iml
@@ -22,7 +19,7 @@
 *.suo
 *.user
 .vs/
-.idea/
+/.idea/
 [Bb]in/
 [Oo]bj/
 _UpgradeReport_Files/

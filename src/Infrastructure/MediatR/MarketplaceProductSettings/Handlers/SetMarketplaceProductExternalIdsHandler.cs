@@ -4,6 +4,7 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.MarketplaceProductSettings.Handlers;
 
@@ -11,11 +12,14 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
 {
     private readonly MContext _context;
     private readonly IChangeTrackingService _trackingService;
+    private readonly ILogger<SetMarketplaceProductSettingsHandler> _logger;
 
-    public SetMarketplaceProductExternalIdsHandler(MContext context, IChangeTrackingService trackingService)
+    public SetMarketplaceProductExternalIdsHandler(MContext context, IChangeTrackingService trackingService,
+        ILogger<SetMarketplaceProductSettingsHandler> logger)
     {
         _context = context;
         _trackingService = trackingService;
+        _logger = logger;
     }
 
     public async Task<Unit> Handle(SetMarketplaceProductExternalIdsRequest request, CancellationToken cancellationToken)
@@ -29,7 +33,7 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
         bool stockTracking = marketplace.IsActive && marketplace.StockChangesTracking;
         bool priceTracking = marketplace.IsActive && marketplace.PriceChangesTracking;
 
-        Dictionary<string, int> productIds = await _context.Products
+        Dictionary<string, int> productsData = await _context.Products
             .AsNoTracking()
             .Where(p => articuls.Contains(p.Articul!))
             .Select(p => new { p.Articul, p.Id })
@@ -40,21 +44,21 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
             .Include(s => s.Product)
             .ToDictionaryAsync(s => s.Product.Articul!, s => s, cancellationToken);
 
-        foreach (KeyValuePair<string, string> keyValue in request.ExternalIds)
+        foreach ((string? articul, string? value) in request.ExternalIds)
         {
-            if (currentSettings.TryGetValue(keyValue.Key, out MarketplaceProductSetting? setting))
+            if (currentSettings.TryGetValue(articul, out MarketplaceProductSetting? setting))
             {
-                if (setting.ExternalId != keyValue.Value)
+                if (setting.ExternalId != value)
                 {
-                    setting.ExternalId = keyValue.Value;
+                    setting.ExternalId = value;
                     await TrackChanges(setting.ProductId);
                 }
             }
-            else if (productIds.TryGetValue(keyValue.Key, out int productId))
+            else if (productsData.TryGetValue(articul, out int productId))
             {
                 setting = new MarketplaceProductSetting
                 {
-                    ExternalId = keyValue.Value,
+                    ExternalId = value,
                     MarketplaceId = request.MarketplaceId,
                     ProductId = productId
                 };
@@ -64,13 +68,21 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
             }
         }
 
+        string[] notFoundArticuls = articuls.Except(productsData.Keys.ToList()).ToArray();
+
+        if (notFoundArticuls.Any())
+        {
+            _logger.LogWarning(
+                $"Can't find products with articuls {string.Join(", ", notFoundArticuls)} to set {marketplace.Name} ({marketplace.Id}) external ids");
+        }
+
         IEnumerable<KeyValuePair<string, MarketplaceProductSetting>> toClear =
             currentSettings.Where(s => !request.ExternalIds.ContainsKey(s.Key));
 
-        foreach (KeyValuePair<string, MarketplaceProductSetting> clearItem in toClear)
+        foreach ((_, MarketplaceProductSetting? value) in toClear)
         {
-            clearItem.Value.ExternalId = null;
-            await TrackChanges(clearItem.Value.ProductId);
+            value.ExternalId = null;
+            await TrackChanges(value.ProductId);
         }
 
         await _context.SaveChangesAsync(cancellationToken);

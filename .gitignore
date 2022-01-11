@@ -8,10 +8,10 @@
 **/.idea/httpRequests/
 
 # Sensitive or high-churn files
-/.idea/**/dataSources
+/.idea/.idea.Morder.Net/.idea/dataSources
 **/.idea/**/dataSources.ids
-/.idea/dataSources.xml
-/.idea/dataSources.local.xml
+/.idea/.idea.Morder.Net/.idea/dataSources.xml
+/.idea/.idea.Morder.Net/.idea/dataSources.local.xml
 **/.idea/**/sqlDataSources.xml
 **/.idea/**/dynamic.xml
 

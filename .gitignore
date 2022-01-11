@@ -22,7 +22,7 @@
 **/.idea/**/modules.xml
 
 # Static files
-./src/Api/wwwroot
+/src/Api/wwwroot
 
 *.suo
 *.user

@@ -1,5 +1,6 @@
 using System.Xml;
 using System.Xml.Serialization;
+using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Integration.SberMegaMarket.Feeds;
@@ -11,13 +12,18 @@ public static class FeedExtensions
 {
     public static Offer? ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
     {
-        decimal price = productData.GetProductPrice(product);
-        decimal stock = productData.GetProductStock(product, price);
-
         if (!int.TryParse(product.Articul, out int articul))
         {
             return null;
         }
+
+        if (product.Barcode.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        decimal price = productData.GetProductPrice(product);
+        decimal stock = productData.GetProductStock(product, price);
 
         bool available = stock > 0;
 

@@ -15,6 +15,11 @@ public static class FeedExtensions
 
     public static MesoProduct? ToMesoProduct(this Product product, MarketplaceProductData productData, MesoDto _meso)
     {
+        if (product.Barcode.IsNullOrEmpty())
+        {
+            return null;
+        }
+
         decimal price = productData.GetProductPrice(product);
         decimal stock = productData.GetProductStock(product, price);
 
@@ -26,7 +31,7 @@ public static class FeedExtensions
         var offer = new MesoProduct
         {
             Price = price,
-            Code = product.Barcode,
+            Code = product.Barcode!,
             InternalCode = product.Articul!,
             MeasureUnit = product.ProductType switch
             {

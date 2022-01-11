@@ -35,18 +35,25 @@ public class LoadOrdersService : ILoadOrdersService
 
             foreach (Marketplace marketplace in marketplaces)
             {
-                MarketplaceOrderLoader? loader = marketplace.Type switch
+                try
                 {
-                    MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider),
-                    _ => null
-                };
+                    MarketplaceOrderLoader? loader = marketplace.Type switch
+                    {
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider),
+                        _ => null
+                    };
 
-                if (loader is null)
-                {
-                    continue;
+                    if (loader is null)
+                    {
+                        continue;
+                    }
+
+                    await loader.LoadAsync();
                 }
-
-                await loader.LoadAsync();
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error while loading orders from {marketplace.Name}");
+                }
             }
         }
         catch (Exception ex)

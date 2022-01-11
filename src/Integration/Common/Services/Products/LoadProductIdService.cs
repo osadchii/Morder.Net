@@ -44,29 +44,36 @@ public class LoadProductIdService : ILoadProductIdService
 
             foreach (Marketplace marketplace in marketplaces)
             {
-                MarketplaceLoadProductIdsService? sendService = marketplace.Type switch
+                try
                 {
-                    MarketplaceType.Ozon => new OzonLoadProductIdsService(_mapper, _serviceProvider),
-                    _ => null
-                };
+                    MarketplaceLoadProductIdsService? sendService = marketplace.Type switch
+                    {
+                        MarketplaceType.Ozon => new OzonLoadProductIdsService(_mapper, _serviceProvider),
+                        _ => null
+                    };
 
-                if (sendService is null)
-                {
-                    continue;
+                    if (sendService is null)
+                    {
+                        continue;
+                    }
+
+                    Dictionary<string, string> result = await sendService.LoadProductIds(marketplace);
+
+                    if (result.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    await _mediator.Send(new SetMarketplaceProductExternalIdsRequest
+                    {
+                        ExternalIds = result,
+                        MarketplaceId = marketplace.Id
+                    });
                 }
-
-                Dictionary<string, string> result = await sendService.LoadProductIds(marketplace);
-
-                if (result.Count == 0)
+                catch (Exception ex)
                 {
-                    continue;
+                    _logger.LogError(ex, $"Error while loading product ids from {marketplace.Name}");
                 }
-
-                await _mediator.Send(new SetMarketplaceProductExternalIdsRequest
-                {
-                    ExternalIds = result,
-                    MarketplaceId = marketplace.Id
-                });
             }
         }
         catch (Exception ex)

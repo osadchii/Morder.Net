@@ -46,33 +46,40 @@ public class SendPriceService : ISendPriceService
 
             foreach (Marketplace marketplace in marketplaces)
             {
-                MarketplacePriceDto[] prices = (await _mediator.Send(new GetMarketplacePricesRequest()
+                try
                 {
-                    MarketplaceId = marketplace.Id,
-                    Limit = marketplace.PriceSendLimit
-                })).ToArray();
+                    MarketplacePriceDto[] prices = (await _mediator.Send(new GetMarketplacePricesRequest()
+                    {
+                        MarketplaceId = marketplace.Id,
+                        Limit = marketplace.PriceSendLimit
+                    })).ToArray();
 
-                if (!prices.Any())
-                {
-                    continue;
+                    if (!prices.Any())
+                    {
+                        continue;
+                    }
+
+                    MarketplaceSendPriceService? sendService = marketplace.Type switch
+                    {
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mapper,
+                            _serviceProvider),
+                        MarketplaceType.Ozon => new OzonSendPriceService(_mapper, _serviceProvider),
+                        _ => null
+                    };
+
+                    if (sendService is not null)
+                    {
+                        await sendService.SendPricesAsync(marketplace, prices);
+                    }
+
+                    await _mediator.Send(new DeletePriceChangesRequest(marketplace.Id,
+                        prices.Select(s => s.ProductId).ToList()));
+                    _logger.LogInformation($"Sent {prices.Length} prices to {marketplace.Name}");
                 }
-
-                MarketplaceSendPriceService? sendService = marketplace.Type switch
+                catch (Exception ex)
                 {
-                    MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mapper,
-                        _serviceProvider),
-                    MarketplaceType.Ozon => new OzonSendPriceService(_mapper, _serviceProvider),
-                    _ => null
-                };
-
-                if (sendService is not null)
-                {
-                    await sendService.SendPricesAsync(marketplace, prices);
+                    _logger.LogError(ex, $"Error while sending prices to {marketplace.Name}");
                 }
-
-                await _mediator.Send(new DeletePriceChangesRequest(marketplace.Id,
-                    prices.Select(s => s.ProductId).ToList()));
-                _logger.LogInformation($"Sent {prices.Length} prices to {marketplace.Name}");
             }
         }
         catch (Exception ex)

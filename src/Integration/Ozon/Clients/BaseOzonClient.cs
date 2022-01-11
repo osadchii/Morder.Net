@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 
@@ -19,7 +20,7 @@ public abstract class BaseOzonClient
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
 
-        httpMessage.Content = new StringContent(obj.ToJson());
+        httpMessage.Content = new StringContent(obj.ToJson(), Encoding.UTF8, "application/json");
         httpMessage.Headers.Add("Client-Id", ozon.Settings.ClientId);
         httpMessage.Headers.Add("Api-Key", ozon.Settings.ApiKey);
         httpMessage.Headers.Add("cache-disable", Guid.NewGuid().ToString());

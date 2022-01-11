@@ -1,10 +1,9 @@
 using AutoMapper;
-using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
-using Infrastructure.Models.Companies;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Meso;
 using Integration.Common.Services.Feeds;
+using Integration.Meso.Clients;
 using Integration.Meso.Extensions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +23,7 @@ public class MesoFeedService : MarketplaceFeedService
     public override async Task GenerateFeed()
     {
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
-
-        CompanyDto companyInformation = await mediator.Send(new GetCompanyInformationRequest());
+        var client = ServiceProvider.GetRequiredService<IMesoSendFeedClient>();
 
         MarketplaceProductData data = await mediator.Send(new GetMarketplaceProductDataRequest()
         {
@@ -35,6 +33,7 @@ public class MesoFeedService : MarketplaceFeedService
         var feedBuilder = new FeedBuilder(data, _meso);
 
         Feed feed = feedBuilder.Build();
+        await client.SendFeed(_meso, feed);
 
         if (_meso.Settings.SaveFeed)
         {

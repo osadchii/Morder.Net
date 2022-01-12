@@ -1,6 +1,5 @@
 using System.Xml;
 using System.Xml.Serialization;
-using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Integration.SberMegaMarket.Feeds;
@@ -17,11 +16,6 @@ public static class FeedExtensions
             return null;
         }
 
-        if (product.Barcode.IsNullOrEmpty())
-        {
-            return null;
-        }
-
         decimal price = productData.GetProductPrice(product);
         decimal stock = productData.GetProductStock(product, price);
 
@@ -30,7 +24,7 @@ public static class FeedExtensions
         var offer = new Offer
         {
             Available = available,
-            Barcode = product.Barcode,
+            Barcode = product.Barcode ?? string.Empty,
             Brand = product.Brand,
             Height = product.Height,
             Length = product.Length,
@@ -72,7 +66,7 @@ public static class FeedExtensions
             Indent = true,
             Async = true
         };
-        // Remove Namespace
+
         var ns = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
         using var stream = new StreamWriter(fileName);

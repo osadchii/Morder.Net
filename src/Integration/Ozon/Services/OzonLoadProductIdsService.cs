@@ -16,8 +16,13 @@ public class OzonLoadProductIdsService : MarketplaceLoadProductIdsService
     public override async Task<Dictionary<string, string>> LoadProductIds(Marketplace marketplace)
     {
         var client = ServiceProvider.GetRequiredService<IOzonLoadProductIdsClient>();
-        var sber = Mapper.Map<OzonDto>(marketplace);
+        var ozon = Mapper.Map<OzonDto>(marketplace);
 
-        return await client.LoadProductIdsAsync(sber);
+        if (!ozon.Settings.LoadProductIds)
+        {
+            return new Dictionary<string, string>();
+        }
+
+        return await client.LoadProductIdsAsync(ozon);
     }
 }

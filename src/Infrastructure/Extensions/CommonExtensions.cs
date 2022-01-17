@@ -22,6 +22,9 @@ public static class CommonExtensions
         }
         catch
         {
+#if DEBUG
+            throw;
+#endif
             return default;
         }
     }

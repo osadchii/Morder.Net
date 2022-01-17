@@ -21,11 +21,10 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
     private readonly SberMegaMarketDto _sberMegaMarketDto;
     private const int PortionSize = 100;
 
-    public SberMegaMarketOrderLoader(Marketplace marketplace, IServiceProvider serviceProvider) : base(marketplace,
-        serviceProvider)
+    public SberMegaMarketOrderLoader(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper) : base(
+        marketplace, serviceProvider, mapper)
     {
-        var mapper = ServiceProvider.GetRequiredService<IMapper>();
-        _sberMegaMarketDto = mapper.Map<SberMegaMarketDto>(Marketplace);
+        _sberMegaMarketDto = Mapper.Map<SberMegaMarketDto>(Marketplace);
     }
 
     public override async Task LoadAsync()
@@ -46,8 +45,6 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
 
             handled += PortionSize;
         }
-
-        var request = new SberMegaMarketMessage<LoadOrdersData>(_sberMegaMarketDto.Settings.Token);
     }
 
     private async Task LoadOrdersPortion(IEnumerable<string> portion)

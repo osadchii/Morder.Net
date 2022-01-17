@@ -16,7 +16,7 @@ public class OzonLoadProductIdsClient : BaseOzonClient, IOzonLoadProductIdsClien
         var result = new Dictionary<string, string>();
         var currentPage = 1;
         var loaded = false;
-        var pageLimit = 500;
+        const int pageLimit = 500;
 
         while (!loaded)
         {

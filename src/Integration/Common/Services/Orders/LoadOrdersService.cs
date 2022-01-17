@@ -1,5 +1,7 @@
+using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
+using Integration.Ozon.Services;
 using Integration.SberMegaMarket.Services.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,15 @@ public class LoadOrdersService : ILoadOrdersService
     private readonly ILogger<LoadOrdersService> _logger;
     private readonly MContext _context;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IMapper _mapper;
 
-    public LoadOrdersService(ILogger<LoadOrdersService> logger, MContext context, IServiceProvider serviceProvider)
+    public LoadOrdersService(ILogger<LoadOrdersService> logger, MContext context, IServiceProvider serviceProvider,
+        IMapper mapper)
     {
         _logger = logger;
         _context = context;
         _serviceProvider = serviceProvider;
+        _mapper = mapper;
     }
 
     public async Task LoadOrders()
@@ -39,7 +44,9 @@ public class LoadOrdersService : ILoadOrdersService
                 {
                     MarketplaceOrderLoader? loader = marketplace.Type switch
                     {
-                        MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider),
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider,
+                            _mapper),
+                        MarketplaceType.Ozon => new OzonOrderLoader(marketplace, _serviceProvider, _mapper),
                         _ => null
                     };
 

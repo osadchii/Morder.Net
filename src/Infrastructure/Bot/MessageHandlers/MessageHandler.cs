@@ -2,7 +2,9 @@ using Bot.States;
 using Infrastructure.Bot.Menus;
 using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
+using Infrastructure.Models.Marketplaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,16 +18,19 @@ public class MessageHandler
     protected readonly Message Message;
     protected readonly BotUser User;
     protected readonly ILogger Logger;
+    protected readonly MContext Context;
     protected long ChatId => Message.Chat.Id;
     protected string Text => Message.Text!;
 
-    public MessageHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger)
+    public MessageHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger,
+        MContext context)
     {
         Client = client;
         Mediator = mediator;
         Message = message;
         User = user;
         Logger = logger;
+        Context = context;
     }
 
     public virtual async Task Handle()
@@ -49,6 +54,26 @@ public class MessageHandler
     {
         await client.SendReplyKeyboard(message.Chat.Id, BotMenus.MainMenu);
         await SetUserState(mediator, user, StateIds.MainMenu);
+    }
+
+    protected async Task ToMarketplaces()
+    {
+        List<Marketplace> marketplaces = await Context.Marketplaces
+            .AsNoTracking()
+            .OrderBy(m => m.Id)
+            .ToListAsync();
+
+        var menuBuilder = new KeyboardBuilder();
+
+        foreach (Marketplace marketplace in marketplaces)
+        {
+            menuBuilder.AddLine()
+                .AddButton($"{marketplace.Id} – {marketplace.Name} ({marketplace.Type})");
+        }
+
+        await Client.SendReplyKeyboard(ChatId, menuBuilder.Build());
+        await SetUserState(StateIds.Marketplaces);
+        LogRouting("Marketplaces");
     }
 
     protected void LogRouting(string routedTo)

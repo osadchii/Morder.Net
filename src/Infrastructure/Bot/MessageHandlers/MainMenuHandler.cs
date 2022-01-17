@@ -17,12 +17,14 @@ public class MainMenuHandler : MessageHandler
             MenuTexts.SummaryToday => SendSummary(DateOnly.FromDateTime(DateTime.Today)),
             MenuTexts.SummaryYesterday => SendSummary(DateOnly.FromDateTime(DateTime.Today).AddDays(-1)),
             MenuTexts.ToReports => ToReports(),
+            MenuTexts.ToMarketplaces => ToMarketplaces(),
             _ => Task.CompletedTask
         };
     }
 
-    public MainMenuHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger)
-        : base(client, mediator, message, user, logger)
+    public MainMenuHandler(ITelegramBotClient client, IMediator mediator, Message message, BotUser user, ILogger logger,
+        MContext context)
+        : base(client, mediator, message, user, logger, context)
     {
     }
 

@@ -1,4 +1,5 @@
 using Bot.States;
+using Infrastructure;
 using Infrastructure.Bot;
 using Infrastructure.Bot.Interfaces;
 using Infrastructure.Bot.MessageHandlers;
@@ -13,15 +14,17 @@ namespace Api.Bot;
 public class MessageRouter : IMessageRouter
 {
     private readonly IMediator _mediator;
+    private readonly MContext _context;
     private readonly ILogger<MessageRouter> _logger;
     private readonly string _ownerUserName;
     private BotUser? _user;
 
     public MessageRouter(IMediator mediator, ILogger<MessageRouter> logger,
-        IConfiguration configuration)
+        IConfiguration configuration, MContext context)
     {
         _mediator = mediator;
         _logger = logger;
+        _context = context;
 
         var config = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
         _ownerUserName = config.BotOwnerUserName!;
@@ -46,8 +49,13 @@ public class MessageRouter : IMessageRouter
 
         MessageHandler handler = _user.CurrentState switch
         {
-            StateIds.MainMenu => new MainMenuHandler(bot, _mediator, message, _user, _logger),
-            _ => new MessageHandler(bot, _mediator, message, _user, _logger)
+            StateIds.MainMenu => new MainMenuHandler(bot, _mediator, message, _user, _logger, _context),
+            StateIds.MarketplaceSetMinimalPrice => new MarketplaceHandler(bot, _mediator, message, _user, _logger,
+                _context),
+            StateIds.MarketplaceSetMinimapStock => new MarketplaceHandler(bot, _mediator, message, _user, _logger,
+                _context),
+            StateIds.Marketplaces => new MarketplaceHandler(bot, _mediator, message, _user, _logger, _context),
+            _ => new MessageHandler(bot, _mediator, message, _user, _logger, _context)
         };
 
         await handler.Handle();

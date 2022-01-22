@@ -43,6 +43,9 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     public DateTime? ShippingTimeLimit { get; set; }
 
+    public bool ExpressOrder { get; set; }
+    public string? TrackNumber { get; set; }
+
     public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 
     public Collection<OrderItem> Items { get; set; }

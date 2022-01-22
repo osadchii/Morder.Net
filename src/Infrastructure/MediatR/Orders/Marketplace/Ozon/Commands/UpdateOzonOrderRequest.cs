@@ -14,6 +14,7 @@ public class UpdateOzonOrderRequest : IRequest<Unit>
     public string? CustomerFullName { get; set; }
 
     public string? CustomerAddress { get; set; }
+    public string? TrackNumber { get; set; }
 
     public IEnumerable<UpdateOzonOrderItem> Items { get; set; }
 }

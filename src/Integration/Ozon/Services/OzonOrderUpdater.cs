@@ -52,6 +52,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
                 CustomerAddress = posting.Custromer?.Address?.AddressTail,
                 CustomerFullName = posting.Custromer?.Name,
                 PackingTimeLimit = posting.ShipmentDate,
+                TrackNumber = posting.TrackingNumber,
                 Items = posting.Products.Select(p => new UpdateOzonOrderItem()
                 {
                     Articul = p.OfferId,

@@ -44,6 +44,8 @@ public class OzonOrderAdapter : IOzonOrderAdapter
                     MarketplaceId = ozon.Id,
                     Archived = ozon.Settings.LoadOrdersAsArchived,
                     ShippingDate = p.ShipmentDate.ToUtcTime(),
+                    ExpressOrder = p.IsExpress,
+                    TrackNumber = p.TrackingNumber,
                     Items = p.Products.Select(i => new CreateOrderItem()
                     {
                         Count = i.Quantity,

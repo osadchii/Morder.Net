@@ -14,6 +14,9 @@ public class CreateOrderRequest : IRequest<Order>
     public string Customer { get; set; }
     public DateTime Date { get; set; }
     public DateTime ShippingDate { get; set; }
+
+    public bool ExpressOrder { get; set; }
+    public string? TrackNumber { get; set; }
     public IEnumerable<CreateOrderItem> Items { get; set; }
 }
 

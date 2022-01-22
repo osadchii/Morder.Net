@@ -40,6 +40,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
         order.Status = request.Status;
         order.PackingTimeLimit = request.PackingTimeLimit;
         order.CustomerAddress = request.CustomerAddress;
+        order.TrackNumber = request.TrackNumber;
 
         if (request.CustomerFullName is not null)
         {
@@ -82,6 +83,11 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
                         $"{Environment.NewLine}{item.Count} more than count in order");
                 }
             }
+        }
+
+        if (order.Items.All(i => i.Canceled))
+        {
+            order.Status = OrderStatus.Canceled;
         }
 
         int saved = await _context.SaveChangesAsync(cancellationToken);

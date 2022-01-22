@@ -4,19 +4,19 @@ namespace Integration.Ozon.Clients.Orders.Messages;
 
 public class GetUnfulfilledOrdersResponse
 {
-    [JsonProperty("result")] public Result Result { get; set; }
+    [JsonProperty("result")] public GetUnfulfilledOrdersResult GetUnfulfilledOrdersResult { get; set; }
 }
 
-public class Result
+public class GetUnfulfilledOrdersResult
 {
     [JsonProperty("count")] public int Count { get; set; }
 
-    [JsonProperty("postings")] public IEnumerable<Posting> Postings { get; set; }
+    [JsonProperty("postings")] public IEnumerable<GetUnfulfilledOrdersPosting> Postings { get; set; }
 }
 
-public class Posting
+public class GetUnfulfilledOrdersPosting
 {
-    [JsonProperty("customer")] public PostingCustomer Customer { get; set; }
+    [JsonProperty("customer")] public GetUnfulfilledOrdersPostingCustomer Customer { get; set; }
 
     [JsonProperty("in_process_at")] public DateTime InProcessAt { get; set; }
 
@@ -30,10 +30,10 @@ public class Posting
 
     [JsonProperty("tracking_number")] public string TrackingNumber { get; set; }
 
-    [JsonProperty("products")] public IEnumerable<PostingProduct> Products { get; set; }
+    [JsonProperty("products")] public IEnumerable<GetUnfulfilledOrdersPostingProduct> Products { get; set; }
 }
 
-public class PostingProduct
+public class GetUnfulfilledOrdersPostingProduct
 {
     [JsonProperty("offer_id")] public string OfferId { get; set; }
 
@@ -42,16 +42,16 @@ public class PostingProduct
     [JsonProperty("quantity")] public int Quantity { get; set; }
 }
 
-public class PostingCustomer
+public class GetUnfulfilledOrdersPostingCustomer
 {
-    [JsonProperty("address")] public PostingCustomerAddress Address { get; set; }
+    [JsonProperty("address")] public GetUnfulfilledOrdersPostingCustomerAddress Address { get; set; }
 
     [JsonProperty("name")] public string Name { get; set; }
 
     [JsonProperty("phone")] public string Phone { get; set; }
 }
 
-public class PostingCustomerAddress
+public class GetUnfulfilledOrdersPostingCustomerAddress
 {
     [JsonProperty("address_tail")] public string AddressTail { get; set; }
 }

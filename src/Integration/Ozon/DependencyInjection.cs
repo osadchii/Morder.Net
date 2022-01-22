@@ -12,7 +12,10 @@ public static class DependencyInjection
     {
         services.AddTransient<IOzonLoadProductIdsClient, OzonLoadProductIdsClient>();
         services.AddTransient<IOzonLoadUnfulfilledOrdersClient, OzonLoadUnfulfilledOrdersClient>();
+        services.AddTransient<IOzonLoadOrderListClient, OzonLoadOrderListClient>();
         services.AddTransient<IOzonStockClient, OzonStockClient>();
         services.AddTransient<IOzonPriceClient, OzonPriceClient>();
+
+        services.AddTransient<IOzonOrderAdapter, OzonOrderAdapter>();
     }
 }

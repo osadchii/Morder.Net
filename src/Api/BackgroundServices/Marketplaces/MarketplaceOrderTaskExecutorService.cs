@@ -8,7 +8,7 @@ public class MarketplaceOrderTaskExecutorService : BackgroundService
 
     public MarketplaceOrderTaskExecutorService(ILogger<MarketplaceOrderTaskExecutorService> logger,
         IServiceProvider services, IConfiguration configuration)
-        : base(logger, services, "Marketplace order task")
+        : base(logger, services)
     {
         TimerInterval = configuration.GetValue<int>("MarketplaceSettings:Tasks:ExecutionInterval");
         _maxTryCount = configuration.GetValue<int>("MarketplaceSettings:Tasks:MaxTryCount");

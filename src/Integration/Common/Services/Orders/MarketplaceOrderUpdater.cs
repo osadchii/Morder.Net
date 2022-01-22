@@ -3,21 +3,18 @@ using Infrastructure.Models.Marketplaces;
 
 namespace Integration.Common.Services.Orders;
 
-public abstract class MarketplaceOrderLoader
+public abstract class MarketplaceOrderUpdater
 {
     protected readonly Marketplace Marketplace;
     protected readonly IServiceProvider ServiceProvider;
     protected readonly IMapper Mapper;
-    protected readonly DateTime StartDate;
 
-    protected MarketplaceOrderLoader(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper,
-        DateTime startDate)
+    protected MarketplaceOrderUpdater(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper)
     {
         Marketplace = marketplace;
         ServiceProvider = serviceProvider;
         Mapper = mapper;
-        StartDate = startDate;
     }
 
-    public abstract Task LoadOrders();
+    public abstract Task UpdateAsync();
 }

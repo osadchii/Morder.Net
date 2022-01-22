@@ -5,21 +5,19 @@ public abstract class BackgroundService : IHostedService, IDisposable
     protected readonly IServiceProvider Services;
     protected int TimerInterval { get; set; }
     private readonly ILogger _logger;
-    private readonly string _serviceName;
     private Task? _task;
 
     private Timer _timer = null!;
 
-    protected BackgroundService(ILogger logger, IServiceProvider services, string serviceName)
+    protected BackgroundService(ILogger logger, IServiceProvider services)
     {
         _logger = logger;
         Services = services;
-        _serviceName = serviceName;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{_serviceName} service running.");
+        _logger.LogInformation("Service started");
 
         _timer = new Timer(DoWork, null, TimeSpan.Zero,
             TimeSpan.FromMinutes(TimerInterval));
@@ -29,18 +27,20 @@ public abstract class BackgroundService : IHostedService, IDisposable
 
     private void DoWork(object? state)
     {
-        if (_task is null
-            || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion)
+        if (!(_task is null
+              || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion))
         {
-            _task = ServiceWork();
+            return;
         }
+
+        _task = ServiceWork();
     }
 
     protected abstract Task ServiceWork();
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{_serviceName} service is stopping.");
+        _logger.LogInformation("Service stopped.");
 
         _timer?.Change(Timeout.Infinite, 0);
 

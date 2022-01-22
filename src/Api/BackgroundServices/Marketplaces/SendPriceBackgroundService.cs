@@ -6,7 +6,7 @@ public class SendPriceBackgroundService : BackgroundService
 {
     public SendPriceBackgroundService(ILogger<SendPriceBackgroundService> logger, IServiceProvider services,
         IConfiguration configuration)
-        : base(logger, services, "Send prices")
+        : base(logger, services)
     {
         TimerInterval = configuration.GetValue<int>("MarketplaceSettings:SendPriceInterval");
     }

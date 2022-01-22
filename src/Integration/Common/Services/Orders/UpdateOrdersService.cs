@@ -1,25 +1,26 @@
-using System.Diagnostics;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
 using Integration.Ozon.Services;
+using Integration.SberMegaMarket.Services.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Integration.Common.Services.Orders;
 
-public interface ILoadOrdersService
+public interface IUpdateOrdersService
 {
-    Task LoadOrders(DateTime startDate);
+    Task UpdateOrders();
 }
-public class LoadOrdersService : ILoadOrdersService
+
+public class UpdateOrdersService : IUpdateOrdersService
 {
-    private readonly ILogger<LoadOrdersService> _logger;
+    private readonly ILogger<UpdateOrdersService> _logger;
     private readonly MContext _context;
     private readonly IServiceProvider _serviceProvider;
     private readonly IMapper _mapper;
 
-    public LoadOrdersService(ILogger<LoadOrdersService> logger, MContext context, IServiceProvider serviceProvider,
+    public UpdateOrdersService(ILogger<UpdateOrdersService> logger, MContext context, IServiceProvider serviceProvider,
         IMapper mapper)
     {
         _logger = logger;
@@ -28,7 +29,7 @@ public class LoadOrdersService : ILoadOrdersService
         _mapper = mapper;
     }
 
-    public async Task LoadOrders(DateTime startDate)
+    public async Task UpdateOrders()
     {
         try
         {
@@ -41,9 +42,11 @@ public class LoadOrdersService : ILoadOrdersService
             {
                 try
                 {
-                    MarketplaceOrderLoader? loader = marketplace.Type switch
+                    MarketplaceOrderUpdater? loader = marketplace.Type switch
                     {
-                        MarketplaceType.Ozon => new OzonOrderLoader(marketplace, _serviceProvider, _mapper, startDate),
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketOrderUpdater(marketplace, _serviceProvider,
+                            _mapper),
+                        MarketplaceType.Ozon => new OzonOrderUpdater(marketplace, _serviceProvider, _mapper),
                         _ => null
                     };
 
@@ -52,20 +55,11 @@ public class LoadOrdersService : ILoadOrdersService
                         continue;
                     }
 
-                    var sw = new Stopwatch();
-                    sw.Start();
-
-                    await loader.LoadOrders();
-
-                    sw.Stop();
-
-                    _logger.LogInformation("Loaded {Marketplace} ({MarketplaceId}) orders. Elapsed {Ms} ms",
-                        marketplace.Name, marketplace.Id, sw.ElapsedMilliseconds);
+                    await loader.UpdateAsync();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while loading orders from {Marketplace} ({MarketplaceId})",
-                        marketplace.Name, marketplace.Id);
+                    _logger.LogError(ex, $"Error while updating orders from {marketplace.Name}");
                 }
             }
         }

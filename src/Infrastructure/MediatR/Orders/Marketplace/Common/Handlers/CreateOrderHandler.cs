@@ -14,7 +14,6 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
     private readonly MContext _context;
     private readonly IMediator _mediator;
     private readonly ILogger<CreateOrderHandler> _logger;
-    private const OrderStatus Status = OrderStatus.Created;
 
     public CreateOrderHandler(IMapper mapper, MContext context, IMediator mediator, ILogger<CreateOrderHandler> logger)
     {
@@ -31,14 +30,19 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
         await _context.Orders.AddAsync(order, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
+        if (!order.Archived)
+        {
+            await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
+        }
+
         await _mediator.Send(new SaveOrderStatusHistoryRequest()
         {
-            Status = Status,
+            Status = order.Status,
             OrderId = order.Id
         }, cancellationToken);
 
-        _logger.LogInformation($"Created order {order.Number} with {order.ExternalId} external id");
+        _logger.LogInformation("Created order {Number} with {ExternalId} external id",
+            order.Number, order.ExternalId);
 
         return order;
     }

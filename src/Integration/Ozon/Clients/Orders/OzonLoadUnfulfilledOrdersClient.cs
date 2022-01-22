@@ -6,14 +6,14 @@ namespace Integration.Ozon.Clients.Orders;
 
 public interface IOzonLoadUnfulfilledOrdersClient
 {
-    Task<IEnumerable<Posting>> GetOrders(OzonDto ozonDto);
+    Task<IEnumerable<GetUnfulfilledOrdersPosting>> GetOrders(OzonDto ozonDto);
 }
 
 public class OzonLoadUnfulfilledOrdersClient : BaseOzonClient, IOzonLoadUnfulfilledOrdersClient
 {
-    public async Task<IEnumerable<Posting>> GetOrders(OzonDto ozonDto)
+    public async Task<IEnumerable<GetUnfulfilledOrdersPosting>> GetOrders(OzonDto ozonDto)
     {
-        var result = new List<Posting>();
+        var result = new List<GetUnfulfilledOrdersPosting>();
         var currentPage = 1;
         var loaded = false;
         const int pageLimit = 1000;
@@ -30,7 +30,8 @@ public class OzonLoadUnfulfilledOrdersClient : BaseOzonClient, IOzonLoadUnfulfil
         return result;
     }
 
-    private async Task<int> LoadPostingsPortions(OzonDto ozon, List<Posting> postings, int currentPage)
+    private async Task<int> LoadPostingsPortions(OzonDto ozon, List<GetUnfulfilledOrdersPosting> postings,
+        int currentPage)
     {
         var request = new GetUnfulfilledOrdersRequest()
         {
@@ -56,11 +57,11 @@ public class OzonLoadUnfulfilledOrdersClient : BaseOzonClient, IOzonLoadUnfulfil
             throw new Exception(message);
         }
 
-        foreach (Posting item in response.Result.Postings)
+        foreach (GetUnfulfilledOrdersPosting item in response.GetUnfulfilledOrdersResult.Postings)
         {
             postings.Add(item);
         }
 
-        return response.Result.Count;
+        return response.GetUnfulfilledOrdersResult.Count;
     }
 }

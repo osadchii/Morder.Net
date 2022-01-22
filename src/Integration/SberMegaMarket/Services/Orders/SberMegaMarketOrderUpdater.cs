@@ -16,18 +16,18 @@ using static System.Int32;
 
 namespace Integration.SberMegaMarket.Services.Orders;
 
-public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
+public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 {
     private readonly SberMegaMarketDto _sberMegaMarketDto;
     private const int PortionSize = 100;
 
-    public SberMegaMarketOrderLoader(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper) : base(
+    public SberMegaMarketOrderUpdater(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper) : base(
         marketplace, serviceProvider, mapper)
     {
         _sberMegaMarketDto = Mapper.Map<SberMegaMarketDto>(Marketplace);
     }
 
-    public override async Task LoadAsync()
+    public override async Task UpdateAsync()
     {
         List<string> orderNumbers = await GetOrderNumbersToUpdate();
 

@@ -6,6 +6,8 @@ namespace Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 public class CreateOrderRequest : IRequest<Order>
 {
     public Guid ExternalId { get; set; }
+
+    public bool Archived { get; set; }
     public int MarketplaceId { get; set; }
     public string Number { get; set; }
     public OrderStatus Status { get; set; }

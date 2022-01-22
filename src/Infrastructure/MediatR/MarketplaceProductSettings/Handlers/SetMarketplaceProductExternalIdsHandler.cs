@@ -52,6 +52,9 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
                 {
                     setting.ExternalId = value;
                     await TrackChanges(setting.ProductId);
+                    _logger.LogInformation(
+                        "Product with articul {Articul} mapped to {ExternalId} in marketplace with id {Id}",
+                        articul, value, request.MarketplaceId);
                 }
             }
             else if (productsData.TryGetValue(articul, out int productId))
@@ -65,6 +68,9 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
 
                 await _context.MarketplaceProductSettings.AddAsync(setting, cancellationToken);
                 await TrackChanges(setting.ProductId);
+                _logger.LogInformation(
+                    "Product with articul {Articul} mapped to {ExternalId} in marketplace with id {Id}",
+                    articul, value, request.MarketplaceId);
             }
         }
 
@@ -73,7 +79,8 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
         if (notFoundArticuls.Any())
         {
             _logger.LogWarning(
-                $"Can't find products with articuls {string.Join(", ", notFoundArticuls)} to set {marketplace.Name} ({marketplace.Id}) external ids");
+                "Can't find products with articuls {Articuls} to set {MarketplaceName} ({MarketplaceId}) external ids",
+                string.Join(", ", notFoundArticuls), marketplace.Name, marketplace.Id);
         }
 
         IEnumerable<KeyValuePair<string, MarketplaceProductSetting>> toClear =

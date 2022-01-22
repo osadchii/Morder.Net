@@ -31,8 +31,8 @@ public abstract class BaseOzonClient
         {
             string body = await httpResponse.Content.ReadAsStringAsync();
             string message = $"Send Ozon request failure." +
-                             $"{Environment.NewLine}Url: ${fullUrl}" +
-                             $"{Environment.NewLine}Status code: ${httpResponse.StatusCode}" +
+                             $"{Environment.NewLine}Url: {fullUrl}" +
+                             $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
                              $"{Environment.NewLine}Message: {body}";
 
             throw new Exception(message);

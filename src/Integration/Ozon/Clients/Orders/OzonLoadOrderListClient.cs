@@ -7,14 +7,14 @@ namespace Integration.Ozon.Clients.Orders;
 
 public interface IOzonLoadOrderListClient
 {
-    Task<List<GetOrderListPosting>> GetOrders(OzonDto ozonDto, DateTime startDate);
+    Task<List<OzonPosting>> GetOrders(OzonDto ozonDto, DateTime startDate);
 }
 
 public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 {
-    public async Task<List<GetOrderListPosting>> GetOrders(OzonDto ozonDto, DateTime startDate)
+    public async Task<List<OzonPosting>> GetOrders(OzonDto ozonDto, DateTime startDate)
     {
-        var result = new ConcurrentBag<GetOrderListPosting>();
+        var result = new ConcurrentBag<OzonPosting>();
 
         DateTime currentDate = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0).ToUtcTime();
         var months = new List<DateTime>();
@@ -33,7 +33,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
         return result.ToList();
     }
 
-    private static async Task LoadPostingByMonth(OzonDto ozonDto, ConcurrentBag<GetOrderListPosting> postings,
+    private static async Task LoadPostingByMonth(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings,
         DateTime month)
     {
         var currentPage = 1;
@@ -46,7 +46,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
         }
     }
 
-    private static async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<GetOrderListPosting> postings,
+    private static async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<OzonPosting> postings,
         DateTime month, int currentPage)
     {
         var request = new GetOrderListRequest()
@@ -67,13 +67,13 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 
         if (response is null)
         {
-            string message = $"Ozon update orders error." +
+            string message = $"Ozon load orders error." +
                              $"{Environment.NewLine}Can't deserialize body: {body}";
 
             throw new Exception(message);
         }
 
-        foreach (GetOrderListPosting posting in response.Result.Postings)
+        foreach (OzonPosting posting in response.Result.Postings)
         {
             postings.Add(posting);
         }

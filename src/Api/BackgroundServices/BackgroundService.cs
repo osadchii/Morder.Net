@@ -30,6 +30,7 @@ public abstract class BackgroundService : IHostedService, IDisposable
         if (!(_task is null
               || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion))
         {
+            _logger.LogError("Service did not finished the last job.");
             return;
         }
 

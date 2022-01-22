@@ -67,7 +67,13 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
             return Unit.Value;
         }
 
-        await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
+        _logger.LogInformation("Order {OrderId} with number {Number} updated from marketplace with id {MarketplaceId}",
+            order.Id, order.Number, order.MarketplaceId);
+
+        if (!order.Archived)
+        {
+            await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
+        }
 
         if (initialStatus != order.Status)
         {

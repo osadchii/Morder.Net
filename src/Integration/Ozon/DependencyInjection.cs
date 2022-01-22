@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddTransient<IOzonLoadOrderListClient, OzonLoadOrderListClient>();
         services.AddTransient<IOzonStockClient, OzonStockClient>();
         services.AddTransient<IOzonPriceClient, OzonPriceClient>();
+        services.AddTransient<IOzonGetOrdersClient, OzonGetOrdersClient>();
 
         services.AddTransient<IOzonOrderAdapter, OzonOrderAdapter>();
     }

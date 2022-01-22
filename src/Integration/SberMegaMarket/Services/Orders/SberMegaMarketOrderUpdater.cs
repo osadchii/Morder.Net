@@ -1,16 +1,13 @@
 using AutoMapper;
-using Infrastructure;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Marketplace.SberMegaMarket.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
-using Infrastructure.Models.Orders;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Int32;
 
@@ -29,7 +26,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 
     public override async Task UpdateAsync()
     {
-        List<string> orderNumbers = await GetOrderNumbersToUpdate();
+        List<string> orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
 
         if (orderNumbers.Count == 0)
         {
@@ -95,17 +92,5 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
                 })
             });
         }
-    }
-
-    private Task<List<string>> GetOrderNumbersToUpdate()
-    {
-        var context = ServiceProvider.GetRequiredService<MContext>();
-
-        return context.Orders
-            .AsNoTracking()
-            .Where(o => o.MarketplaceId == _sberMegaMarketDto.Id && o.Status != OrderStatus.Canceled &&
-                        o.Status != OrderStatus.Finished)
-            .Select(o => o.Number)
-            .ToListAsync();
     }
 }

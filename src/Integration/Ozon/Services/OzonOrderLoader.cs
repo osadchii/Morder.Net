@@ -31,7 +31,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
 
         var client = ServiceProvider.GetRequiredService<IOzonLoadOrderListClient>();
 
-        List<GetOrderListPosting> postings = await client.GetOrders(_ozon, StartDate);
+        List<OzonPosting> postings = await client.GetOrders(_ozon, StartDate);
 
         if (postings.Count == 0)
         {

@@ -2,7 +2,6 @@ using Infrastructure.Cache.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Marketplaces.Ozon;
-using Infrastructure.Models.Orders;
 using Integration.Ozon.Clients.Orders.Messages;
 
 namespace Integration.Ozon.Clients.Orders;
@@ -10,7 +9,7 @@ namespace Integration.Ozon.Clients.Orders;
 public interface IOzonOrderAdapter
 {
     public Task<IEnumerable<CreateOrderRequest>> CreateOrderRequests(OzonDto ozon,
-        GetOrderListPosting[] postings);
+        OzonPosting[] postings);
 }
 
 public class OzonOrderAdapter : IOzonOrderAdapter
@@ -23,7 +22,7 @@ public class OzonOrderAdapter : IOzonOrderAdapter
         _productCache = productCache;
     }
 
-    public async Task<IEnumerable<CreateOrderRequest>> CreateOrderRequests(OzonDto ozon, GetOrderListPosting[] postings)
+    public async Task<IEnumerable<CreateOrderRequest>> CreateOrderRequests(OzonDto ozon, OzonPosting[] postings)
     {
         List<string> requestArticuls = postings
             .SelectMany(p => p.Products.Select(product => product.OfferId))
@@ -40,21 +39,7 @@ public class OzonOrderAdapter : IOzonOrderAdapter
                     Customer = p.Custromer?.Name ?? Customer,
                     Date = p.InProcessAt.ToUtcTime(),
                     Number = p.PostingNumber,
-                    Status = p.Status switch
-                    {
-                        "acceptance_in_progress" => OrderStatus.Shipped,
-                        "awaiting_approve" => OrderStatus.Created,
-                        "awaiting_packaging" => OrderStatus.Reserved,
-                        "awaiting_deliver" => OrderStatus.Packed,
-                        "arbitration" => OrderStatus.Shipped,
-                        "client_arbitration" => OrderStatus.Shipped,
-                        "delivering" => OrderStatus.Shipped,
-                        "driver_pickup" => OrderStatus.Shipped,
-                        "delivered" => OrderStatus.Finished,
-                        "cancelled" => OrderStatus.Canceled,
-                        "not_accepted" => OrderStatus.Shipped,
-                        _ => OrderStatus.Created
-                    },
+                    Status = StatusConverter.OzonStatusToOrderStatus(p.Status),
                     ExternalId = Guid.NewGuid(),
                     MarketplaceId = ozon.Id,
                     Archived = ozon.Settings.LoadOrdersAsArchived,

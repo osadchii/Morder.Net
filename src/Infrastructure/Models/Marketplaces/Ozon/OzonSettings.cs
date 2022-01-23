@@ -14,4 +14,6 @@ public class OzonSettings
     // TODO: Remove days interval. Need to update all active orders
     public int LoadOrdersDaysInterval { get; set; } = 7;
     public bool LoadOrdersAsArchived { get; set; } = true;
+    public int LoadOrdersThreads = 10;
+    public int UpdateOrdersThreads = 10;
 }

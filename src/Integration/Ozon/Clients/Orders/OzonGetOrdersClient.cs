@@ -18,7 +18,7 @@ public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
 
         await Parallel.ForEachAsync(orderNumbers, new ParallelOptions()
         {
-            MaxDegreeOfParallelism = 10
+            MaxDegreeOfParallelism = ozonDto.Settings.LoadOrdersThreads
         }, async (number, _) => { await LoadOrder(ozonDto, result, number); });
 
         return result.ToList();

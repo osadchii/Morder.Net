@@ -27,7 +27,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 
         await Parallel.ForEachAsync(months, new ParallelOptions()
         {
-            MaxDegreeOfParallelism = 10
+            MaxDegreeOfParallelism = ozonDto.Settings.UpdateOrdersThreads
         }, async (time, _) => { await LoadPostingByMonth(ozonDto, result, time); });
 
         return result.ToList();

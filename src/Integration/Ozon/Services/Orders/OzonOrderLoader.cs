@@ -9,7 +9,7 @@ using Integration.Ozon.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Integration.Ozon.Services;
+namespace Integration.Ozon.Services.Orders;
 
 public class OzonOrderLoader : MarketplaceOrderLoader
 {

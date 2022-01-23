@@ -2,7 +2,7 @@ using System.Diagnostics;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
-using Integration.Ozon.Services;
+using Integration.Ozon.Services.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -12,6 +12,7 @@ public interface ILoadOrdersService
 {
     Task LoadOrders(DateTime startDate);
 }
+
 public class LoadOrdersService : ILoadOrdersService
 {
     private readonly ILogger<LoadOrdersService> _logger;

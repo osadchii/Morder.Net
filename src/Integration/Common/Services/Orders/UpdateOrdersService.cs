@@ -1,7 +1,7 @@
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
-using Integration.Ozon.Services;
+using Integration.Ozon.Services.Orders;
 using Integration.SberMegaMarket.Services.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

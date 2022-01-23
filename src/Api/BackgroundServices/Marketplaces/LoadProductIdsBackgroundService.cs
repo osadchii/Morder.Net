@@ -6,7 +6,7 @@ public class LoadProductIdsBackgroundService : BackgroundService
 {
     public LoadProductIdsBackgroundService(ILogger<LoadProductIdsBackgroundService> logger, IServiceProvider services,
         IConfiguration configuration)
-        : base(logger, services, "Load marketplace product ids")
+        : base(logger, services)
     {
         TimerInterval = configuration.GetValue<int>("MarketplaceSettings:LoadProductIdsInterval");
     }

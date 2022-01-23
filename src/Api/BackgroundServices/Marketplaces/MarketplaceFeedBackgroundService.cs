@@ -6,7 +6,7 @@ public class MarketplaceFeedBackgroundService : BackgroundService
 {
     public MarketplaceFeedBackgroundService(ILogger<MarketplaceFeedBackgroundService> logger, IServiceProvider services,
         IConfiguration configuration)
-        : base(logger, services, "Marketplace feed")
+        : base(logger, services)
     {
         TimerInterval = configuration.GetValue<int>("MarketplaceSettings:FeedGenerationInterval");
     }

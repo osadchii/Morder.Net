@@ -97,7 +97,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
 
         if (wrongPack)
         {
-            throw new HttpRequestException("Count in no cancelled items differs from count items in boxes");
+            throw new HttpRequestException("Count in no canceled items differs from count items in boxes");
         }
 
         order.Status = Status;

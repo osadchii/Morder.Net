@@ -1,5 +1,5 @@
 using System.Globalization;
-using Api.BackgroundServices.Marketplaces;
+using Api.BackgroundServices;
 using Api.Bot;
 using Api.Filters;
 using Infrastructure;
@@ -69,12 +69,7 @@ public class Program
         builder.Services.AddMorderBot(builder.Configuration);
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
-        builder.Services.AddHostedService<MarketplaceFeedBackgroundService>();
-        builder.Services.AddHostedService<SendStockBackgroundService>();
-        builder.Services.AddHostedService<SendPriceBackgroundService>();
-        builder.Services.AddHostedService<LoadProductIdsBackgroundService>();
-        builder.Services.AddHostedService<MarketplaceOrderTaskExecutorService>();
-        builder.Services.AddHostedService<LoadOrdersBackgroundService>();
+        builder.Services.AddBackgroundServices();
 
         WebApplication app = builder.Build();
 

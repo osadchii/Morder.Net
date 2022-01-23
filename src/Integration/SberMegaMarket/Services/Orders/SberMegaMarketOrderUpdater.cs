@@ -1,36 +1,32 @@
 using AutoMapper;
-using Infrastructure;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Marketplace.SberMegaMarket.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
-using Infrastructure.Models.Orders;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Int32;
 
 namespace Integration.SberMegaMarket.Services.Orders;
 
-public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
+public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 {
     private readonly SberMegaMarketDto _sberMegaMarketDto;
     private const int PortionSize = 100;
 
-    public SberMegaMarketOrderLoader(Marketplace marketplace, IServiceProvider serviceProvider) : base(marketplace,
-        serviceProvider)
+    public SberMegaMarketOrderUpdater(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper) : base(
+        marketplace, serviceProvider, mapper)
     {
-        var mapper = ServiceProvider.GetRequiredService<IMapper>();
-        _sberMegaMarketDto = mapper.Map<SberMegaMarketDto>(Marketplace);
+        _sberMegaMarketDto = Mapper.Map<SberMegaMarketDto>(Marketplace);
     }
 
-    public override async Task LoadAsync()
+    public override async Task UpdateAsync()
     {
-        List<string> orderNumbers = await GetOrderNumbersToUpdate();
+        List<string> orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
 
         if (orderNumbers.Count == 0)
         {
@@ -46,8 +42,6 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
 
             handled += PortionSize;
         }
-
-        var request = new SberMegaMarketMessage<LoadOrdersData>(_sberMegaMarketDto.Settings.Token);
     }
 
     private async Task LoadOrdersPortion(IEnumerable<string> portion)
@@ -98,17 +92,5 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
                 })
             });
         }
-    }
-
-    private Task<List<string>> GetOrderNumbersToUpdate()
-    {
-        var context = ServiceProvider.GetRequiredService<MContext>();
-
-        return context.Orders
-            .AsNoTracking()
-            .Where(o => o.MarketplaceId == _sberMegaMarketDto.Id && o.Status != OrderStatus.Canceled &&
-                        o.Status != OrderStatus.Finished)
-            .Select(o => o.Number)
-            .ToListAsync();
     }
 }

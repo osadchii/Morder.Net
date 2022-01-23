@@ -1,4 +1,5 @@
 using Integration.Ozon.Clients.LoadProducts;
+using Integration.Ozon.Clients.Orders;
 using Integration.Ozon.Clients.Prices;
 using Integration.Ozon.Clients.Stocks;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,12 @@ public static class DependencyInjection
     public static void AddOzon(this IServiceCollection services)
     {
         services.AddTransient<IOzonLoadProductIdsClient, OzonLoadProductIdsClient>();
+        services.AddTransient<IOzonLoadUnfulfilledOrdersClient, OzonLoadUnfulfilledOrdersClient>();
+        services.AddTransient<IOzonLoadOrderListClient, OzonLoadOrderListClient>();
         services.AddTransient<IOzonStockClient, OzonStockClient>();
         services.AddTransient<IOzonPriceClient, OzonPriceClient>();
+        services.AddTransient<IOzonGetOrdersClient, OzonGetOrdersClient>();
+
+        services.AddTransient<IOzonOrderAdapter, OzonOrderAdapter>();
     }
 }

@@ -9,7 +9,7 @@ public class UpdateOzonOrderRequest : IRequest<Unit>
     public string OrderNumber { get; set; }
     public OrderStatus Status { get; set; }
 
-    public DateTime? PackingTimeLimit { get; set; }
+    public DateTime ShippingDate { get; set; }
 
     public string? CustomerFullName { get; set; }
 

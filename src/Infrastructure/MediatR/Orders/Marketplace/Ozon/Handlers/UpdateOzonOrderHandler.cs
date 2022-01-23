@@ -38,7 +38,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
         OrderStatus initialStatus = order.Status;
 
         order.Status = request.Status;
-        order.PackingTimeLimit = request.PackingTimeLimit;
+        order.ShippingDate = request.ShippingDate;
         order.CustomerAddress = request.CustomerAddress;
         order.TrackNumber = request.TrackNumber;
 

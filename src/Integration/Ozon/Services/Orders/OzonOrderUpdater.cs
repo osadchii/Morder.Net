@@ -51,7 +51,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
                 Status = StatusConverter.OzonStatusToOrderStatus(posting.Status),
                 CustomerAddress = posting.Custromer?.Address?.AddressTail,
                 CustomerFullName = posting.Custromer?.Name,
-                PackingTimeLimit = posting.ShipmentDate,
+                ShippingDate = posting.ShipmentDate,
                 TrackNumber = posting.TrackingNumber,
                 Items = posting.Products.Select(p => new UpdateOzonOrderItem()
                 {

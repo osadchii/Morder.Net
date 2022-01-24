@@ -49,8 +49,8 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
 
         foreach (UpdateOzonOrderItem item in request.Items)
         {
-            IEnumerable<Order.OrderItem> orderItems = order.Items
-                .Where(orderItem => orderItem.Product.Articul == item.Articul && !orderItem.Canceled);
+            Order.OrderItem[] orderItems = order.Items
+                .Where(orderItem => orderItem.Product.Articul == item.Articul && !orderItem.Canceled).ToArray();
 
             foreach (Order.OrderItem orderItem in orderItems)
             {

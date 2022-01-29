@@ -27,17 +27,17 @@ public abstract class BaseOzonClient
 
         HttpResponseMessage httpResponse = await client.SendAsync(httpMessage);
 
-        if (httpResponse.StatusCode != HttpStatusCode.OK)
+        if (httpResponse.StatusCode == HttpStatusCode.OK)
         {
-            string body = await httpResponse.Content.ReadAsStringAsync();
-            string message = $"Send Ozon request failure." +
-                             $"{Environment.NewLine}Url: {fullUrl}" +
-                             $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
-                             $"{Environment.NewLine}Message: {body}";
-
-            throw new Exception(message);
+            return httpResponse;
         }
 
-        return httpResponse;
+        string body = await httpResponse.Content.ReadAsStringAsync();
+        string message = $"Send Ozon request failure." +
+                         $"{Environment.NewLine}Url: {fullUrl}" +
+                         $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
+                         $"{Environment.NewLine}Message: {body}";
+
+        throw new Exception(message);
     }
 }

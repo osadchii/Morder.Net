@@ -1,4 +1,5 @@
 using System.Text;
+using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
@@ -17,7 +18,15 @@ public class SaveOrderStickerFromStringHandler : IRequestHandler<SaveOrderSticke
 
     public async Task<Unit> Handle(SaveOrderStickerFromStringRequest request, CancellationToken cancellationToken)
     {
-        byte[] data = Encoding.UTF8.GetBytes(request.Content);
+        byte[] data;
+        if (!request.Content.IsNullOrEmpty())
+        {
+            data = Encoding.UTF8.GetBytes(request.Content);
+        }
+        else
+        {
+            data = request.Bytes;
+        }
 
         OrderSticker? dbEntry = await _context.OrderStickers
             .FirstOrDefaultAsync(s => s.OrderId == request.OrderId, cancellationToken);

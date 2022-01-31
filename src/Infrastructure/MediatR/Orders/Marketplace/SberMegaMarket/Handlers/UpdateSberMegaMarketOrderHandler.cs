@@ -25,7 +25,8 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
     public async Task<Unit> Handle(UpdateSberMegaMarketOrderRequest request, CancellationToken cancellationToken)
     {
         Order? order = await _context.Orders
-            .SingleOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
+            .SingleOrDefaultAsync(o => o.Number == request.ShipmentId
+                                       && o.MarketplaceId == request.MarketplaceId, cancellationToken);
 
         if (order is null)
         {
@@ -39,15 +40,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
         order.ConfirmedTimeLimit = request.ConfirmedTimeLimit;
         order.PackingTimeLimit = request.PackingTimeLimit;
         order.ShippingTimeLimit = request.ShippingTimeLimit;
-
-        if (request.Items.All(i => i.Canceled))
-        {
-            order.Status = OrderStatus.Canceled;
-        }
-        else if (request.Items.Where(i => !i.Canceled).All(i => i.Finished))
-        {
-            order.Status = OrderStatus.Finished;
-        }
+        order.Status = request.Status;
 
         foreach (UpdateSberMegaMarketOrderRequestItem item in request.Items.Where(i => i.Canceled))
         {

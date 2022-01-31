@@ -12,26 +12,26 @@ public class OrderShippingData : SberMegaMarketMessageData
     {
     }
 
-    [JsonProperty("shipments")] public IEnumerable<OrderShippingShipment> Shipments { get; set; }
+    [JsonProperty("shipments")] public IEnumerable<OrderShippingShipment> Shipments { get; set; } = null!;
 }
 
 public class OrderShippingShipment
 {
-    [JsonProperty("shipmentId")] public string ShipmentId { get; set; }
+    [JsonProperty("shipmentId")] public string ShipmentId { get; set; } = null!;
 
-    [JsonProperty("boxes")] public IEnumerable<OrderShippingShipmentBox> Boxes { get; set; }
+    [JsonProperty("boxes")] public IEnumerable<OrderShippingShipmentBox> Boxes { get; set; } = null!;
 
-    [JsonProperty("shipping")] public OrderShippingShipmentShipping Shipping { get; set; }
+    [JsonProperty("shipping")] public OrderShippingShipmentShipping Shipping { get; set; } = null!;
 }
 
 public class OrderShippingShipmentBox
 {
     [JsonProperty("boxIndex")] public int BoxIndex { get; set; }
 
-    [JsonProperty("boxCode")] public string BoxCode { get; set; }
+    [JsonProperty("boxCode")] public string BoxCode { get; set; } = null!;
 }
 
 public class OrderShippingShipmentShipping
 {
-    [JsonProperty("shippingDate")] public string ShippingDate { get; set; }
+    [JsonProperty("shippingDate")] public string ShippingDate { get; set; } = null!;
 }

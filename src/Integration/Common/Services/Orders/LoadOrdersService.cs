@@ -3,6 +3,7 @@ using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
 using Integration.Ozon.Services.Orders;
+using Integration.SberMegaMarket.Services.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -45,6 +46,8 @@ public class LoadOrdersService : ILoadOrdersService
                     MarketplaceOrderLoader? loader = marketplace.Type switch
                     {
                         MarketplaceType.Ozon => new OzonOrderLoader(marketplace, _serviceProvider, _mapper, startDate),
+                        MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider,
+                            _mapper, startDate),
                         _ => null
                     };
 

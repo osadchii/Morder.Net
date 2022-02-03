@@ -1,5 +1,4 @@
 using Integration.SberMegaMarket.Clients;
-using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using Integration.SberMegaMarket.Clients.Prices.Messages;
 using Integration.SberMegaMarket.Clients.Stocks.Messages;

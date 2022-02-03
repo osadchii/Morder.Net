@@ -10,6 +10,7 @@ public static class SberMegaMarketOrderStatuses
     public const string PendingPacking = "PENDING_PACKING";
     public const string Packed = "PACKED";
     public const string Shipped = "SHIPPED";
+    public const string New = "NEW";
 
     public static bool IsCanceled(string status)
     {

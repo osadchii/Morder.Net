@@ -51,6 +51,7 @@ public class Program
                     DateTimeStyles = DateTimeStyles.AdjustToUniversal
                 });
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
         builder.Services.AddLogging(logBuilder =>

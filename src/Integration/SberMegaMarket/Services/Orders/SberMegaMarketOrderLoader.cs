@@ -7,7 +7,6 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
-using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using Integration.SberMegaMarket.Orders;
 using MediatR;

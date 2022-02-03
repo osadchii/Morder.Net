@@ -21,7 +21,8 @@ public static class StatusConverter
         {
             status = OrderStatus.Finished;
         }
-        else if (nonCanceledItems.Any(i => i.Status is SberMegaMarketOrderStatuses.PendingConfirmation))
+        else if (nonCanceledItems.Any(i =>
+                     i.Status is SberMegaMarketOrderStatuses.PendingConfirmation or SberMegaMarketOrderStatuses.New))
         {
             status = OrderStatus.Created;
         }

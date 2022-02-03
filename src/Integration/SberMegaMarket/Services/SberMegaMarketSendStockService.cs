@@ -4,7 +4,6 @@ using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Warehouses;
 using Integration.Common.Services.Stocks;
 using Integration.SberMegaMarket.Clients;
-using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Stocks.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

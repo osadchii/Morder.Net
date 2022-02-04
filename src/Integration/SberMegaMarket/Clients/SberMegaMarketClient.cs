@@ -2,9 +2,13 @@ using System.Net;
 using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
-using Integration.SberMegaMarket.Clients.Interfaces;
 
 namespace Integration.SberMegaMarket.Clients;
+
+public interface ISberMegaMarketClient<T> where T : SberMegaMarketMessageData, new()
+{
+    Task<string> SendRequest(string url, SberMegaMarketDto sber, SberMegaMarketMessage<T> request);
+}
 
 public class SberMegaMarketClient<T> : ISberMegaMarketClient<T> where T : SberMegaMarketMessageData, new()
 {

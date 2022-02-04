@@ -2,6 +2,7 @@ using Integration.Common;
 using Integration.Meso;
 using Integration.Ozon;
 using Integration.SberMegaMarket;
+using Integration.YandexMarket;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration;
@@ -14,5 +15,6 @@ public static class DependencyInjection
         services.AddSberMegaMarket();
         services.AddOzon();
         services.AddMeso();
+        services.AddYandexMarket();
     }
 }

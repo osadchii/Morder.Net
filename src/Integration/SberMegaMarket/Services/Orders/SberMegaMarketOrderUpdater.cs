@@ -5,7 +5,7 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
-using Integration.SberMegaMarket.Clients.Interfaces;
+using Integration.SberMegaMarket.Clients.Orders;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,8 +46,8 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 
     private async Task LoadOrdersPortion(IEnumerable<string> portion)
     {
-        var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<LoadOrdersData>>();
-        var request = new SberMegaMarketMessage<LoadOrdersData>(_sberMegaMarketDto.Settings.Token)
+        var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<UpdateOrdersData>>();
+        var request = new SberMegaMarketMessage<UpdateOrdersData>(_sberMegaMarketDto.Settings.Token)
         {
             Data =
             {
@@ -56,7 +56,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
         };
 
         string content = await client.SendRequest(ApiUrls.GetOrders, _sberMegaMarketDto, request);
-        var response = content.FromJson<LoadOrderResponse>();
+        var response = content.FromJson<UpdateOrderResponse>();
 
         if (response is null || response.Success != 1)
         {
@@ -68,27 +68,31 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
 
-        foreach (LoadOrderResponseDataShipment shipment in response.Data.Shipments)
+        foreach (UpdateOrderResponseDataShipment shipment in response.Data.Shipments)
         {
-            if (!TryParse(shipment.OrderCode, out int orderId))
-            {
-                throw new Exception($"Can't parse order code {shipment.OrderCode}");
-            }
+            TryParse(shipment.OrderCode, out int orderId);
 
             await mediator.Send(new UpdateSberMegaMarketOrderRequest()
             {
+                MarketplaceId = _sberMegaMarketDto.Id,
                 OrderId = orderId,
+                Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(shipment),
                 CustomerAddress = shipment.CustomerAddress,
                 CustomerFullName = shipment.CustomerFullName,
                 ShipmentId = shipment.ShipmentId,
-                ConfirmedTimeLimit = shipment.ConfirmedTimeLimit.ToCommonTime().ToUtcTime(),
-                PackingTimeLimit = shipment.PackingTimeLimit.ToCommonTime().ToUtcTime(),
-                ShippingTimeLimit = shipment.ShippingTimeLimit.ToCommonTime().ToUtcTime(),
+                ConfirmedTimeLimit = shipment.ConfirmedTimeLimit.HasValue
+                    ? shipment.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
+                PackingTimeLimit = shipment.PackingTimeLimit.HasValue
+                    ? shipment.PackingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
+                ShippingTimeLimit = shipment.ShippingTimeLimit.HasValue
+                    ? shipment.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
                 Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem()
                 {
                     ItemIndex = i.ItemIndex,
-                    Canceled = i.Status is "CUSTOMER_CANCELED" or "MERCHANT_CANCELED",
-                    Finished = i.Status is "DELIVERED"
+                    Canceled = SberMegaMarketOrderStatuses.IsCanceled(i.Status)
                 })
             });
         }

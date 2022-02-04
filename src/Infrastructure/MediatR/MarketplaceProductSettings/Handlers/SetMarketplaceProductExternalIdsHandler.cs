@@ -12,10 +12,10 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
 {
     private readonly MContext _context;
     private readonly IChangeTrackingService _trackingService;
-    private readonly ILogger<SetMarketplaceProductSettingsHandler> _logger;
+    private readonly ILogger<SetMarketplaceProductExternalIdsHandler> _logger;
 
     public SetMarketplaceProductExternalIdsHandler(MContext context, IChangeTrackingService trackingService,
-        ILogger<SetMarketplaceProductSettingsHandler> logger)
+        ILogger<SetMarketplaceProductExternalIdsHandler> logger)
     {
         _context = context;
         _trackingService = trackingService;
@@ -32,6 +32,8 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
 
         bool stockTracking = marketplace.IsActive && marketplace.StockChangesTracking;
         bool priceTracking = marketplace.IsActive && marketplace.PriceChangesTracking;
+
+        var newProductIds = new List<int>();
 
         Dictionary<string, int> productsData = await _context.Products
             .AsNoTracking()
@@ -51,7 +53,7 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
                 if (setting.ExternalId != value)
                 {
                     setting.ExternalId = value;
-                    await TrackChanges(setting.ProductId);
+                    newProductIds.Add(setting.ProductId);
                     _logger.LogInformation(
                         "Product with articul {Articul} mapped to {ExternalId} in marketplace with id {Id}",
                         articul, value, request.MarketplaceId);
@@ -67,7 +69,7 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
                 };
 
                 await _context.MarketplaceProductSettings.AddAsync(setting, cancellationToken);
-                await TrackChanges(setting.ProductId);
+                newProductIds.Add(setting.ProductId);
                 _logger.LogInformation(
                     "Product with articul {Articul} mapped to {ExternalId} in marketplace with id {Id}",
                     articul, value, request.MarketplaceId);
@@ -89,23 +91,20 @@ public class SetMarketplaceProductExternalIdsHandler : IRequestHandler<SetMarket
         foreach ((_, MarketplaceProductSetting? value) in toClear)
         {
             value.ExternalId = null;
-            await TrackChanges(value.ProductId);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
-        return Unit.Value;
 
-        async Task TrackChanges(int productId)
+        if (priceTracking)
         {
-            if (priceTracking)
-            {
-                await _trackingService.TrackPriceChange(request.MarketplaceId, productId, cancellationToken);
-            }
-
-            if (stockTracking)
-            {
-                await _trackingService.TrackStockChange(request.MarketplaceId, productId, cancellationToken);
-            }
+            await _trackingService.TrackPricesChange(request.MarketplaceId, newProductIds, cancellationToken);
         }
+
+        if (stockTracking)
+        {
+            await _trackingService.TrackStocksChange(request.MarketplaceId, newProductIds, cancellationToken);
+        }
+
+        return Unit.Value;
     }
 }

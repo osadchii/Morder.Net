@@ -7,6 +7,8 @@ using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Orders;
+using Integration.SberMegaMarket.Clients.Orders;
+using Integration.SberMegaMarket.Clients.Orders.Messages;
 using Integration.SberMegaMarket.Orders.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -20,6 +22,9 @@ public interface ISberMegaMarketOrderAdapter
 
     public Task<IEnumerable<CancelOrderItemsByExternalIdRequest>> CancelOrderRequests(
         BaseSberMegaMarketOrderRequest<CancelSberMegaMarketOrdersRequest> cancelRequest);
+
+    public Task<CreateOrdersRequest>
+        CreateArchiveOrdersRequest(UpdateOrderResponseDataShipment[] shipments, SberMegaMarketDto sber);
 }
 
 public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
@@ -82,6 +87,55 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             OrderNumber = s.ShipmentId,
             ItemExternalIds = s.Items.Select(i => i.ItemIndex)
         });
+    }
+
+    public async Task<CreateOrdersRequest> CreateArchiveOrdersRequest(UpdateOrderResponseDataShipment[] shipments,
+        SberMegaMarketDto sber)
+    {
+        var result = new CreateOrdersRequest();
+        List<string> requestArticuls = shipments
+            .SelectMany(s => s.Items.Select(i => i.OfferId))
+            .Distinct()
+            .ToList();
+
+        Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
+
+        result.CreateOrderRequests = shipments
+            .Where(s => s.Items.All(i => products.ContainsKey(i.OfferId)))
+            .Select(s =>
+            {
+                return new CreateOrderRequest()
+                {
+                    Archived = true,
+                    Customer = s.CustomerFullName,
+                    Number = s.ShipmentId,
+                    Date = s.CreationDate.ToCommonTime().ToUtcTime(),
+                    ExpressOrder = false,
+                    ExternalId = Guid.NewGuid(),
+                    MarketplaceId = sber.Id,
+                    ShippingDate = s.DeliveryDate.ToCommonTime().ToUtcTime(),
+                    Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(s),
+                    ConfirmedTimeLimit = s.ConfirmedTimeLimit.HasValue
+                        ? s.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()
+                        : new DateTime().ToUtcTime(),
+                    PackingTimeLimit = s.PackingTimeLimit.HasValue
+                        ? s.PackingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                        : new DateTime().ToUtcTime(),
+                    ShippingTimeLimit = s.ShippingTimeLimit.HasValue
+                        ? s.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                        : new DateTime().ToUtcTime(),
+                    Items = s.Items.Select(i => new CreateOrderItem()
+                    {
+                        Count = i.Quantity,
+                        Price = i.Price,
+                        Sum = i.Quantity * i.Price,
+                        ExternalId = i.ItemIndex,
+                        ProductId = products[i.OfferId]
+                    })
+                };
+            });
+
+        return result;
     }
 
     private async Task<SberMegaMarketDto> GetMarketplaceByMerchantId(int merchantId)

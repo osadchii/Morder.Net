@@ -2,13 +2,13 @@ using Newtonsoft.Json;
 
 namespace Integration.SberMegaMarket.Clients.Orders.Messages;
 
-public class LoadOrdersData : SberMegaMarketMessageData
+public class UpdateOrdersData : SberMegaMarketMessageData
 {
-    public LoadOrdersData(string token) : base(token)
+    public UpdateOrdersData(string token) : base(token)
     {
     }
 
-    public LoadOrdersData() : base("")
+    public UpdateOrdersData() : base("")
     {
     }
 

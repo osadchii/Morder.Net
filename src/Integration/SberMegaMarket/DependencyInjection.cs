@@ -1,5 +1,4 @@
 using Integration.SberMegaMarket.Clients;
-using Integration.SberMegaMarket.Clients.Interfaces;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using Integration.SberMegaMarket.Clients.Prices.Messages;
 using Integration.SberMegaMarket.Clients.Stocks.Messages;
@@ -19,7 +18,8 @@ public static class DependencyInjection
         services.AddTransient<ISberMegaMarketClient<OrderShippingData>, SberMegaMarketClient<OrderShippingData>>();
         services.AddTransient<ISberMegaMarketClient<OrderRejectingData>, SberMegaMarketClient<OrderRejectingData>>();
         services.AddTransient<ISberMegaMarketClient<StickerPrintData>, SberMegaMarketClient<StickerPrintData>>();
-        services.AddTransient<ISberMegaMarketClient<LoadOrdersData>, SberMegaMarketClient<LoadOrdersData>>();
+        services.AddTransient<ISberMegaMarketClient<UpdateOrdersData>, SberMegaMarketClient<UpdateOrdersData>>();
+        services.AddTransient<ISberMegaMarketClient<SearchOrdersData>, SberMegaMarketClient<SearchOrdersData>>();
 
         services.AddTransient<ISberMegaMarketOrderAdapter, SberMegaMarketOrderAdapter>();
     }

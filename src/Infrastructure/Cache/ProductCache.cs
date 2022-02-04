@@ -16,7 +16,8 @@ public class ProductCache : IProductCache
         _cache = cache;
     }
 
-    public async Task<Dictionary<string, int>> GetProductIdsByArticul(List<string> articuls)
+    public async Task<Dictionary<string, int>> GetProductIdsByArticul(List<string> articuls,
+        bool ignoreNotFound = false)
     {
         var result = new Dictionary<string, int>();
         var uncached = new List<string>();
@@ -46,6 +47,11 @@ public class ProductCache : IProductCache
                 result.TryAdd(keyValue.Key, keyValue.Value);
                 _cache.Set(ArticulCacheKey(keyValue.Key), keyValue.Value);
             }
+        }
+
+        if (ignoreNotFound)
+        {
+            return result;
         }
 
         List<string> notFound = articuls.Except(result.Keys).ToList();

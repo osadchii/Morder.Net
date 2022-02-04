@@ -1,12 +1,16 @@
+using Infrastructure.Models.Orders;
 using MediatR;
 
 namespace Infrastructure.MediatR.Orders.Marketplace.SberMegaMarket.Commands;
 
 public class UpdateSberMegaMarketOrderRequest : IRequest<Unit>
 {
+    public int MarketplaceId { get; set; }
     public string ShipmentId { get; set; }
 
     public int OrderId { get; set; }
+
+    public OrderStatus Status { get; set; }
 
     public DateTime ConfirmedTimeLimit { get; set; }
 
@@ -26,6 +30,4 @@ public class UpdateSberMegaMarketOrderRequestItem
     public string ItemIndex { get; set; }
 
     public bool Canceled { get; set; }
-
-    public bool Finished { get; set; }
 }

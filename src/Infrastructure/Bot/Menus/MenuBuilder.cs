@@ -32,6 +32,34 @@ public class KeyboardBuilder
         return this;
     }
 
+    public KeyboardBuilder AddMonthsButtons(DateTime startDate)
+    {
+        var months = new List<DateTime>();
+        DateTime currentDate = startDate;
+
+        while (currentDate <= DateTime.UtcNow)
+        {
+            months.Add(currentDate);
+            currentDate = currentDate.AddMonths(1);
+        }
+
+        var count = 0;
+
+        foreach (DateTime month in months.OrderByDescending(m => m))
+        {
+            if (count > 0 && count % 2 == 0)
+            {
+                AddLine();
+            }
+
+            AddButton(month.ToRussianMonthYearString());
+
+            count++;
+        }
+
+        return this;
+    }
+
     public ReplyKeyboardMarkup Build()
     {
         var result = new ReplyKeyboardMarkup(_buttonLines);

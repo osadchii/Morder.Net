@@ -1,6 +1,4 @@
-using Infrastructure.Bot.Interfaces;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -9,14 +7,11 @@ namespace Infrastructure.Bot.Services;
 
 public class HandleUpdateService
 {
-    private readonly ITelegramBotClient _botClient;
     private readonly ILogger<HandleUpdateService> _logger;
     private readonly IMessageRouter _router;
 
-    public HandleUpdateService(ITelegramBotClient botClient,
-        ILogger<HandleUpdateService> logger, IMessageRouter router)
+    public HandleUpdateService(ILogger<HandleUpdateService> logger, IMessageRouter router)
     {
-        _botClient = botClient;
         _logger = logger;
         _router = router;
     }
@@ -35,17 +30,16 @@ public class HandleUpdateService
         }
         catch (Exception exception)
         {
-            await HandleErrorAsync(exception);
+            HandleError(exception);
         }
     }
 
-    private async Task BotOnMessageReceived(Message message)
+    private Task BotOnMessageReceived(Message message)
     {
-        _logger.LogInformation("Receive message type: {MessageType}", message.Type);
         if (message.Type != MessageType.Text)
-            return;
+            return Task.CompletedTask;
 
-        await _router.RouteMessageAsync(_botClient, message);
+        return _router.Route(message);
     }
 
     private Task UnknownUpdateHandlerAsync(Update update)
@@ -54,7 +48,7 @@ public class HandleUpdateService
         return Task.CompletedTask;
     }
 
-    private Task HandleErrorAsync(Exception exception)
+    private void HandleError(Exception exception)
     {
         string errorMessage = exception switch
         {
@@ -64,6 +58,5 @@ public class HandleUpdateService
         };
 
         _logger.LogError(exception, "HandleError: {ErrorMessage}", errorMessage);
-        return Task.CompletedTask;
     }
 }

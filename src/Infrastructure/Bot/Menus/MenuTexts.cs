@@ -20,8 +20,14 @@ public static class MenuTexts
 
     public const string ToReports = "Отчеты";
     public const string ToMarketplaces = "Маркетплейсы";
+    public const string ToUsers = "Пользователи";
 
     public const string Days7 = "7 дней";
     public const string Days28 = "28 дней";
     public const string Days90 = "90 дней";
+
+    public const string AddAdministrator = "Сделать администратором";
+    public const string RemoveAdministrator = "Сделать пользователем";
+    public const string Verify = "Дать доступ к боту";
+    public const string Block = "Забрать доступ к боту";
 }

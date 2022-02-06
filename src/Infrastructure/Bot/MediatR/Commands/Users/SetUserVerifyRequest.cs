@@ -1,0 +1,46 @@
+using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Models.BotUsers;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Telegram.Bot;
+
+namespace Infrastructure.Bot.MediatR.Commands.Users;
+
+public class SetUserVerifyRequest : IRequest<Unit>
+{
+    public int UserId { get; set; }
+    public bool Verified { get; set; }
+}
+
+public class SetUserVerifyHandler : IRequestHandler<SetUserVerifyRequest, Unit>
+{
+    private readonly ITelegramBotClient _client;
+    private readonly MContext _context;
+    private readonly IMediator _mediator;
+
+    public SetUserVerifyHandler(ITelegramBotClient client, MContext context, IMediator mediator)
+    {
+        _client = client;
+        _context = context;
+        _mediator = mediator;
+    }
+
+    public async Task<Unit> Handle(SetUserVerifyRequest request, CancellationToken cancellationToken)
+    {
+        BotUser user = await _context.BotUsers
+            .SingleAsync(u => u.Id == request.UserId, cancellationToken);
+
+        user.Verified = request.Verified;
+        await _context.SaveChangesAsync(cancellationToken);
+
+        if (user.Verified)
+        {
+            await _mediator.Send(new ToMainMenuCommand()
+            {
+                ChatId = user.ChatId
+            }, cancellationToken);
+        }
+
+        return Unit.Value;
+    }
+}

@@ -63,6 +63,8 @@ public class MessageRouter : IMessageRouter
             ScreenIds.SoldProducts => new SoldProductsScreenHandler(_serviceProvider, message, user),
             ScreenIds.SoldProductsByMarketplace => new SoldProductsByMarketplaceScreenHandler(_serviceProvider, message,
                 user),
+            ScreenIds.UsersMenu => new UsersScreenHandler(_serviceProvider, message, user),
+            ScreenIds.UserManagement => new UserManagementScreenHandler(_serviceProvider, message, user),
             _ => null
         };
 

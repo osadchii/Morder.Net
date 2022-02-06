@@ -10,8 +10,9 @@ public static class BotMenus
         .AddButton(MenuTexts.TodaySummary)
         .AddLine()
         .AddButton(MenuTexts.ToReports)
-        .AddLine()
         .AddButton(MenuTexts.ToMarketplaces)
+        .AddLine()
+        .AddButton(MenuTexts.ToUsers)
         .Build();
 
     public static ReplyKeyboardMarkup ReportMenu => new KeyboardBuilder()

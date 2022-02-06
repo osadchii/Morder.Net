@@ -23,8 +23,8 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
     {
         Order[] orders = await _context.Orders
             .AsNoTracking()
-            .Where(o => o.Status != OrderStatus.Canceled && o.Date >= request.Date &&
-                        o.Date <= request.Date.AddDays(1).AddMilliseconds(-1))
+            .Where(o => o.Status != OrderStatus.Canceled && o.Date >= request.Date.ToUtcWithMoscowOffset() &&
+                        o.Date <= request.Date.AddDays(1).AddMilliseconds(-1).ToUtcWithMoscowOffset())
             .Include(o => o.Marketplace).ToArrayAsync(cancellationToken);
 
         IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
@@ -54,10 +54,10 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
         decimal sum = orders.Sum(o => o.Sum);
 
         sb.AppendLine($"<b>{marketplaceName}</b>");
-        sb.AppendLine($"Сумма заказов: {Math.Round(sum)}");
+        sb.AppendLine($"Сумма заказов: {sum.ToFormatString()}");
         sb.AppendLine($"Количество заказов: {orders.Length}");
-        sb.AppendLine($"Средний чек: {Math.Round(sum / orders.Length)}");
-        sb.AppendLine($"Максимальный чек: {Math.Round(orders.Max(o => o.Sum))}");
+        sb.AppendLine($"Средний чек: {(sum / orders.Length).ToFormatString()}");
+        sb.AppendLine($"Максимальный чек: {orders.Max(o => o.Sum).ToFormatString()}");
         sb.AppendLine();
     }
 }

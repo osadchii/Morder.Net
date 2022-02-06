@@ -40,6 +40,21 @@ public static class TelegramExtensions
             replyMarkup: keyboard);
     }
 
+    public static string ToFormatString(this decimal value)
+    {
+        var cultureInfo = CultureInfo.GetCultureInfo("es-ES");
+        return Math.Round(value).ToString("##,#", cultureInfo);
+    }
+
+    public static DateTime ToUtcWithMoscowOffset(this DateTime date)
+    {
+        TimeZoneInfo moscow = TimeZoneInfo.FindSystemTimeZoneById
+            ("Russian Standard Time");
+
+        TimeSpan offset = moscow.GetUtcOffset(date);
+        return date - offset;
+    }
+
     public static string ToRussianMonthYearString(this DateTime date)
     {
         DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;

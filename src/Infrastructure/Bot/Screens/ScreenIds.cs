@@ -4,6 +4,9 @@ public static class ScreenIds
 {
     public const string MainMenu = "MainMenu";
     public const string ReportMenu = "ReportMenu";
+    public const string UsersMenu = "UsersMenu";
+
+    public const string UserManagement = "UserManagement";
 
     public const string OrdersSum = "OrdersSum";
     public const string OrdersCount = "OrdersCount";

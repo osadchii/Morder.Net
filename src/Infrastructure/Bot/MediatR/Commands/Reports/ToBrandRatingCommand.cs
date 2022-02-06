@@ -37,7 +37,7 @@ public class ToBrandRatingHandler : IRequestHandler<ToBrandRatingCommand, Unit>
             .AddLine()
             .AddButton(MenuTexts.Back);
 
-        foreach (Marketplace marketplace in marketplaces)
+        foreach (Marketplace marketplace in marketplaces.OrderBy(m => m.Id))
         {
             menuBuilder.AddLine();
             menuBuilder.AddButton($"{marketplace.Id} – {marketplace.Name}");

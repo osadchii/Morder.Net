@@ -40,7 +40,7 @@ public class CreateUpdateBotUserHandler : IRequestHandler<CreateUpdateBotUserReq
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Created bot user {request.FirstName}");
+        _logger.LogInformation("Created bot user {User}", dbEntry.ToString());
 
         return dbEntry;
     }
@@ -52,7 +52,7 @@ public class CreateUpdateBotUserHandler : IRequestHandler<CreateUpdateBotUserReq
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Updated bot user {request.FirstName}");
+        _logger.LogInformation("Updated bot user {User}", dbEntry.ToString());
 
         return dbEntry;
     }

@@ -21,7 +21,7 @@ public class ConfigureWebhook : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _services.CreateScope();
+        using IServiceScope scope = _services.CreateScope();
         var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
         // Configure custom endpoint per Telegram API recommendations:

@@ -67,8 +67,8 @@ public class ProductRatingReportHandler : IRequestHandler<ProductRatingReportReq
                      .Take(ResultCount))
         {
             sb.AppendLine($"{++rowCount}: <b>{row.Key}</b>");
-            sb.AppendLine($"Количество: {row.Value.Count}");
-            sb.AppendLine($"Сумма: {row.Value.Sum}");
+            sb.AppendLine($"Количество: {row.Value.Count.ToFormatString()}");
+            sb.AppendLine($"Сумма: {row.Value.Sum.ToFormatString()}");
         }
 
         sb.AppendLine();

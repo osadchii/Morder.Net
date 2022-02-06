@@ -64,7 +64,8 @@ public class SoldProductsReportHandler : IRequestHandler<SoldProductsReportReque
 
         foreach (KeyValuePair<string, (decimal Count, decimal Sum)> row in result.OrderByDescending(r => r.Value.Sum))
         {
-            sb.AppendLine($"{++rowCount}: <b>{row.Key}</b> Количество: {row.Value.Count} Сумма: {row.Value.Sum}");
+            sb.AppendLine(
+                $"{++rowCount}: <b>{row.Key}</b> Количество: {row.Value.Count.ToFormatString()} Сумма: {row.Value.Sum.ToFormatString()}");
         }
 
         sb.AppendLine();

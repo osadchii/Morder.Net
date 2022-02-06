@@ -54,10 +54,10 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
         decimal sum = orders.Sum(o => o.Sum);
 
         sb.AppendLine($"<b>{marketplaceName}</b>");
-        sb.AppendLine($"Сумма заказов: {sum}");
+        sb.AppendLine($"Сумма заказов: {Math.Round(sum)}");
         sb.AppendLine($"Количество заказов: {orders.Length}");
         sb.AppendLine($"Средний чек: {Math.Round(sum / orders.Length)}");
-        sb.AppendLine($"Максимальный чек: {orders.Max(o => o.Sum)}");
+        sb.AppendLine($"Максимальный чек: {Math.Round(orders.Max(o => o.Sum))}");
         sb.AppendLine();
     }
 }

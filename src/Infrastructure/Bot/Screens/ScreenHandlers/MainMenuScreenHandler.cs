@@ -29,14 +29,15 @@ public class MainMenuScreenHandler : ScreenHandler
                 await Mediator.Send(new GetOrderSummaryByDayRequest()
                 {
                     ChatId = ChatId,
-                    Date = DateTime.Today.ToUtcTime()
+                    Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day).ToUtcTime()
                 });
                 break;
             case MenuTexts.YesterdaySummary:
                 await Mediator.Send(new GetOrderSummaryByDayRequest()
                 {
                     ChatId = ChatId,
-                    Date = DateTime.Today.AddDays(-1).ToUtcTime()
+                    Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day).AddDays(-1)
+                        .ToUtcTime()
                 });
                 break;
             case MenuTexts.ToReports:

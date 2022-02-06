@@ -53,6 +53,7 @@ public class MessageRouter : IMessageRouter
             ScreenIds.MainMenu => new MainMenuScreenHandler(_serviceProvider, message, user),
             ScreenIds.ReportMenu => new ReportMenuScreenHandler(_serviceProvider, message, user),
             ScreenIds.OrdersSum => new OrdersSumScreenHandler(_serviceProvider, message, user),
+            ScreenIds.OrdersCount => new OrdersCountScreenHandler(_serviceProvider, message, user),
             _ => null
         };
 

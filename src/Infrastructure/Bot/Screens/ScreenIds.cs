@@ -6,4 +6,5 @@ public static class ScreenIds
     public const string ReportMenu = "ReportMenu";
 
     public const string OrdersSum = "OrdersSum";
+    public const string OrdersCount = "OrdersCount";
 }

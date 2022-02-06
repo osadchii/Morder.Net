@@ -29,6 +29,18 @@ public class ReportMenuScreenHandler : ScreenHandler
                     ChatId = ChatId
                 });
                 break;
+            case MenuTexts.RatingProduct:
+                await Mediator.Send(new ToProductRatingCommand()
+                {
+                    ChatId = ChatId
+                });
+                break;
+            case MenuTexts.RatingBrand:
+                await Mediator.Send(new ToBrandRatingCommand()
+                {
+                    ChatId = ChatId
+                });
+                break;
             default:
                 await Mediator.Send(new ToMainMenuCommand()
                 {

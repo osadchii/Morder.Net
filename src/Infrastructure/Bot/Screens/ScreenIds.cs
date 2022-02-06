@@ -7,4 +7,10 @@ public static class ScreenIds
 
     public const string OrdersSum = "OrdersSum";
     public const string OrdersCount = "OrdersCount";
+
+    public const string ProductRating = "ProductRating";
+    public const string ProductRatingByMarketplace = "ProductRatingByMarketplace";
+
+    public const string BrandRating = "BrandRating";
+    public const string BrandRatingByMarketplace = "BrandRatingByMarketplace";
 }

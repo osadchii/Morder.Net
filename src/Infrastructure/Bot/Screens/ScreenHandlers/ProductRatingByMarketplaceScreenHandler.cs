@@ -1,4 +1,3 @@
-using Infrastructure.Bot.MediatR.Commands.Common;
 using Infrastructure.Bot.MediatR.Commands.Reports;
 using Infrastructure.Bot.Menus;
 using Infrastructure.Extensions;
@@ -9,9 +8,9 @@ using Telegram.Bot.Types;
 
 namespace Infrastructure.Bot.Screens.ScreenHandlers;
 
-public class OrdersCountScreenHandler : ScreenHandler
+public class ProductRatingByMarketplaceScreenHandler : ScreenHandler
 {
-    public OrdersCountScreenHandler(IServiceProvider serviceProvider, Message message, BotUser user)
+    public ProductRatingByMarketplaceScreenHandler(IServiceProvider serviceProvider, Message message, BotUser user)
         : base(serviceProvider, message, user)
     {
     }
@@ -20,26 +19,29 @@ public class OrdersCountScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToReportMenuCommand()
+            await Mediator.Send(new ToProductRatingCommand()
             {
                 ChatId = ChatId
             });
             return;
         }
 
+        int.TryParse(User.CurrentStateKey, out int marketplaceId);
+
         try
         {
             (DateTime from, DateTime to) dates = Text.FromRussianInterval();
-            await Mediator.Send(new OrdersCountReportRequest()
+            await Mediator.Send(new ProductRatingReportRequest()
             {
                 From = dates.from.ToUtcTime(),
                 To = dates.to.ToUtcTime(),
-                ChatId = ChatId
+                ChatId = ChatId,
+                MarketplaceId = marketplaceId == 0 ? null : marketplaceId
             });
         }
         catch (Exception ex)
         {
-            var logger = ServiceProvider.GetRequiredService<ILogger<OrdersCountScreenHandler>>();
+            var logger = ServiceProvider.GetRequiredService<ILogger<ProductRatingByMarketplaceScreenHandler>>();
             logger.LogError(ex, "Can't parse dates from {Message}", Text);
         }
     }

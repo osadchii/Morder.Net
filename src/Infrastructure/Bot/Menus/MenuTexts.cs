@@ -5,6 +5,7 @@ public static class MenuTexts
     public const string ToMainMenu = "В главное меню";
 
     public const string Back = "Назад";
+    public const string Total = "Всего";
 
     public const string TodaySummary = "Сводка за сегодня";
     public const string YesterdaySummary = "Сводка за вчера";

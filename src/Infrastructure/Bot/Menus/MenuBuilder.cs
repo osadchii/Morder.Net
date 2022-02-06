@@ -32,10 +32,12 @@ public class KeyboardBuilder
         return this;
     }
 
-    public KeyboardBuilder AddMonthsButtons(DateTime startDate)
+    public KeyboardBuilder AddDateIntervalButtons(DateTime startDate)
     {
+        const int buttonsPerLine = 3;
+
         var months = new List<DateTime>();
-        DateTime currentDate = startDate;
+        var currentDate = new DateTime(startDate.Year, startDate.Month, 1);
 
         while (currentDate <= DateTime.UtcNow)
         {
@@ -43,17 +45,27 @@ public class KeyboardBuilder
             currentDate = currentDate.AddMonths(1);
         }
 
+        var names = new List<string>()
+        {
+            MenuTexts.Days7,
+            MenuTexts.Days28,
+            MenuTexts.Days90
+        };
+        names.AddRange(
+            months
+                .OrderByDescending(m => m)
+                .Select(month => month.ToRussianMonthYearString()));
+
         var count = 0;
 
-        foreach (DateTime month in months.OrderByDescending(m => m))
+        foreach (string name in names)
         {
-            if (count > 0 && count % 2 == 0)
+            if (count > 0 && count % buttonsPerLine == 0)
             {
                 AddLine();
             }
 
-            AddButton(month.ToRussianMonthYearString());
-
+            AddButton(name);
             count++;
         }
 

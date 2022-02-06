@@ -1,4 +1,5 @@
 using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.Bot.Screens.ScreenHandlers;
 using Infrastructure.MediatR.BotUsers.Commands;
@@ -38,9 +39,20 @@ public class MessageRouter : IMessageRouter
             return;
         }
 
+        if ((message.Text ?? string.Empty) == MenuTexts.ToMainMenu)
+        {
+            await _mediator.Send(new ToMainMenuCommand()
+            {
+                ChatId = message.Chat.Id
+            });
+            return;
+        }
+
         ScreenHandler? handler = user.CurrentState switch
         {
             ScreenIds.MainMenu => new MainMenuScreenHandler(_serviceProvider, message, user),
+            ScreenIds.ReportMenu => new ReportMenuScreenHandler(_serviceProvider, message, user),
+            ScreenIds.OrdersSum => new OrdersSumScreenHandler(_serviceProvider, message, user),
             _ => null
         };
 

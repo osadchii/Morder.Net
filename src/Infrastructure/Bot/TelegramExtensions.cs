@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Infrastructure.Bot.Menus;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -63,8 +64,23 @@ public static class TelegramExtensions
         return $"{monthName} {date.Year}";
     }
 
-    public static DateTime FromRussianMonthYearString(this string dateString)
+    public static (DateTime from, DateTime to) FromRussianInterval(this string dateString)
     {
+        if (dateString.Equals(MenuTexts.Days7, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return (DateTime.Now.AddDays(-7), DateTime.Now);
+        }
+
+        if (dateString.Equals(MenuTexts.Days28, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return (DateTime.Now.AddDays(-28), DateTime.Now);
+        }
+
+        if (dateString.Equals(MenuTexts.Days90, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return (DateTime.Now.AddDays(-90), DateTime.Now);
+        }
+
         DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
         string[] splitDate = dateString.Split(' ');
 
@@ -82,7 +98,9 @@ public static class TelegramExtensions
         {
             if (info.MonthNames[i].Equals(splitDate[0], StringComparison.InvariantCultureIgnoreCase))
             {
-                return new DateTime(year, i + 1, 1);
+                DateTime from = new DateTime(year, i + 1, 1);
+                DateTime to = from.AddMonths(1).AddMilliseconds(-1);
+                return (from, to);
             }
         }
 

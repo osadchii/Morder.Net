@@ -23,20 +23,26 @@ public class MainMenuScreenHandler : ScreenHandler
 
     public override async Task HandleMessage()
     {
+        TimeZoneInfo moscow = TimeZoneInfo.FindSystemTimeZoneById
+            ("Russian Standard Time");
+
+        TimeSpan offset = moscow.GetUtcOffset(DateTime.UtcNow);
+        DateTime utcMoscow = DateTime.UtcNow + offset;
+
         switch (Text)
         {
             case MenuTexts.TodaySummary:
                 await Mediator.Send(new GetOrderSummaryByDayRequest()
                 {
                     ChatId = ChatId,
-                    Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day).ToUtcTime()
+                    Date = new DateTime(utcMoscow.Year, utcMoscow.Month, utcMoscow.Day).ToUtcTime()
                 });
                 break;
             case MenuTexts.YesterdaySummary:
                 await Mediator.Send(new GetOrderSummaryByDayRequest()
                 {
                     ChatId = ChatId,
-                    Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day).AddDays(-1)
+                    Date = new DateTime(utcMoscow.Year, utcMoscow.Month, utcMoscow.Day).AddDays(-1)
                         .ToUtcTime()
                 });
                 break;

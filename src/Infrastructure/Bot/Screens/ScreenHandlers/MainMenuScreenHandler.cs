@@ -32,6 +32,12 @@ public class MainMenuScreenHandler : ScreenHandler
                     Date = DateTime.Today.AddDays(-1).ToUtcTime()
                 });
                 break;
+            case MenuTexts.ToReports:
+                await Mediator.Send(new ToReportMenuCommand()
+                {
+                    ChatId = ChatId
+                });
+                break;
             default:
                 await Mediator.Send(new ToMainMenuCommand()
                 {

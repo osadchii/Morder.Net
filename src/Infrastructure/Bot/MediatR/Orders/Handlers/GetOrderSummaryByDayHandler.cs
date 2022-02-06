@@ -43,7 +43,7 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
         return Unit.Value;
     }
 
-    private void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName)
+    private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName)
     {
         if (orders.Length == 0)
         {

@@ -13,4 +13,15 @@ public static class BotMenus
         .AddLine()
         .AddButton(MenuTexts.ToMarketplaces)
         .Build();
+
+    public static ReplyKeyboardMarkup ReportMenu => new KeyboardBuilder()
+        .AddLine()
+        .AddButton(MenuTexts.OrdersCount)
+        .AddButton(MenuTexts.OrdersSum)
+        .AddLine()
+        .AddButton(MenuTexts.RatingBrand)
+        .AddButton(MenuTexts.RatingProduct)
+        .AddLine()
+        .AddButton(MenuTexts.SoldProducts)
+        .Build();
 }

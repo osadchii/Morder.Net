@@ -36,21 +36,28 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
 
         IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
 
+        bool extrapolation = DateTime.Now >= request.From && DateTime.Now <= request.To;
+
         var sb = new StringBuilder();
 
         foreach (MarketplaceType type in types)
         {
-            AppendReport(sb, orders.Where(o => o.Marketplace.Type == type).ToArray(), type.ToString());
+            AppendReport(sb, orders
+                    .Where(o => o.Marketplace.Type == type).ToArray(),
+                type.ToString(), false,
+                request.From, request.To);
         }
 
-        AppendReport(sb, orders, "Всего");
+        AppendReport(sb, orders, "Всего", extrapolation,
+            request.From, request.To);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
         return Unit.Value;
     }
 
-    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName)
+    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool extrapolation,
+        DateTime from, DateTime to)
     {
         if (orders.Length == 0)
         {
@@ -76,5 +83,17 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
         sb.AppendLine($"Рекордный день: {bestDay.ToString("dd.MM.yyyy")}");
         sb.AppendLine($"Рекордная сумма: {bestDaySum.ToFormatString()}");
         sb.AppendLine();
+
+        if (extrapolation)
+        {
+            TimeSpan span = DateTime.Now - from;
+            decimal perSecond = sum / Convert.ToDecimal(span.TotalSeconds);
+            var totalSeconds = Convert.ToDecimal((to - from).TotalSeconds);
+
+            decimal total = totalSeconds * perSecond;
+
+            sb.AppendLine($"Экстраполированная сумма на конец месяца: {total.ToFormatString()}");
+            sb.AppendLine();
+        }
     }
 }

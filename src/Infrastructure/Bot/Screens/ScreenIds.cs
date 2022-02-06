@@ -13,4 +13,7 @@ public static class ScreenIds
 
     public const string BrandRating = "BrandRating";
     public const string BrandRatingByMarketplace = "BrandRatingByMarketplace";
+
+    public const string SoldProducts = "SoldProducts";
+    public const string SoldProductsByMarketplace = "SoldProductsByMarketplace";
 }

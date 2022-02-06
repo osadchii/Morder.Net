@@ -60,6 +60,9 @@ public class MessageRouter : IMessageRouter
             ScreenIds.BrandRating => new BrandRatingScreenHandler(_serviceProvider, message, user),
             ScreenIds.BrandRatingByMarketplace => new BrandRatingByMarketplaceScreenHandler(_serviceProvider, message,
                 user),
+            ScreenIds.SoldProducts => new SoldProductsScreenHandler(_serviceProvider, message, user),
+            ScreenIds.SoldProductsByMarketplace => new SoldProductsByMarketplaceScreenHandler(_serviceProvider, message,
+                user),
             _ => null
         };
 

@@ -6,6 +6,8 @@ public static class MenuTexts
 
     public const string Back = "Назад";
     public const string Total = "Всего";
+    public const string Yesterday = "Вчера";
+    public const string Today = "Сегодня";
 
     public const string TodaySummary = "Сводка за сегодня";
     public const string YesterdaySummary = "Сводка за вчера";

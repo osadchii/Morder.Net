@@ -41,6 +41,12 @@ public class ReportMenuScreenHandler : ScreenHandler
                     ChatId = ChatId
                 });
                 break;
+            case MenuTexts.SoldProducts:
+                await Mediator.Send(new ToSoldProductCommand()
+                {
+                    ChatId = ChatId
+                });
+                break;
             default:
                 await Mediator.Send(new ToMainMenuCommand()
                 {

@@ -53,6 +53,16 @@ public class MessageRouter : IMessageRouter
             ScreenIds.MainMenu => new MainMenuScreenHandler(_serviceProvider, message, user),
             ScreenIds.ReportMenu => new ReportMenuScreenHandler(_serviceProvider, message, user),
             ScreenIds.OrdersSum => new OrdersSumScreenHandler(_serviceProvider, message, user),
+            ScreenIds.OrdersCount => new OrdersCountScreenHandler(_serviceProvider, message, user),
+            ScreenIds.ProductRating => new ProductRatingScreenHandler(_serviceProvider, message, user),
+            ScreenIds.ProductRatingByMarketplace => new ProductRatingByMarketplaceScreenHandler(_serviceProvider,
+                message, user),
+            ScreenIds.BrandRating => new BrandRatingScreenHandler(_serviceProvider, message, user),
+            ScreenIds.BrandRatingByMarketplace => new BrandRatingByMarketplaceScreenHandler(_serviceProvider, message,
+                user),
+            ScreenIds.SoldProducts => new SoldProductsScreenHandler(_serviceProvider, message, user),
+            ScreenIds.SoldProductsByMarketplace => new SoldProductsByMarketplaceScreenHandler(_serviceProvider, message,
+                user),
             _ => null
         };
 

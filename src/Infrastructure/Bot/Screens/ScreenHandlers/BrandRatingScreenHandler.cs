@@ -1,0 +1,49 @@
+using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Bot.MediatR.Commands.Reports;
+using Infrastructure.Bot.Menus;
+using Infrastructure.Models.BotUsers;
+using Telegram.Bot.Types;
+
+namespace Infrastructure.Bot.Screens.ScreenHandlers;
+
+public class BrandRatingScreenHandler : ScreenHandler
+{
+    public BrandRatingScreenHandler(IServiceProvider serviceProvider, Message message, BotUser user)
+        : base(serviceProvider, message, user)
+    {
+    }
+
+    public override async Task HandleMessage()
+    {
+        if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
+        {
+            await Mediator.Send(new ToReportMenuCommand()
+            {
+                ChatId = ChatId
+            });
+            return;
+        }
+
+        if (Text.Equals(MenuTexts.Total, StringComparison.InvariantCultureIgnoreCase))
+        {
+            await Mediator.Send(new ToBrandRatingByMarketplaceCommand()
+            {
+                ChatId = ChatId,
+                MarketplaceId = null
+            });
+            return;
+        }
+
+        string[] splitText = Text.Split('–');
+        string firstPart = splitText[0].Trim();
+
+        if (int.TryParse(firstPart, out int marketplaceId))
+        {
+            await Mediator.Send(new ToBrandRatingByMarketplaceCommand()
+            {
+                ChatId = ChatId,
+                MarketplaceId = marketplaceId
+            });
+        }
+    }
+}

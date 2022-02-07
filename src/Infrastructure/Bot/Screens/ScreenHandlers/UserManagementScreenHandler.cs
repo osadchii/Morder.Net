@@ -33,6 +33,7 @@ public class UserManagementScreenHandler : ScreenHandler
             case MenuTexts.Verify:
                 await Mediator.Send(new SetUserVerifyRequest()
                 {
+                    ChatId = ChatId,
                     Verified = true,
                     UserId = userId
                 });
@@ -40,6 +41,7 @@ public class UserManagementScreenHandler : ScreenHandler
             case MenuTexts.Block:
                 await Mediator.Send(new SetUserVerifyRequest()
                 {
+                    ChatId = ChatId,
                     Verified = false,
                     UserId = userId
                 });
@@ -47,6 +49,7 @@ public class UserManagementScreenHandler : ScreenHandler
             case MenuTexts.AddAdministrator:
                 await Mediator.Send(new SetUserAdministratorRequest()
                 {
+                    ChatId = ChatId,
                     Administrator = true,
                     UserId = userId
                 });
@@ -54,6 +57,7 @@ public class UserManagementScreenHandler : ScreenHandler
             case MenuTexts.RemoveAdministrator:
                 await Mediator.Send(new SetUserAdministratorRequest()
                 {
+                    ChatId = ChatId,
                     Administrator = false,
                     UserId = userId
                 });

@@ -1,4 +1,5 @@
 using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Bot.MediatR.Commands.Marketplaces;
 using Infrastructure.Bot.MediatR.Commands.Users;
 using Infrastructure.Bot.MediatR.Orders.Queries;
 using Infrastructure.Bot.Menus;
@@ -60,6 +61,18 @@ public class MainMenuScreenHandler : ScreenHandler
                 }
 
                 await Mediator.Send(new ToUsersCommand()
+                {
+                    ChatId = ChatId
+                });
+                break;
+            case MenuTexts.ToMarketplaces:
+                if (!User.Administrator && User.UserName != _botOwnerUserName)
+                {
+                    await Client.SendTextAsync(ChatId, MessageConstants.OnlyAdministratorsMessage);
+                    break;
+                }
+
+                await Mediator.Send(new ToMarketplacesCommand()
                 {
                     ChatId = ChatId
                 });

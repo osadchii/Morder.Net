@@ -10,4 +10,6 @@ public static class MessageConstants
     public const string NoOrders = "В выбранном периоде не было заказов.";
 
     public const string OnlyAdministratorsMessage = "Для доступа к выбранному разделу необходимы права администратора.";
+    public const string EnterNewMinimalPrice = "Отправьте новое значение минимальной цены";
+    public const string EnterNewMinimalStock = "Отправьте новое значение минимального остатка";
 }

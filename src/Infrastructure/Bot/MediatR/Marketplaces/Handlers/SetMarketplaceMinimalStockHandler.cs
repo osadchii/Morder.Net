@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Bot.MediatR.Marketplaces.Handlers;
 
-public class SetMarketplaceMinimalPriceHandler : IRequestHandler<SetMarketplaceMinimalPriceRequest, Unit>
+public class SetMarketplaceMinimalStockHandler : IRequestHandler<SetMarketplaceMinimalStockRequest, Unit>
 {
     private readonly MContext _context;
-    private readonly ILogger<SetMarketplaceMinimalPriceHandler> _logger;
+    private readonly ILogger<SetMarketplaceMinimalStockHandler> _logger;
     private readonly IChangeTrackingService _changeTrackingService;
     private readonly IMediator _mediator;
 
-    public SetMarketplaceMinimalPriceHandler(MContext context, ILogger<SetMarketplaceMinimalPriceHandler> logger,
+    public SetMarketplaceMinimalStockHandler(MContext context, ILogger<SetMarketplaceMinimalStockHandler> logger,
         IChangeTrackingService changeTrackingService, IMediator mediator)
     {
         _context = context;
@@ -24,26 +24,24 @@ public class SetMarketplaceMinimalPriceHandler : IRequestHandler<SetMarketplaceM
         _mediator = mediator;
     }
 
-    public async Task<Unit> Handle(SetMarketplaceMinimalPriceRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SetMarketplaceMinimalStockRequest request, CancellationToken cancellationToken)
     {
         Marketplace marketplace = await _context.Marketplaces
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
-        decimal oldMinimalPrice = marketplace.MinimalPrice;
+        decimal oldMinimalStock = marketplace.MinimalStock;
 
-        marketplace.MinimalPrice = request.MinimalPrice;
+        marketplace.MinimalStock = request.MinimalStock;
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        if (marketplace.IsActive && marketplace.StockChangesTracking)
+        if (marketplace.IsActive && marketplace.StockChangesTracking && oldMinimalStock != marketplace.MinimalStock)
         {
-            await _changeTrackingService.TrackStockChangeByMinMaxPrice(marketplace.Id,
-                Math.Min(oldMinimalPrice, marketplace.MinimalPrice),
-                Math.Max(oldMinimalPrice, marketplace.MinimalPrice), cancellationToken);
+            await _changeTrackingService.TrackAllStocks(marketplace.Id, cancellationToken);
         }
 
         _logger.LogInformation(
-            $"User: {request.ChatId} changed minimal price for ${marketplace.Name} ({marketplace.Id}) to {request.MinimalPrice}");
+            $"User: {request.ChatId} changed minimal stock for ${marketplace.Name} ({marketplace.Id}) to {request.MinimalStock}");
 
         await _mediator.Send(new ToMarketplaceManagementCommand()
         {

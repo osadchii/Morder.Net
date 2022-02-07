@@ -5,8 +5,11 @@ public static class ScreenIds
     public const string MainMenu = "MainMenu";
     public const string ReportMenu = "ReportMenu";
     public const string UsersMenu = "UsersMenu";
+    public const string MarketplacesMenu = "MarketplacesMenu";
 
     public const string UserManagement = "UserManagement";
+
+    public const string MarketplaceManagement = "MarketplaceManagement";
 
     public const string OrdersSum = "OrdersSum";
     public const string OrdersCount = "OrdersCount";
@@ -19,4 +22,7 @@ public static class ScreenIds
 
     public const string SoldProducts = "SoldProducts";
     public const string SoldProductsByMarketplace = "SoldProductsByMarketplace";
+
+    public const string SetMinimalPrice = "SetMinimalPrice";
+    public const string SetMinimalStock = "SetMinimalStock";
 }

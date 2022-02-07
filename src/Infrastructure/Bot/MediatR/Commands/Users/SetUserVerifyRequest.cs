@@ -8,6 +8,7 @@ namespace Infrastructure.Bot.MediatR.Commands.Users;
 
 public class SetUserVerifyRequest : IRequest<Unit>
 {
+    public long ChatId { get; set; }
     public int UserId { get; set; }
     public bool Verified { get; set; }
 }
@@ -33,13 +34,19 @@ public class SetUserVerifyHandler : IRequestHandler<SetUserVerifyRequest, Unit>
         user.Verified = request.Verified;
         await _context.SaveChangesAsync(cancellationToken);
 
-        if (user.Verified)
+        if (user.Verified && request.ChatId != user.ChatId)
         {
             await _mediator.Send(new ToMainMenuCommand()
             {
                 ChatId = user.ChatId
             }, cancellationToken);
         }
+
+        await _mediator.Send(new ToUserManagementCommand()
+        {
+            ChatId = request.ChatId,
+            UserId = request.UserId
+        }, cancellationToken);
 
         return Unit.Value;
     }

@@ -65,6 +65,10 @@ public class MessageRouter : IMessageRouter
                 user),
             ScreenIds.UsersMenu => new UsersScreenHandler(_serviceProvider, message, user),
             ScreenIds.UserManagement => new UserManagementScreenHandler(_serviceProvider, message, user),
+            ScreenIds.MarketplacesMenu => new MarketplacesScreenHandler(_serviceProvider, message, user),
+            ScreenIds.MarketplaceManagement => new MarketplaceManagementScreenHandler(_serviceProvider, message, user),
+            ScreenIds.SetMinimalPrice => new SetMarketplaceMinimalPriceScreenHandler(_serviceProvider, message, user),
+            ScreenIds.SetMinimalStock => new SetMarketplaceMinimalStockScreenHandler(_serviceProvider, message, user),
             _ => null
         };
 

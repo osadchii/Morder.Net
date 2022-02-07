@@ -2,9 +2,9 @@ using MediatR;
 
 namespace Infrastructure.Bot.MediatR.Marketplaces.Commands;
 
-public class SetMarketplaceMinimalPriceRequest : IRequest<Unit>
+public class SetMarketplaceNullifyStocksRequest : IRequest<Unit>
 {
     public int MarketplaceId { get; set; }
-    public decimal MinimalPrice { get; set; }
+    public bool NullifyStocks { get; set; }
     public long ChatId { get; set; }
 }

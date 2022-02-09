@@ -9,6 +9,7 @@ using Integration.SberMegaMarket.Clients.Orders;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using static System.Int32;
 
 namespace Integration.SberMegaMarket.Services.Orders;
@@ -55,7 +56,18 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
             }
         };
 
-        string content = await client.SendRequest(ApiUrls.GetOrders, _sberMegaMarketDto, request);
+        string content;
+        try
+        {
+            content = await client.SendRequest(ApiUrls.GetOrders, _sberMegaMarketDto, request);
+        }
+        catch (Exception ex)
+        {
+            var logger = ServiceProvider.GetRequiredService<ILogger<SberMegaMarketOrderUpdater>>();
+            logger.LogWarning("Error while getting orders from SberMegaMarket: {Message}", ex.Message);
+            return;
+        }
+
         var response = content.FromJson<UpdateOrderResponse>();
 
         if (response is null || response.Success != 1)

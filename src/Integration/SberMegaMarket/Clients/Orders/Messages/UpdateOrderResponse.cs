@@ -41,7 +41,7 @@ public class UpdateOrderResponseDataShipmentItem
 {
     [JsonProperty("itemIndex")] public string ItemIndex { get; set; } = null!;
 
-    [JsonProperty("status")] public string Status { get; set; } = null!;
+    [JsonProperty("status")] public string? Status { get; set; }
 
     [JsonProperty("offerId")] public string OfferId { get; set; } = null!;
 

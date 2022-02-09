@@ -30,6 +30,7 @@ public static class MenuTexts
     public const string RemoveAdministrator = "Сделать пользователем";
     public const string Verify = "Дать доступ к боту";
     public const string Block = "Забрать доступ к боту";
+    public const string RemoveUser = "Удалить пользователя";
 
     public const string SetMinimalPrice = "Установить минимальную цену";
     public const string SetMinimalStock = "Установить минимальный остаток";

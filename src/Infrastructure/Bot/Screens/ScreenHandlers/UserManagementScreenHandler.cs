@@ -62,6 +62,13 @@ public class UserManagementScreenHandler : ScreenHandler
                     UserId = userId
                 });
                 break;
+            case MenuTexts.RemoveUser:
+                await Mediator.Send(new RemoveUserRequest()
+                {
+                    ChatId = ChatId,
+                    UserId = userId
+                });
+                break;
             default:
                 break;
         }

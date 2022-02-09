@@ -29,6 +29,8 @@ public class BotUser : BaseEntity, IHasId
 
     public bool Administrator { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public override string ToString()
     {
         return UserName.IsNullOrEmpty()

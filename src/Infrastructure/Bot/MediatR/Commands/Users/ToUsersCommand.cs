@@ -30,6 +30,7 @@ public class ToUsersHandler : IRequestHandler<ToUsersCommand, Unit>
     {
         BotUser[] users = await _context.BotUsers
             .AsNoTracking()
+            .Where(u => !u.IsDeleted)
             .ToArrayAsync(cancellationToken);
 
         var menuBuilder = new KeyboardBuilder();

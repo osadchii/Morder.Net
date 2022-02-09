@@ -12,7 +12,7 @@ public static class SberMegaMarketOrderStatuses
     public const string Shipped = "SHIPPED";
     public const string New = "NEW";
 
-    public static bool IsCanceled(string status)
+    public static bool IsCanceled(string? status)
     {
         return status is CustomerCanceled or MerchantCanceled;
     }

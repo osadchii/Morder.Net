@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Ozon.Clients.Orders.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Ozon.Clients.Orders;
 
@@ -12,6 +13,13 @@ public interface IOzonLoadOrderListClient
 
 public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 {
+    private readonly ILogger<OzonLoadOrderListClient> _logger;
+
+    public OzonLoadOrderListClient(ILogger<OzonLoadOrderListClient> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task<List<OzonPosting>> GetOrders(OzonDto ozonDto, DateTime startDate)
     {
         var result = new ConcurrentBag<OzonPosting>();
@@ -33,7 +41,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
         return result.ToList();
     }
 
-    private static async Task LoadPostingByMonth(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings,
+    private async Task LoadPostingByMonth(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings,
         DateTime month)
     {
         var currentPage = 1;
@@ -46,7 +54,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
         }
     }
 
-    private static async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<OzonPosting> postings,
+    private async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<OzonPosting> postings,
         DateTime month, int currentPage)
     {
         var request = new GetOrderListRequest()
@@ -60,7 +68,18 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
             }
         };
 
-        HttpResponseMessage httpResponse = await PostAsync(ozon, "v3/posting/fbs/list", request);
+        HttpResponseMessage httpResponse;
+
+        try
+        {
+            httpResponse = await PostAsync(ozon, "v3/posting/fbs/list", request);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Error while loading ozon order portion: {Message}", ex.Message);
+            return true;
+        }
+
         string body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<GetOrderListResponse>();

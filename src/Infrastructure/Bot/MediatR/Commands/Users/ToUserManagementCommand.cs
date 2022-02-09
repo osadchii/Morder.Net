@@ -33,14 +33,21 @@ public class ToUserManagementHandler : IRequestHandler<ToUserManagementCommand, 
             .AsNoTracking()
             .SingleAsync(b => b.Id == request.UserId, cancellationToken);
 
-        await _client.SendReplyKeyboard(request.ChatId, new KeyboardBuilder()
+        KeyboardBuilder menuBuilder = new KeyboardBuilder()
             .AddLine()
             .AddButton(MenuTexts.Back)
             .AddLine()
             .AddButton(user.Verified ? MenuTexts.Block : MenuTexts.Verify)
             .AddLine()
-            .AddButton(user.Administrator ? MenuTexts.RemoveAdministrator : MenuTexts.AddAdministrator)
-            .Build());
+            .AddButton(user.Administrator ? MenuTexts.RemoveAdministrator : MenuTexts.AddAdministrator);
+
+        if (!user.Administrator && !user.Verified)
+        {
+            menuBuilder.AddLine()
+                .AddButton(MenuTexts.RemoveUser);
+        }
+
+        await _client.SendReplyKeyboard(request.ChatId, menuBuilder.Build());
 
         await _mediator.Send(new SetBotUserStateRequest(request.ChatId, ScreenIds.UserManagement,
             request.UserId.ToString()), cancellationToken);

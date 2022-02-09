@@ -32,6 +32,8 @@ public class MContext : DbContext
 
     public DbSet<BotUser> BotUsers { get; set; }
 
+    public DbSet<BotUserUsageCounter> BotUserUsageCounters { get; set; }
+
     #endregion
 
     #region Marketplace
@@ -143,6 +145,8 @@ public class MContext : DbContext
             e.Property(t => t.Type)
                 .HasConversion(new EnumToStringConverter<TaskType>());
         });
+
+        modelBuilder.Entity<BotUserUsageCounter>(e => { e.HasKey(t => t.BotUserId); });
 
         foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
         {

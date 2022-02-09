@@ -1,4 +1,5 @@
 using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Bot.MediatR.Commands.Users;
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.Bot.Screens.ScreenHandlers;
@@ -28,6 +29,11 @@ public class MessageRouter : IMessageRouter
     public async Task Route(Message message)
     {
         BotUser user = await GetUser(message);
+
+        await _mediator.Send(new IncrementBotUserUsageCounterRequest()
+        {
+            BotUserId = user.Id
+        });
 
         bool hasAccess = await _mediator.Send(new UserAccessCheckRequest()
         {

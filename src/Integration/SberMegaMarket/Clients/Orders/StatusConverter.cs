@@ -5,7 +5,8 @@ namespace Integration.SberMegaMarket.Clients.Orders;
 
 public static class StatusConverter
 {
-    public static OrderStatus GetOrderStatusBySberMegaMarketOrder(UpdateOrderResponseDataShipment shipment)
+    public static OrderStatus GetOrderStatusBySberMegaMarketOrder(UpdateOrderResponseDataShipment shipment,
+        bool unknownStatusIsFinished)
     {
         OrderStatus status;
 
@@ -39,9 +40,13 @@ public static class StatusConverter
         {
             status = OrderStatus.Shipped;
         }
-        else
+        else if (unknownStatusIsFinished)
         {
             status = OrderStatus.Finished;
+        }
+        else
+        {
+            status = OrderStatus.Created;
         }
 
         return status;

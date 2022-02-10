@@ -92,7 +92,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
         catch (Exception ex)
         {
             var logger = ServiceProvider.GetRequiredService<ILogger<SberMegaMarketOrderLoader>>();
-            logger.LogError(ex, "Error while loading sber orders: {Message}", ex.Message);
+            logger.LogWarning(ex, "Error while loading sber orders: {Message}", ex.Message);
             return;
         }
 

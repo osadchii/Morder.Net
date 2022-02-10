@@ -34,6 +34,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     private readonly IMapper _mapper;
     private readonly IProductCache _productCache;
     private const string Customer = "SberMegaMarket Customer";
+    private readonly DateTime _wrongStatusDate = new DateTime(2021, 1, 1);
 
     public SberMegaMarketOrderAdapter(IMemoryCache cache, MContext context, IMapper mapper, IProductCache productCache)
     {
@@ -104,6 +105,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             .Where(s => s.Items.All(i => products.ContainsKey(i.OfferId)))
             .Select(s =>
             {
+                DateTime creationDate = s.CreationDate.ToCommonTime().ToUtcTime();
                 return new CreateOrderRequest()
                 {
                     Archived = true,
@@ -114,7 +116,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
                     ExternalId = Guid.NewGuid(),
                     MarketplaceId = sber.Id,
                     ShippingDate = s.DeliveryDate.ToCommonTime().ToUtcTime(),
-                    Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(s),
+                    Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(s, creationDate < _wrongStatusDate),
                     ConfirmedTimeLimit = s.ConfirmedTimeLimit.HasValue
                         ? s.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()
                         : new DateTime().ToUtcTime(),

@@ -88,7 +88,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
             {
                 MarketplaceId = _sberMegaMarketDto.Id,
                 OrderId = orderId,
-                Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(shipment),
+                Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(shipment, false),
                 CustomerAddress = shipment.CustomerAddress,
                 CustomerFullName = shipment.CustomerFullName,
                 ShipmentId = shipment.ShipmentId,

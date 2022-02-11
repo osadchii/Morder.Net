@@ -33,6 +33,8 @@ public class LoadOrdersService : ILoadOrdersService
 
     public async Task LoadOrders(DateTime startDate)
     {
+        _logger.LogInformation("Started loading orders from {StartDate}", startDate.ToString("dd.MM.yyyy HH:mm"));
+
         try
         {
             List<Marketplace> marketplaces = await _context.Marketplaces

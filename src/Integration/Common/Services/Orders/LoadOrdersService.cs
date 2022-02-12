@@ -12,7 +12,8 @@ namespace Integration.Common.Services.Orders;
 
 public interface ILoadOrdersService
 {
-    Task LoadOrders(DateTime startDate);
+    Task LoadOrdersFromDate(DateTime startDate);
+    Task LoadOrdersInDays(int days);
 }
 
 public class LoadOrdersService : ILoadOrdersService
@@ -31,7 +32,7 @@ public class LoadOrdersService : ILoadOrdersService
         _mapper = mapper;
     }
 
-    public async Task LoadOrders(DateTime startDate)
+    public async Task LoadOrdersFromDate(DateTime startDate)
     {
         _logger.LogInformation("Started loading orders from {StartDate}", startDate.ToString("dd.MM.yyyy HH:mm"));
 
@@ -82,5 +83,10 @@ public class LoadOrdersService : ILoadOrdersService
         {
             _logger.LogError(ex, "Error while loading orders");
         }
+    }
+
+    public Task LoadOrdersInDays(int days)
+    {
+        return LoadOrdersFromDate(DateTime.UtcNow.AddDays(0 - days));
     }
 }

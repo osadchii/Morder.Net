@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
@@ -55,11 +56,17 @@ public class UpdateOrdersService : IUpdateOrdersService
                         continue;
                     }
 
+                    var sw = new Stopwatch();
+                    sw.Start();
                     await loader.UpdateAsync();
+                    sw.Stop();
+
+                    _logger.LogInformation("{MarketplaceName} orders updated. Elapsed {Ms} ms", marketplace.Name,
+                        sw.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error while updating orders from {marketplace.Name}");
+                    _logger.LogError(ex, "Error while updating orders from {MarketplaceName}", marketplace.Name);
                 }
             }
         }

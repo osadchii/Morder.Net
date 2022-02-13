@@ -7,7 +7,7 @@ namespace Infrastructure.Bot.MediatR.Commands.Common;
 
 public class UserAccessCheckRequest : IRequest<bool>
 {
-    public BotUser User { get; set; }
+    public BotUser User { get; set; } = null!;
 }
 
 public class UserAccessCheckHandler : IRequestHandler<UserAccessCheckRequest, bool>

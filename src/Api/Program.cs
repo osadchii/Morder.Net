@@ -93,7 +93,7 @@ public class Program
 
         app.UseEndpoints(endpoints =>
         {
-            string token = config.BotToken;
+            string token = config.BotToken!;
             endpoints.MapControllerRoute(name: "tgwebhook",
                 pattern: $"bot/{token}",
                 new { controller = "Telegram", action = "Post" });

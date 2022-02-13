@@ -11,12 +11,13 @@ public static class DependencyInjection
     public static void AddOzon(this IServiceCollection services)
     {
         services.AddTransient<IOzonLoadProductIdsClient, OzonLoadProductIdsClient>();
-        services.AddTransient<IOzonLoadUnfulfilledOrdersClient, OzonLoadUnfulfilledOrdersClient>();
         services.AddTransient<IOzonLoadOrderListClient, OzonLoadOrderListClient>();
         services.AddTransient<IOzonStockClient, OzonStockClient>();
         services.AddTransient<IOzonPriceClient, OzonPriceClient>();
         services.AddTransient<IOzonGetStickerClient, OzonGetStickerClient>();
         services.AddTransient<IOzonGetOrdersClient, OzonGetOrdersClient>();
+        services.AddTransient<IOzonRejectOrderClient, OzonRejectOrderClient>();
+        services.AddTransient<IOzonPackOrderClient, OzonPackOrderClient>();
 
         services.AddTransient<IOzonOrderAdapter, OzonOrderAdapter>();
     }

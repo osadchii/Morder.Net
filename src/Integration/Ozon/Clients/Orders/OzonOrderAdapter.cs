@@ -29,9 +29,14 @@ public class OzonOrderAdapter : IOzonOrderAdapter
             .Distinct()
             .ToList();
 
+#if DEBUG
+        Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
+#else
         Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls);
+#endif
 
         return postings
+            .Where(p => p.Products.All(i => products.ContainsKey(i.OfferId)))
             .Select(p =>
             {
                 return new CreateOrderRequest()

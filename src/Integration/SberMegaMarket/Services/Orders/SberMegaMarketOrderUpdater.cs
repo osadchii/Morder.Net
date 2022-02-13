@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Marketplace.SberMegaMarket.Commands;
@@ -34,18 +35,62 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
             return;
         }
 
+        var shipments = new ConcurrentBag<UpdateOrderResponseDataShipment>();
+        var portions = new List<List<string>>();
+
         var handled = 0;
 
         while (handled < orderNumbers.Count)
         {
             List<string> portion = orderNumbers.Skip(handled).Take(PortionSize).ToList();
-            await LoadOrdersPortion(portion);
+            portions.Add(portion);
 
             handled += PortionSize;
         }
+
+        await Parallel.ForEachAsync(portions, new ParallelOptions()
+        {
+            MaxDegreeOfParallelism = 10
+        }, async (list, _) => { await LoadOrdersPortion(list, shipments); });
+
+        await UpdateOrders(shipments);
     }
 
-    private async Task LoadOrdersPortion(IEnumerable<string> portion)
+    private async Task UpdateOrders(ConcurrentBag<UpdateOrderResponseDataShipment> shipments)
+    {
+        var mediator = ServiceProvider.GetRequiredService<IMediator>();
+        foreach (UpdateOrderResponseDataShipment shipment in shipments)
+        {
+            TryParse(shipment.OrderCode, out int orderId);
+
+            await mediator.Send(new UpdateSberMegaMarketOrderRequest()
+            {
+                MarketplaceId = _sberMegaMarketDto.Id,
+                OrderId = orderId,
+                Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(shipment, false),
+                CustomerAddress = shipment.CustomerAddress,
+                CustomerFullName = shipment.CustomerFullName,
+                ShipmentId = shipment.ShipmentId,
+                ConfirmedTimeLimit = shipment.ConfirmedTimeLimit.HasValue
+                    ? shipment.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
+                PackingTimeLimit = shipment.PackingTimeLimit.HasValue
+                    ? shipment.PackingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
+                ShippingTimeLimit = shipment.ShippingTimeLimit.HasValue
+                    ? shipment.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
+                Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem()
+                {
+                    ItemIndex = i.ItemIndex,
+                    Canceled = SberMegaMarketOrderStatuses.IsCanceled(i.Status)
+                })
+            });
+        }
+    }
+
+    private async Task LoadOrdersPortion(IEnumerable<string> portion,
+        ConcurrentBag<UpdateOrderResponseDataShipment> result)
     {
         var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<UpdateOrdersData>>();
         var request = new SberMegaMarketMessage<UpdateOrdersData>(_sberMegaMarketDto.Settings.Token)
@@ -78,35 +123,9 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
                                 $"{Environment.NewLine}Response: {response}");
         }
 
-        var mediator = ServiceProvider.GetRequiredService<IMediator>();
-
         foreach (UpdateOrderResponseDataShipment shipment in response.Data.Shipments)
         {
-            TryParse(shipment.OrderCode, out int orderId);
-
-            await mediator.Send(new UpdateSberMegaMarketOrderRequest()
-            {
-                MarketplaceId = _sberMegaMarketDto.Id,
-                OrderId = orderId,
-                Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(shipment, false),
-                CustomerAddress = shipment.CustomerAddress,
-                CustomerFullName = shipment.CustomerFullName,
-                ShipmentId = shipment.ShipmentId,
-                ConfirmedTimeLimit = shipment.ConfirmedTimeLimit.HasValue
-                    ? shipment.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()
-                    : new DateTime().ToUtcTime(),
-                PackingTimeLimit = shipment.PackingTimeLimit.HasValue
-                    ? shipment.PackingTimeLimit.Value.ToCommonTime().ToUtcTime()
-                    : new DateTime().ToUtcTime(),
-                ShippingTimeLimit = shipment.ShippingTimeLimit.HasValue
-                    ? shipment.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
-                    : new DateTime().ToUtcTime(),
-                Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem()
-                {
-                    ItemIndex = i.ItemIndex,
-                    Canceled = SberMegaMarketOrderStatuses.IsCanceled(i.Status)
-                })
-            });
+            result.Add(shipment);
         }
     }
 }

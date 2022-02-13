@@ -10,10 +10,7 @@ public class OzonSettings
     public int LoadProductIdsPageSize { get; set; } = 100;
     public bool LoadOrders { get; set; } = false;
     public int LoadOrdersPageSize { get; set; } = 1000;
-
-    // TODO: Remove days interval. Need to update all active orders
-    public int LoadOrdersDaysInterval { get; set; } = 7;
     public bool LoadOrdersAsArchived { get; set; } = true;
-    public int LoadOrdersThreads = 10;
-    public int UpdateOrdersThreads = 10;
+    public int LoadOrdersThreads { get; set; } = 10;
+    public int UpdateOrdersThreads { get; set; } = 10;
 }

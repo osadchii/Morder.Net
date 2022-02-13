@@ -23,7 +23,7 @@ public class WarehouseController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
-        WarehouseDto? result = await _mediator.Send(new GetWarehouseByExternalIdRequest() { ExternalId = externalId });
+        WarehouseDto result = await _mediator.Send(new GetWarehouseByExternalIdRequest() { ExternalId = externalId });
         return result.AsResult();
     }
 

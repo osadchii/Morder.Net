@@ -26,8 +26,7 @@ public class ServiceExceptionFilter : IActionFilter, IOrderedFilter
         context.Result = new JsonResult(context.Exception.AsResult());
         context.ExceptionHandled = true;
 
-        if (context.Exception is HttpRequestException exception
-            && exception?.StatusCode == HttpStatusCode.NotFound)
+        if (context.Exception is HttpRequestException { StatusCode: HttpStatusCode.NotFound })
         {
             context.HttpContext.Response.StatusCode = 404;
         }

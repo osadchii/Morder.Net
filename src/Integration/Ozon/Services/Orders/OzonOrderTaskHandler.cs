@@ -1,11 +1,11 @@
 using AutoMapper;
 using Infrastructure.MediatR.Orders.Company.Commands;
+using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Common.Services.Orders;
 using Integration.Ozon.Clients.Orders;
 using Integration.Ozon.Clients.Orders.Messages;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.Ozon.Services.Orders;
@@ -26,12 +26,47 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
     {
         return OrderTask.Type switch
         {
-            TaskType.Pack => Task.CompletedTask,
-            TaskType.Ship => Task.CompletedTask,
-            TaskType.Reject => Task.CompletedTask,
+            TaskType.Pack => HandlePackOrderTask(),
+            TaskType.Reject => HandleRejectOrderTask(),
             TaskType.Sticker => HandleStickerTask(),
             _ => Task.CompletedTask
         };
+    }
+
+    private async Task HandlePackOrderTask()
+    {
+        var client = ServiceProvider.GetRequiredService<IOzonPackOrderClient>();
+
+        IEnumerable<int> productIds = Order.Boxes.Select(b => b.ProductId).Distinct();
+        Dictionary<int, string> externalIds = await Mediator.Send(new GetExternalIdsByProductIdsRequest()
+        {
+            MarketplaceId = _ozonDto.Id,
+            ProductIds = productIds
+        });
+
+        var request = new PackPostingRequest
+        {
+            PostingNumber = Order.Number,
+            Packages = Order.Boxes.GroupBy(b => b.Number).Select(g => new PackPostingPackage()
+            {
+                Products = g.Select(p => new PackPostingProduct()
+                {
+                    Quantity = Convert.ToInt32(p.Count),
+                    ProductId = Convert.ToInt32(externalIds[p.ProductId])
+                })
+            })
+        };
+
+        await client.PackOrder(_ozonDto, request);
+    }
+
+    private async Task HandleRejectOrderTask()
+    {
+        var client = ServiceProvider.GetRequiredService<IOzonRejectOrderClient>();
+        await client.RejectOrder(_ozonDto, new RejectPostingRequest()
+        {
+            PostingNumber = Order.Number
+        });
     }
 
     private async Task HandleStickerTask()
@@ -39,8 +74,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var client = ServiceProvider.GetRequiredService<IOzonGetStickerClient>();
         byte[] file = await client.GetSticker(_ozonDto, new GetStickerRequest(Order.Number));
 
-        var mediator = ServiceProvider.GetRequiredService<IMediator>();
-        await mediator.Send(new SaveOrderStickerFromStringRequest()
+        await Mediator.Send(new SaveOrderStickerFromStringRequest()
         {
             Bytes = file,
             FileName = "Ozon Sticker.pdf",

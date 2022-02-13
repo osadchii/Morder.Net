@@ -152,7 +152,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
             }
         }
 
-        _logger.LogInformation($"Updated marketplace {request.Name}");
+        _logger.LogInformation("Updated marketplace {Name}", request.Name);
 
         return _mapper.Map<TDto>(dbEntry);
     }

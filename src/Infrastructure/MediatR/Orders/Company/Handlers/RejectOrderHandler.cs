@@ -106,7 +106,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             OrderId = order.Id
         }, cancellationToken);
 
-        if (order.Status == OrderStatus.Canceled)
+        if (order.Status == Status)
         {
             await _mediator.Send(new SaveOrderStatusHistoryRequest()
             {
@@ -115,7 +115,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             }, cancellationToken);
         }
 
-        _logger.LogInformation($"Packed order {order.Number} with {order.ExternalId} external id");
+        _logger.LogInformation("Packed order {Number} with {ExternalId} external id", order.Number, order.ExternalId);
 
         return Unit.Value;
     }

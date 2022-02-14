@@ -61,4 +61,21 @@ public class OrderController : ControllerBase
         });
         return File(stickerData.StickerData, "application/octet-stream", stickerData.Name);
     }
+
+    [HttpGet]
+    [Route("{externalId:guid}")]
+    public async Task<Result> GetOrderByExternalId([Required] Guid externalId)
+    {
+        return await _mediator.Send(new GetOrderByExternalIdRequest()
+        {
+            ExternalId = externalId
+        });
+    }
+
+    [HttpPost]
+    [Route("changes")]
+    public Task<Result> GetChangedOrders([Required] [FromBody] GetChangedOrdersRequest request)
+    {
+        return _mediator.Send(request);
+    }
 }

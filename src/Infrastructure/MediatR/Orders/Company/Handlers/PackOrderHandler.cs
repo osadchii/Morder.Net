@@ -60,13 +60,13 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
         foreach (PackOrderItem item in request.Items!)
         {
             int? productId = order.Items
-                .Where(p => p.Product.ExternalId == item.ProductExternalId)
+                .Where(p => p.Product.ExternalId == item.ProductExternalId!.Value)
                 .Select(i => i.ProductId)
                 .FirstOrDefault();
 
             if (productId is null or 0)
             {
-                throw new HttpRequestException($"Product with {item.ProductExternalId} external id not found");
+                throw new HttpRequestException($"Product with {item.ProductExternalId!.Value} external id not found");
             }
 
             order.Boxes.Add(new Order.OrderBox()

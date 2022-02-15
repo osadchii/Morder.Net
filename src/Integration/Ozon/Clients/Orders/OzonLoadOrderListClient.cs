@@ -14,6 +14,7 @@ public interface IOzonLoadOrderListClient
 public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 {
     private readonly ILogger<OzonLoadOrderListClient> _logger;
+    private const int DaysInterval = 7;
 
     public OzonLoadOrderListClient(ILogger<OzonLoadOrderListClient> logger)
     {
@@ -24,25 +25,25 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
     {
         var result = new ConcurrentBag<OzonPosting>();
 
-        DateTime currentDate = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0).ToUtcTime();
-        var months = new List<DateTime>();
+        DateTime currentDate = startDate;
+        var intervals = new List<(DateTime Since, DateTime To)>();
 
-        while (currentDate < DateTime.UtcNow)
+        while (currentDate < DateTime.UtcNow.AddDays(DaysInterval * 2))
         {
-            currentDate = currentDate.AddMonths(1);
-            months.Add(currentDate);
+            intervals.Add((Since: currentDate, To: currentDate.AddDays(DaysInterval)));
+            currentDate = currentDate.AddDays(DaysInterval);
         }
 
-        await Parallel.ForEachAsync(months, new ParallelOptions()
+        await Parallel.ForEachAsync(intervals, new ParallelOptions()
         {
             MaxDegreeOfParallelism = ozonDto.Settings.UpdateOrdersThreads
-        }, async (time, _) => { await LoadPostingByMonth(ozonDto, result, time); });
+        }, async (interval, _) => { await LoadPostingByInterval(ozonDto, result, interval); });
 
-        return result.ToList();
+        return result.DistinctBy(p => p.PostingNumber).ToList();
     }
 
-    private async Task LoadPostingByMonth(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings,
-        DateTime month)
+    private async Task LoadPostingByInterval(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings,
+        (DateTime Since, DateTime To) interval)
     {
         var currentPage = 1;
         var loaded = false;
@@ -50,12 +51,12 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
 
         while (!loaded)
         {
-            loaded = await LoadPostingsPortions(ozonDto, postings, month, currentPage++) || currentPage > pageLimit;
+            loaded = await LoadPostingsPortions(ozonDto, postings, interval, currentPage++) || currentPage > pageLimit;
         }
     }
 
     private async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<OzonPosting> postings,
-        DateTime month, int currentPage)
+        (DateTime Since, DateTime To) interval, int currentPage)
     {
         var request = new GetOrderListRequest()
         {
@@ -63,8 +64,8 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
             Offset = (currentPage - 1) * ozon.Settings.LoadOrdersPageSize,
             Filter = new GetOrderListFilter()
             {
-                Since = month,
-                To = month.AddMonths(1).AddMilliseconds(-1)
+                Since = interval.Since,
+                To = interval.To
             }
         };
 

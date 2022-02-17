@@ -18,7 +18,7 @@ public class ProductRatingReportHandler : IRequestHandler<ProductRatingReportReq
 {
     private readonly ITelegramBotClient _client;
     private readonly MContext _context;
-    private const int ResultCount = 100;
+    private const int ResultCount = 200;
 
     public ProductRatingReportHandler(ITelegramBotClient client, MContext context)
     {

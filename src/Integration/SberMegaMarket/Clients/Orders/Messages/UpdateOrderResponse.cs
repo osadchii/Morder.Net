@@ -24,7 +24,7 @@ public class UpdateOrderResponseDataShipment
 
     [JsonProperty("creationDate")] public DateTime CreationDate { get; set; }
 
-    [JsonProperty("shippingDate")] public DateTime ShippingDate { get; set; }
+    [JsonProperty("shipmentDateTo")] public DateTime ShippingDate { get; set; }
 
     [JsonProperty("packingTimeLimit")] public DateTime? PackingTimeLimit { get; set; }
 

@@ -115,7 +115,9 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
                     ExpressOrder = false,
                     ExternalId = Guid.NewGuid(),
                     MarketplaceId = sber.Id,
-                    ShippingDate = s.ShippingDate.ToCommonTime().ToUtcTime(),
+                    ShippingDate = s.ShippingDate.HasValue
+                        ? s.ShippingDate.Value.ToCommonTime().ToUtcTime()
+                        : new DateTime().ToUtcTime(),
                     Status = StatusConverter.GetOrderStatusBySberMegaMarketOrder(s, creationDate < _wrongStatusDate),
                     ConfirmedTimeLimit = s.ConfirmedTimeLimit.HasValue
                         ? s.ConfirmedTimeLimit.Value.ToCommonTime().ToUtcTime()

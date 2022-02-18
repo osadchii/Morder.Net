@@ -5,6 +5,7 @@ using Api.Filters;
 using Infrastructure;
 using Infrastructure.Bot;
 using Integration;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -59,10 +60,15 @@ public class Program
             logBuilder.AddConfiguration(builder.Configuration);
             logBuilder.AddConsole();
             logBuilder.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
-#if !DEBUG
+            logBuilder.AddFilter("System.Net.Http.HttpClient.tgwebhook.ClientHandler", LogLevel.Warning);
+            logBuilder.AddFilter("System.Net.Http.HttpClient.tgwebhook.LogicalHandler", LogLevel.Warning);
+            logBuilder.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Information);
+// #if !DEBUG
             logBuilder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-#endif
+// #endif
         });
+
+        builder.Services.AddHttpLogging(logging => { logging.LoggingFields = HttpLoggingFields.RequestPath; });
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -80,6 +86,8 @@ public class Program
         });
 
         app.UseHsts();
+
+        app.UseHttpLogging();
 
         app.UseRouting();
         app.UseHttpsRedirection();

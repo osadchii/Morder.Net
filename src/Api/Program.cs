@@ -5,7 +5,6 @@ using Api.Filters;
 using Infrastructure;
 using Infrastructure.Bot;
 using Integration;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -68,7 +67,7 @@ public class Program
 // #endif
         });
 
-        builder.Services.AddHttpLogging(logging => { logging.LoggingFields = HttpLoggingFields.RequestPath; });
+        builder.Services.AddHttpLogging(logging => { });
 
         builder.Services.AddEndpointsApiExplorer();
 

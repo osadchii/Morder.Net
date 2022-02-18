@@ -80,7 +80,9 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
                 ShippingTimeLimit = shipment.ShippingTimeLimit.HasValue
                     ? shipment.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
                     : new DateTime().ToUtcTime(),
-                ShippingDate = shipment.ShippingDate,
+                ShippingDate = shipment.ShippingDate.HasValue
+                    ? shipment.ShippingDate.Value.ToCommonTime().ToUtcTime()
+                    : new DateTime().ToUtcTime(),
                 Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem()
                 {
                     ItemIndex = i.ItemIndex,

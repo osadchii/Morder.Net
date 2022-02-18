@@ -11,6 +11,7 @@ public static class SberMegaMarketOrderStatuses
     public const string Packed = "PACKED";
     public const string Shipped = "SHIPPED";
     public const string New = "NEW";
+    public const string ShippingExpired = "SHIPPING_EXPIRED";
 
     public static bool IsCanceled(string? status)
     {

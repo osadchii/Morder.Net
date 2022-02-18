@@ -18,6 +18,8 @@ public class UpdateSberMegaMarketOrderRequest : IRequest<Unit>
 
     public DateTime ShippingTimeLimit { get; set; }
 
+    public DateTime ShippingDate { get; set; }
+
     public string CustomerFullName { get; set; }
 
     public string CustomerAddress { get; set; }

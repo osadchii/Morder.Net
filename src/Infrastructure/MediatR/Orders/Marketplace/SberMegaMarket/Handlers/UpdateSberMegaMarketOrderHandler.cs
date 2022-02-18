@@ -41,6 +41,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
         order.PackingTimeLimit = request.PackingTimeLimit;
         order.ShippingTimeLimit = request.ShippingTimeLimit;
         order.Status = request.Status;
+        order.ShippingDate = request.ShippingDate;
 
         foreach (UpdateSberMegaMarketOrderRequestItem item in request.Items.Where(i => i.Canceled))
         {

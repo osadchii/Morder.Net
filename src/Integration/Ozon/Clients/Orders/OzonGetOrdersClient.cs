@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Ozon.Clients.Orders.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Ozon.Clients.Orders;
 
@@ -12,6 +13,13 @@ public interface IOzonGetOrdersClient
 
 public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
 {
+    private readonly ILogger<OzonGetOrdersClient> _logger;
+
+    public OzonGetOrdersClient(ILogger<OzonGetOrdersClient> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task<List<OzonPosting>> GetOrders(OzonDto ozonDto, IEnumerable<string> orderNumbers)
     {
         var result = new ConcurrentBag<OzonPosting>();
@@ -24,14 +32,25 @@ public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
         return result.ToList();
     }
 
-    private static async Task LoadOrder(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings, string number)
+    private async Task LoadOrder(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings, string number)
     {
         var request = new GetOrderRequest()
         {
             PostingNumber = number
         };
 
-        HttpResponseMessage httpResponse = await PostAsync(ozonDto, "v3/posting/fbs/get", request);
+        HttpResponseMessage httpResponse;
+
+        try
+        {
+            httpResponse = await PostAsync(ozonDto, "v3/posting/fbs/get", request);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error while loading orders from Ozon {Message}", ex.Message);
+            return;
+        }
+
         string body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<GetOrderResponse>();

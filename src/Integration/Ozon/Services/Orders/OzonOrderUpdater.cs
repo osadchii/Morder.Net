@@ -7,16 +7,19 @@ using Integration.Ozon.Clients.Orders;
 using Integration.Ozon.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Ozon.Services.Orders;
 
 public class OzonOrderUpdater : MarketplaceOrderUpdater
 {
     private readonly OzonDto _ozon;
+    private readonly ILogger<OzonOrderUpdater> _logger;
 
     public OzonOrderUpdater(Marketplace marketplace, IServiceProvider serviceProvider, IMapper mapper) : base(
         marketplace, serviceProvider, mapper)
     {
+        _logger = ServiceProvider.GetRequiredService<ILogger<OzonOrderUpdater>>();
         _ozon = Mapper.Map<OzonDto>(marketplace);
     }
 
@@ -36,6 +39,10 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
 
         var client = ServiceProvider.GetRequiredService<IOzonGetOrdersClient>();
         List<OzonPosting> postings = await client.GetOrders(_ozon, orderNumbers);
+
+        _logger.LogInformation("Loaded {Count} ozon orders from marketplace with {MarketplaceId} Id",
+            postings.Count, _ozon.Id);
+
         await UpdateOrders(postings);
     }
 

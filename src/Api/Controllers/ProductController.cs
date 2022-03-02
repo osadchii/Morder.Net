@@ -27,6 +27,14 @@ public class ProductController : ControllerBase
         return result.AsResult();
     }
 
+    [HttpGet]
+    [Route("{articul}")]
+    public async Task<Result> GetByArticul([Required] string articul)
+    {
+        ProductDto? result = await _mediator.Send(new GetProductByArticulRequest { Articul = articul });
+        return result.AsResult();
+    }
+
     [HttpPost]
     public Task<Result> UpdateProduct([Required] [FromBody] UpdateProductRequest command)
     {

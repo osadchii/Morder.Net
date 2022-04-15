@@ -51,22 +51,29 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
         foreach (OzonPosting posting in postings)
         {
-            await mediator.Send(new UpdateOzonOrderRequest()
+            try
             {
-                MarketplaceId = _ozon.Id,
-                OrderNumber = posting.PostingNumber,
-                Status = StatusConverter.OzonStatusToOrderStatus(posting.Status),
-                CustomerAddress = posting.Custromer?.Address?.AddressTail,
-                CustomerFullName = posting.Custromer?.Name,
-                ShippingDate = posting.ShipmentDate,
-                TrackNumber = posting.TrackingNumber,
-                Items = posting.Products.Select(p => new UpdateOzonOrderItem()
+                await mediator.Send(new UpdateOzonOrderRequest()
                 {
-                    Articul = p.OfferId,
-                    Count = p.Quantity,
-                    Price = decimal.Parse(p.Price)
-                })
-            });
+                    MarketplaceId = _ozon.Id,
+                    OrderNumber = posting.PostingNumber,
+                    Status = StatusConverter.OzonStatusToOrderStatus(posting.Status),
+                    CustomerAddress = posting.Custromer?.Address?.AddressTail,
+                    CustomerFullName = posting.Custromer?.Name,
+                    ShippingDate = posting.ShipmentDate,
+                    TrackNumber = posting.TrackingNumber,
+                    Items = posting.Products.Select(p => new UpdateOzonOrderItem()
+                    {
+                        Articul = p.OfferId,
+                        Count = p.Quantity,
+                        Price = decimal.Parse(p.Price)
+                    })
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating order {OrderNumber}", posting.PostingNumber);
+            }
         }
     }
 }

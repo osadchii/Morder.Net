@@ -13,5 +13,5 @@ public class OzonStock
 
     [JsonProperty("product_id")] public int? ProductId { get; set; }
 
-    [JsonProperty("stock")] public decimal Stock { get; set; }
+    [JsonProperty("stock")] public int Stock { get; set; }
 }

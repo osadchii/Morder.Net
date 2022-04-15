@@ -36,7 +36,7 @@ public class OzonSendStockService : MarketplaceSendStockService
 
                     return new OzonStock
                     {
-                        Stock = s.Value,
+                        Stock = Convert.ToInt32(s.Value),
                         ProductId = productId
                     };
                 })
@@ -46,7 +46,8 @@ public class OzonSendStockService : MarketplaceSendStockService
 
         if (emptyExternalIdCount > 0)
         {
-            logger.LogWarning($"Found ${emptyExternalIdCount} products with null or empty external id");
+            logger.LogWarning("Found ${EmptyExternalIdCount} products with null or empty external id",
+                emptyExternalIdCount);
         }
 
         await client.SendStocks(ozon, request);

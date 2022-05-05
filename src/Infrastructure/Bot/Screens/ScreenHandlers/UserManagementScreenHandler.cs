@@ -69,8 +69,6 @@ public class UserManagementScreenHandler : ScreenHandler
                     UserId = userId
                 });
                 break;
-            default:
-                break;
         }
     }
 }

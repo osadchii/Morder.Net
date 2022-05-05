@@ -16,13 +16,11 @@ public class ToSetMinimalStockCommand : IRequest<Unit>
 public class ToSetMinimalStockHandler : IRequestHandler<ToSetMinimalStockCommand, Unit>
 {
     private readonly ITelegramBotClient _client;
-    private readonly MContext _context;
     private readonly IMediator _mediator;
 
-    public ToSetMinimalStockHandler(ITelegramBotClient client, MContext context, IMediator mediator)
+    public ToSetMinimalStockHandler(ITelegramBotClient client, IMediator mediator)
     {
         _client = client;
-        _context = context;
         _mediator = mediator;
     }
 

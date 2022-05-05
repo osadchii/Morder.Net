@@ -41,7 +41,8 @@ public class SetMarketplaceMinimalStockHandler : IRequestHandler<SetMarketplaceM
         }
 
         _logger.LogInformation(
-            $"User: {request.ChatId} changed minimal stock for ${marketplace.Name} ({marketplace.Id}) to {request.MinimalStock}");
+            "User: {ChatId} changed minimal stock for {MarketplaceName} ({MarketplaceId}) to {MinimalStock}",
+            request.ChatId, marketplace.Name, marketplace.Id, request.MinimalStock);
 
         await _mediator.Send(new ToMarketplaceManagementCommand()
         {

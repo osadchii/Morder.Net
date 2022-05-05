@@ -61,8 +61,6 @@ public class MarketplaceManagementScreenHandler : ScreenHandler
                     NullifyStocks = false
                 });
                 break;
-            default:
-                break;
         }
     }
 }

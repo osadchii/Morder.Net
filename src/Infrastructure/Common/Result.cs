@@ -40,7 +40,7 @@ public class Result<T> : Result
 {
     public T Value { get; set; }
 
-    public Result(T value) : base()
+    public Result(T value)
     {
         Value = value;
     }

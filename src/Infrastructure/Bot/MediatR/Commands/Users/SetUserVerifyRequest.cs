@@ -2,7 +2,6 @@ using Infrastructure.Bot.MediatR.Commands.Common;
 using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Telegram.Bot;
 
 namespace Infrastructure.Bot.MediatR.Commands.Users;
 
@@ -15,13 +14,11 @@ public class SetUserVerifyRequest : IRequest<Unit>
 
 public class SetUserVerifyHandler : IRequestHandler<SetUserVerifyRequest, Unit>
 {
-    private readonly ITelegramBotClient _client;
     private readonly MContext _context;
     private readonly IMediator _mediator;
 
-    public SetUserVerifyHandler(ITelegramBotClient client, MContext context, IMediator mediator)
+    public SetUserVerifyHandler(MContext context, IMediator mediator)
     {
-        _client = client;
         _context = context;
         _mediator = mediator;
     }

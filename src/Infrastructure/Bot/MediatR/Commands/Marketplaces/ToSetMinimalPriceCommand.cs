@@ -16,13 +16,11 @@ public class ToSetMinimalPriceCommand : IRequest<Unit>
 public class ToSetMinimalPriceHandler : IRequestHandler<ToSetMinimalPriceCommand, Unit>
 {
     private readonly ITelegramBotClient _client;
-    private readonly MContext _context;
     private readonly IMediator _mediator;
 
-    public ToSetMinimalPriceHandler(ITelegramBotClient client, MContext context, IMediator mediator)
+    public ToSetMinimalPriceHandler(ITelegramBotClient client, IMediator mediator)
     {
         _client = client;
-        _context = context;
         _mediator = mediator;
     }
 

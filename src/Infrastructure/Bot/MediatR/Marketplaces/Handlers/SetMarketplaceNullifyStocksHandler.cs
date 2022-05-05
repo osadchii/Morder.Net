@@ -39,7 +39,8 @@ public class SetMarketplaceNullifyStocksHandler : IRequestHandler<SetMarketplace
         }
 
         _logger.LogInformation(
-            $"User: {request.ChatId} changed nullify stock value for ${marketplace.Name} ({marketplace.Id}) to {request.NullifyStocks}");
+            "User: {ChatId} changed nullify stock value for {MarketplaceName} ({MarketplaceId}) to {NullifyStock}",
+            request.ChatId, marketplace.Name, marketplace.Id, request.NullifyStocks);
 
         await _mediator.Send(new ToMarketplaceManagementCommand()
         {

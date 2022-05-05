@@ -43,7 +43,8 @@ public class SetMarketplaceMinimalPriceHandler : IRequestHandler<SetMarketplaceM
         }
 
         _logger.LogInformation(
-            $"User: {request.ChatId} changed minimal price for ${marketplace.Name} ({marketplace.Id}) to {request.MinimalPrice}");
+            "User: {ChatId} changed minimal price for {MarketplaceName} ({MarketplaceId}) to {MinimalPrice}",
+            request.ChatId, marketplace.Name, marketplace.Id, request.MinimalPrice);
 
         await _mediator.Send(new ToMarketplaceManagementCommand()
         {

@@ -1,5 +1,4 @@
 using Infrastructure.Cache.Interfaces;
-using Infrastructure.Models.Products;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.Cache;
@@ -29,7 +28,7 @@ public class EntityIdCacheService<T> : IEntityIdCacheService<T>
     public void Remove(string key)
     {
         string fullKey = GetFullKey(key);
-        _cache.Remove(key);
+        _cache.Remove(fullKey);
     }
 
     private string GetFullKey(string key)

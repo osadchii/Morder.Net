@@ -18,11 +18,11 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    public Marketplace Marketplace { get; set; }
+    public Marketplace Marketplace { get; set; } = null!;
 
     [Required]
     [MaxLength(Limits.OrderNumber)]
-    public string Number { get; set; }
+    public string Number { get; set; } = null!;
 
     public bool Archived { get; set; }
 
@@ -32,7 +32,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     [Required] public DateTime ShippingDate { get; set; }
 
-    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }
+    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; } = null!;
 
     [MaxLength(Limits.OrderCustomerAddress)]
     public string? CustomerAddress { get; set; }
@@ -48,9 +48,9 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 
-    public Collection<OrderItem> Items { get; set; }
+    public Collection<OrderItem> Items { get; set; } = null!;
 
-    public Collection<OrderBox> Boxes { get; set; }
+    public Collection<OrderBox> Boxes { get; set; } = null!;
 
     [Owned]
     public class OrderItem
@@ -59,7 +59,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         [ForeignKey("Product")] public int ProductId { get; set; }
 
-        [Required] public Product Product { get; set; }
+        [Required] public Product Product { get; set; } = null!;
 
         [Required]
         [Range(Limits.OrderMinimalPrice, Limits.OrderMaximalPrice)]
@@ -83,7 +83,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         [ForeignKey("Product")] public int ProductId { get; set; }
 
-        [Required] public Product Product { get; set; }
+        [Required] public Product Product { get; set; } = null!;
 
         [Required]
         [Range(Limits.OrderMinimalCount, Limits.OrderMaximalCount)]

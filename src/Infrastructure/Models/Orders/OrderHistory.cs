@@ -16,5 +16,5 @@ public class OrderStatusHistory : BaseEntity, IHasId
     [Required] public DateTime Date { get; set; }
 
     [Required] public OrderStatus Status { get; set; }
-    public string User { get; set; } = null!;
+    public string? User { get; set; }
 }

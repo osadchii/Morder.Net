@@ -20,6 +20,8 @@ public class GetOrderByExternalIdHandler : IRequestHandler<GetOrderByExternalIdR
     {
         Order? order = await _context.Orders
             .AsNoTracking()
+            .Include(o => o.Items)
+            .ThenInclude(p => p.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);
 
         if (order is null)

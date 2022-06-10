@@ -53,7 +53,8 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
         await _mediator.Send(new SaveOrderStatusHistoryRequest()
         {
             Status = Status,
-            OrderId = order.Id
+            OrderId = order.Id,
+            User = request.User
         }, cancellationToken);
 
         _logger.LogInformation($"Confirmed order {order.Number} with {order.ExternalId} external id");

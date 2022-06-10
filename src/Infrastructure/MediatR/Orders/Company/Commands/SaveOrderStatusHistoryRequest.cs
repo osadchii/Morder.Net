@@ -5,6 +5,7 @@ namespace Infrastructure.MediatR.Orders.Company.Commands;
 
 public class SaveOrderStatusHistoryRequest : IRequest<Unit>
 {
-    public int OrderId { get; set; }
-    public OrderStatus Status { get; set; }
+    public int OrderId { get; init; }
+    public OrderStatus Status { get; init; }
+    public string User { get; set; } = null!;
 }

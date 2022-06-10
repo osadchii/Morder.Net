@@ -111,7 +111,8 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             await _mediator.Send(new SaveOrderStatusHistoryRequest()
             {
                 Status = Status,
-                OrderId = order.Id
+                OrderId = order.Id,
+                User = request.User
             }, cancellationToken);
         }
 

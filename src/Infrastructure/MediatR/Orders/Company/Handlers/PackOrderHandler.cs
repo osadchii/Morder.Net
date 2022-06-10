@@ -119,7 +119,8 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
         await _mediator.Send(new SaveOrderStatusHistoryRequest()
         {
             Status = Status,
-            OrderId = order.Id
+            OrderId = order.Id,
+            User = request.User
         }, cancellationToken);
 
         _logger.LogInformation($"Packed order {order.Number} with {order.ExternalId} external id");

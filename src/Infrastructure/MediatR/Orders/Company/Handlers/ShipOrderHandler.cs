@@ -51,7 +51,18 @@ public class ShipOrderHandler : IRequestHandler<ShipOrderRequest, Unit>
             OrderId = order.Id
         }, cancellationToken);
 
-        _logger.LogInformation($"Shipped order {order.Number} with {order.ExternalId} external id");
+        if (order.Status == OrderStatus.Shipped)
+        {
+            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            {
+                Status = OrderStatus.Shipped,
+                OrderId = order.Id,
+                User = request.User
+            }, cancellationToken);
+        }
+
+        _logger.LogInformation("Shipped order {OrderNumber} with {OrderExternalId} external id", 
+            order.Number, order.ExternalId);
 
         return Unit.Value;
     }

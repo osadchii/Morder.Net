@@ -57,7 +57,7 @@ public class Program
         builder.Services.AddLogging(logBuilder =>
         {
             logBuilder.AddConfiguration(builder.Configuration);
-            logBuilder.AddConsole();
+            logBuilder.AddJsonConsole();
             logBuilder.AddFilter("Microsoft.EntityFrameworkCore.Infrastructure", LogLevel.Warning);
             logBuilder.AddFilter("System.Net.Http.HttpClient.tgwebhook.ClientHandler", LogLevel.Warning);
             logBuilder.AddFilter("System.Net.Http.HttpClient.tgwebhook.LogicalHandler", LogLevel.Warning);

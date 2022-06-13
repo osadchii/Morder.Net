@@ -22,6 +22,8 @@ public class GetOrderByExternalIdHandler : IRequestHandler<GetOrderByExternalIdR
             .AsNoTracking()
             .Include(o => o.Items)
             .ThenInclude(p => p.Product)
+            .Include(o => o.Boxes)
+            .ThenInclude(b => b.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);
 
         if (order is null)

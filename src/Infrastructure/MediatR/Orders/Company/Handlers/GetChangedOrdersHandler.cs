@@ -25,6 +25,9 @@ public class GetChangedOrdersHandler : IRequestHandler<GetChangedOrdersRequest, 
             .Include(o => o.Order)
             .ThenInclude(o => o.Items)
             .ThenInclude(o => o.Product)
+            .Include(o => o.Order)
+            .ThenInclude(o => o.Boxes)
+            .ThenInclude(b => b.Product)
             .ToListAsync(cancellationToken);
 
         Result result = orders.Select(o => o.Order).AsResult();

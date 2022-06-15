@@ -3,6 +3,7 @@ using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
+using Infrastructure.Models.Marketplaces.TaskContext;
 using Infrastructure.Models.Orders;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
@@ -81,7 +82,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
             }
         };
 
-        string content = await client.SendRequest(ApiUrls.StickerPrint, _sberMegaMarketDto, request);
+        var content = await client.SendRequest(ApiUrls.StickerPrint, _sberMegaMarketDto, request);
         var response = content.FromJson<StickerPrintResponse>();
 
         if (response is null || response.Success != 1)
@@ -105,6 +106,8 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
     {
         var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<OrderRejectingData>>();
 
+        var taskContext = OrderTask.TaskContext.FromJson<RejectOrderContext>()!;
+
         var request = new SberMegaMarketMessage<OrderRejectingData>(_sberMegaMarketDto.Settings.Token)
         {
             Data =
@@ -114,11 +117,11 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
                     new()
                     {
                         ShipmentId = Order.Number,
-                        Items = Order.Items.Where(i => i.Canceled)
+                        Items = taskContext.Items
                             .Select(i => new OrderRejectingShipmentItem()
                             {
-                                ItemIndex = i.ExternalId!,
-                                OfferId = i.Product.Articul!
+                                ItemIndex = i.ItemIndex,
+                                OfferId = i.Articul
                             }),
                         Reason = new OrderRejectingShipmentReason()
                         {

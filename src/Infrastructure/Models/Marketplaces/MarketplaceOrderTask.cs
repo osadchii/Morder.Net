@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.Orders;
 
@@ -23,6 +24,7 @@ public class MarketplaceOrderTask : BaseEntity, IHasId
     public Order Order { get; set; }
 
     public int TryCount { get; set; } = 0;
+    public string TaskContext { get; set; } = null!;
 }
 
 public enum TaskType

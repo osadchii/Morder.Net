@@ -10,6 +10,17 @@ public class RejectPostingRequest
     public string CancelReasonMessage { get; set; } = "Product is out of stock";
 
     [JsonProperty("posting_number")] public string PostingNumber { get; set; } = null!;
+
+    [JsonProperty("items")] public IEnumerable<RejectPostingItem> Items { get; set; } = null!;
+}
+
+public class RejectPostingItem
+{
+    [JsonProperty("sku")]
+    public int Sku { get; set; }
+    
+    [JsonProperty("quantity")]
+    public int Quantity { get; set; }
 }
 
 public class RejectPostingResponse

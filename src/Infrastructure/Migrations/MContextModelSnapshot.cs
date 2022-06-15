@@ -260,6 +260,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("TaskContext")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("TryCount")
                         .HasColumnType("integer");
 

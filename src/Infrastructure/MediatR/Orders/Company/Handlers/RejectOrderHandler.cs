@@ -1,8 +1,10 @@
 using System.Net;
+using Infrastructure.Extensions;
 using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
 using Infrastructure.MediatR.Marketplaces.Common.Commands;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Marketplaces.TaskContext;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -48,16 +50,18 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
                 $"Order can be rejected only in {nameof(OrderStatus.Created)} or {nameof(OrderStatus.Reserved)} status");
         }
 
+        var taskContext = new RejectOrderContext();
+
         foreach (RejectOrderItem item in request.Items!)
         {
-            decimal toReject = item.Count!.Value;
+            var toReject = item.Count!.Value;
 
             IEnumerable<Order.OrderItem> orderItems = order.Items
                 .Where(i => !i.Canceled && i.Product.ExternalId == item.ProductExternalId);
 
             foreach (Order.OrderItem orderItem in orderItems)
             {
-                decimal rejectingCount = Math.Min(toReject, orderItem.Count);
+                var rejectingCount = Math.Min(toReject, orderItem.Count);
 
                 if (rejectingCount != orderItem.Count)
                 {
@@ -77,6 +81,14 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
                 orderItem.Count = rejectingCount;
                 orderItem.Sum = orderItem.Count * orderItem.Price;
                 orderItem.Canceled = true;
+                
+                taskContext.Add(new RejectOrderContextItem()
+                {
+                    ProductId = orderItem.ProductId,
+                    Articul = orderItem.Product.Articul!,
+                    ItemIndex = orderItem.ExternalId ?? string.Empty,
+                    Count = orderItem.Count
+                });
 
                 toReject -= rejectingCount;
 
@@ -103,7 +115,8 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
         {
             Type = TaskType.Reject,
             MarketplaceId = order.MarketplaceId,
-            OrderId = order.Id
+            OrderId = order.Id,
+            TaskContext = taskContext.ToJson()
         }, cancellationToken);
 
         if (order.Status == Status)

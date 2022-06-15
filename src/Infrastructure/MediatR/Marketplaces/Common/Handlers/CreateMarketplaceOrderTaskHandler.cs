@@ -24,7 +24,8 @@ public class CreateMarketplaceOrderTaskHandler : IRequestHandler<CreateMarketpla
             MarketplaceId = request.MarketplaceId,
             OrderId = request.OrderId,
             Type = request.Type,
-            TryCount = 0
+            TryCount = 0,
+            TaskContext = request.TaskContext
         };
 
         await _context.MarketplaceOrderTasks.AddAsync(task, cancellationToken);

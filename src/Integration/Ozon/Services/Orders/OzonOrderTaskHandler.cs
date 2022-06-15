@@ -1,8 +1,10 @@
 using AutoMapper;
+using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
+using Infrastructure.Models.Marketplaces.TaskContext;
 using Integration.Common.Services.Orders;
 using Integration.Ozon.Clients.Orders;
 using Integration.Ozon.Clients.Orders.Messages;
@@ -63,9 +65,24 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
     private async Task HandleRejectOrderTask()
     {
         var client = ServiceProvider.GetRequiredService<IOzonRejectOrderClient>();
+
+        var taskContext = OrderTask.TaskContext.FromJson<RejectOrderContext>()!;
+        
+        IEnumerable<int> productIds = taskContext.Items.Select(b => b.ProductId).Distinct();
+        Dictionary<int, string> externalIds = await Mediator.Send(new GetExternalIdsByProductIdsRequest()
+        {
+            MarketplaceId = _ozonDto.Id,
+            ProductIds = productIds
+        });
+        
         await client.RejectOrder(_ozonDto, new RejectPostingRequest()
         {
-            PostingNumber = Order.Number
+            PostingNumber = Order.Number,
+            Items = taskContext.Items.Select(i => new RejectPostingItem
+            {
+                Quantity = Convert.ToInt32(i.Count),
+                Sku = Convert.ToInt32(externalIds[i.ProductId])
+            })
         });
     }
 

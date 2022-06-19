@@ -13,14 +13,12 @@ namespace Infrastructure.MediatR.MarketplaceCategorySettings.Handlers;
 public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketplaceCategorySettingsRequest, Unit>
 {
     private readonly MContext _context;
-    private readonly IMapper _mapper;
     private readonly IChangeTrackingService _changeTrackingService;
 
-    public SetMarketplaceCategorySettingsHandler(MContext context, IMapper mapper,
+    public SetMarketplaceCategorySettingsHandler(MContext context,
         IChangeTrackingService changeTrackingService)
     {
         _context = context;
-        _mapper = mapper;
         _changeTrackingService = changeTrackingService;
     }
 

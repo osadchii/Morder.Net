@@ -152,7 +152,7 @@ public class MContext : DbContext
         {
             if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) != null)
             {
-                IMutableProperty? property = entityType.GetProperty("ExternalId");
+                IMutableProperty property = entityType.GetProperty("ExternalId");
                 IMutableIndex index = entityType.AddIndex(property, $"UNIQUE_INDEX_ExternalId");
                 index.IsUnique = true;
             }

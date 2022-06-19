@@ -35,7 +35,7 @@ public class MarketplaceProfile : Profile
                     opt.MapFrom(e => e.Warehouse.ExternalId))
             .ForMember(m => m.PriceTypeExternalId,
                 opt =>
-                    opt.MapFrom(e => e.PriceType.ExternalId));
+                    opt.MapFrom(e => e.PriceType!.ExternalId));
 
         CreateMap<UpdateSberMegaMarketRequest, Marketplace>()
             .ForMember(m => m.ProductTypes,
@@ -70,7 +70,7 @@ public class MarketplaceProfile : Profile
                     opt.MapFrom(e => e.Warehouse.ExternalId))
             .ForMember(m => m.PriceTypeExternalId,
                 opt =>
-                    opt.MapFrom(e => e.PriceType.ExternalId));
+                    opt.MapFrom(e => e.PriceType!.ExternalId));
 
         CreateMap<UpdateOzonRequest, Marketplace>()
             .ForMember(m => m.ProductTypes,
@@ -105,7 +105,7 @@ public class MarketplaceProfile : Profile
                     opt.MapFrom(e => e.Warehouse.ExternalId))
             .ForMember(m => m.PriceTypeExternalId,
                 opt =>
-                    opt.MapFrom(e => e.PriceType.ExternalId));
+                    opt.MapFrom(e => e.PriceType!.ExternalId));
 
         CreateMap<UpdateMesoRequest, Marketplace>()
             .ForMember(m => m.ProductTypes,
@@ -140,7 +140,7 @@ public class MarketplaceProfile : Profile
                     opt.MapFrom(e => e.Warehouse.ExternalId))
             .ForMember(m => m.PriceTypeExternalId,
                 opt =>
-                    opt.MapFrom(e => e.PriceType.ExternalId));
+                    opt.MapFrom(e => e.PriceType!.ExternalId));
 
         CreateMap<UpdateYandexMarketRequest, Marketplace>()
             .ForMember(m => m.ProductTypes,

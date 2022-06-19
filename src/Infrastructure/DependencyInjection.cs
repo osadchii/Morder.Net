@@ -12,7 +12,7 @@ public static class DependencyInjection
 {
     public static void AddMorder(this IServiceCollection services, IConfiguration configuration)
     {
-        string? connectionString = configuration.GetConnectionString("DefaultConnectionString");
+        var connectionString = configuration.GetConnectionString("DefaultConnectionString");
         services.AddDbContext<MContext>((_, options) =>
         {
             options.UseNpgsql(connectionString,

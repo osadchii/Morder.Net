@@ -11,13 +11,11 @@ public class DeleteCategoryByIdHandler : IRequestHandler<DeleteCategoryByIdReque
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
-    private readonly IMediator _mediator;
 
-    public DeleteCategoryByIdHandler(IMapper mapper, MContext context, IMediator mediator)
+    public DeleteCategoryByIdHandler(IMapper mapper, MContext context)
     {
         _mapper = mapper;
         _context = context;
-        _mediator = mediator;
     }
 
     public async Task<CategoryDto> Handle(DeleteCategoryByIdRequest request, CancellationToken cancellationToken)

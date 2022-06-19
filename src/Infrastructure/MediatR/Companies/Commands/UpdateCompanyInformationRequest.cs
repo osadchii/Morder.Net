@@ -6,13 +6,13 @@ namespace Infrastructure.MediatR.Companies.Commands;
 
 public class UpdateCompanyInformationRequest : IRequest
 {
-    [MaxLength(Limits.CompanyName)] public string Name { get; set; }
+    [MaxLength(Limits.CompanyName)] public string Name { get; set; } = null!;
 
-    [MaxLength(Limits.ShopName)] public string Shop { get; set; }
+    [MaxLength(Limits.ShopName)] public string Shop { get; set; } = null!;
 
-    [MaxLength(Limits.ShopUrl)] public string Url { get; set; }
+    [MaxLength(Limits.ShopUrl)] public string Url { get; set; } = null!;
 
-    [Required] public Guid? PriceTypeExternalid { get; set; }
+    [Required] public Guid? PriceTypeExternalId { get; set; }
 
     public int? PriceTypeId { get; set; }
 }

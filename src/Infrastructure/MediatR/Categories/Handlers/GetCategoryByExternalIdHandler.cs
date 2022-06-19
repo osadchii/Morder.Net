@@ -19,7 +19,7 @@ public class GetCategoryByExternalIdHandler : IRequestHandler<GetCategoryByExter
 
     public async Task<CategoryDto> Handle(GetCategoryByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        int? id = await _extractor.GetIdAsync(request.ExternalId!.Value);
+        var id = await _extractor.GetIdAsync(request.ExternalId!.Value);
 
         if (!id.HasValue)
         {

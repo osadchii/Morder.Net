@@ -32,7 +32,7 @@ public class Program
         };
 
         IWebHostEnvironment env = builder.Environment;
-        string sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
+        var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
         builder.Configuration
             .AddJsonFile(Path.Combine(sharedFolder, "appsettings.json"), true)
@@ -98,13 +98,16 @@ public class Program
 
         app.MapControllers();
 
-        InitializeDatabase(app);
+        if (env.EnvironmentName != "Testing")
+        {
+            InitializeDatabase(app);
+        }
 
         var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
 
         app.UseEndpoints(endpoints =>
         {
-            string token = config.BotToken!;
+            var token = config.BotToken!;
             endpoints.MapControllerRoute(name: "tgwebhook",
                 pattern: $"bot/{token}",
                 new { controller = "Telegram", action = "Post" });

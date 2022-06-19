@@ -127,7 +127,7 @@ public class ChangeTrackingService : IChangeTrackingService
         IEnumerable<int> marketplaceIds =
             await GetMarketplaceTrackingStockIdsAsync(cancellationToken);
 
-        foreach (int marketplaceId in marketplaceIds)
+        foreach (var marketplaceId in marketplaceIds)
         {
             await TrackStockChange(marketplaceId, productId, cancellationToken);
         }
@@ -138,7 +138,7 @@ public class ChangeTrackingService : IChangeTrackingService
         IEnumerable<int> marketplaceIds =
             await GetMarketplaceTrackingPriceIdsAsync(cancellationToken);
 
-        foreach (int marketplaceId in marketplaceIds)
+        foreach (var marketplaceId in marketplaceIds)
         {
             await TrackPriceChange(marketplaceId, productId, cancellationToken);
         }

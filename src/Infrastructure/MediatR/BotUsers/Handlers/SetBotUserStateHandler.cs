@@ -9,12 +9,10 @@ namespace Infrastructure.MediatR.BotUsers.Handlers;
 public class SetBotUserStateHandler : IRequestHandler<SetBotUserStateRequest, Unit>
 {
     private readonly MContext _context;
-    private readonly ILogger<SetBotUserStateHandler> _logger;
 
-    public SetBotUserStateHandler(MContext context, ILogger<SetBotUserStateHandler> logger)
+    public SetBotUserStateHandler(MContext context)
     {
         _context = context;
-        _logger = logger;
     }
 
     public async Task<Unit> Handle(SetBotUserStateRequest request, CancellationToken cancellationToken)

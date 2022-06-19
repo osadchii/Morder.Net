@@ -31,13 +31,13 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
 
     public async Task<Unit> Handle(UpdateCompanyInformationRequest request, CancellationToken cancellationToken)
     {
-        if (request.PriceTypeExternalid.HasValue)
+        if (request.PriceTypeExternalId.HasValue)
         {
-            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalid.Value);
+            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
 
             if (!priceTypeId.HasValue)
             {
-                throw new ArgumentException($@"Wrong price type external id: {request.PriceTypeExternalid.Value}");
+                throw new ArgumentException($@"Wrong price type external id: {request.PriceTypeExternalId.Value}");
             }
 
             request.PriceTypeId = priceTypeId.Value;

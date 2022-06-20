@@ -19,18 +19,18 @@ public class OrderRejectingData : SberMegaMarketMessageData
 
 public class OrderRejectingShipment
 {
-    [JsonProperty("shipmentId")] public string ShipmentId { get; set; }
+    [JsonProperty("shipmentId")] public string ShipmentId { get; set; } = null!;
 
-    [JsonProperty("items")] public IEnumerable<OrderRejectingShipmentItem> Items { get; set; }
+    [JsonProperty("items")] public IEnumerable<OrderRejectingShipmentItem> Items { get; set; } = null!;
 
-    [JsonProperty("Reason")] public OrderRejectingShipmentReason Reason { get; set; }
+    [JsonProperty("reason")] public OrderRejectingShipmentReason Reason { get; set; } = null!;
 }
 
 public class OrderRejectingShipmentItem
 {
-    [JsonProperty("itemIndex")] public string ItemIndex { get; set; }
+    [JsonProperty("itemIndex")] public string ItemIndex { get; set; } = null!;
 
-    [JsonProperty("offerId")] public string OfferId { get; set; }
+    [JsonProperty("offerId")] public string OfferId { get; set; } = null!;
 }
 
 public class OrderRejectingShipmentReason

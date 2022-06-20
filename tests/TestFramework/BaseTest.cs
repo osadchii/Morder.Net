@@ -8,7 +8,7 @@ public abstract class BaseTest : IClassFixture<MorderWebApplicationFactory<Progr
 {
     protected readonly HttpClient Client;
 
-    protected BaseTest(WebApplicationFactory<Program> factory)
+    protected BaseTest(MorderWebApplicationFactory<Program> factory)
     {
         Client = factory.CreateClient();
     }

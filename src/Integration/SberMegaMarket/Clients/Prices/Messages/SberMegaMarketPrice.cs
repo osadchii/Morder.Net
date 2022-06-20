@@ -8,6 +8,8 @@ public class SberMegaMarketPrice
 
     [JsonProperty("price")] public decimal Price { get; set; }
 
+    [JsonProperty("isDeleted")] public bool IsDeleted => false;
+
     public SberMegaMarketPrice()
     {
     }

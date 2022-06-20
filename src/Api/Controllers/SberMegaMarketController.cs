@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
+using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,17 @@ public class SberMegaMarketController : ControllerBase
     {
         command.Id = id;
         SberMegaMarketDto result = await _mediator.Send(command);
+        return result.AsResult();
+    }
+
+    [HttpGet]
+    [Route("{id:int}")]
+    public async Task<Result> GetSberMegaMarketById([Required] int id)
+    {
+        SberMegaMarketDto result = await _mediator.Send(new GetSberMegaMarketByIdRequest()
+        {
+            Id = id
+        });
         return result.AsResult();
     }
 }

@@ -106,7 +106,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
     {
         var client = ServiceProvider.GetRequiredService<ISberMegaMarketClient<OrderRejectingData>>();
 
-        var taskContext = OrderTask.TaskContext.FromJson<RejectOrderContext>()!;
+        var taskContext = OrderTask.TaskContext!.FromJson<RejectOrderContext>()!;
 
         var request = new SberMegaMarketMessage<OrderRejectingData>(_sberMegaMarketDto.Settings.Token)
         {

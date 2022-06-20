@@ -71,12 +71,17 @@ public class Program
 // #endif
         });
 
-        builder.Services.AddHttpLogging(logging => { });
+        builder.Services.AddHttpLogging(_ => {});
 
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddMorder(builder.Configuration);
-        builder.Services.AddMorderBot(builder.Configuration);
+
+        if (env.EnvironmentName != "Testing")
+        {
+            builder.Services.AddMorderBot(builder.Configuration);
+        }
+        
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
         builder.Services.AddBackgroundServices();

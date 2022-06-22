@@ -129,7 +129,8 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             }, cancellationToken);
         }
 
-        _logger.LogInformation("Packed order {Number} with {ExternalId} external id", order.Number, order.ExternalId);
+        _logger.LogInformation("Packed order {Number} with {ExternalId} external id by {UserName}", 
+            order.Number, order.ExternalId, request.User);
 
         return Unit.Value;
     }

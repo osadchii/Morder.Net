@@ -123,7 +123,8 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             User = request.User
         }, cancellationToken);
 
-        _logger.LogInformation($"Packed order {order.Number} with {order.ExternalId} external id");
+        _logger.LogInformation("Packed order {OrderNumber} with {OrderExternalId} external id by {UserName}", 
+            order.Number, order.ExternalId, request.User);
 
         return Unit.Value;
     }

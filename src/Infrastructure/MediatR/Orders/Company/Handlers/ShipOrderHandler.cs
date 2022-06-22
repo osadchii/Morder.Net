@@ -61,8 +61,8 @@ public class ShipOrderHandler : IRequestHandler<ShipOrderRequest, Unit>
             }, cancellationToken);
         }
 
-        _logger.LogInformation("Shipped order {OrderNumber} with {OrderExternalId} external id", 
-            order.Number, order.ExternalId);
+        _logger.LogInformation("Shipped order {OrderNumber} with {OrderExternalId} external id by {UserName}", 
+            order.Number, order.ExternalId, request.User);
 
         return Unit.Value;
     }

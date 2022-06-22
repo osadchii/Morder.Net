@@ -57,7 +57,7 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
             User = request.User
         }, cancellationToken);
 
-        _logger.LogInformation($"Confirmed order {order.Number} with {order.ExternalId} external id");
+        _logger.LogInformation("Confirmed order {OrderNumber} with {OrderExternalId} external id by {UserName}", order.Number, order.ExternalId, request.User);
 
         return Unit.Value;
     }

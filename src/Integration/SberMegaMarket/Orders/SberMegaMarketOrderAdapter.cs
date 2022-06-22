@@ -65,13 +65,21 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             ExternalId = Guid.NewGuid(),
             MarketplaceId = sber.Id,
             ShippingDate = s.Shipping.ShippingDate.ToCommonTime().ToUtcTime(),
-            Items = s.Items.Select(i => new CreateOrderItem()
+            Items = s.Items.Select(i =>
             {
-                Count = i.Quantity,
-                Price = i.Price,
-                Sum = i.Quantity * i.Price,
-                ExternalId = i.ItemIndex,
-                ProductId = products[i.OfferId]
+                // TODO: Find better solution
+                if (!products.TryGetValue(i.OfferId, out var product) && i.OfferId.Length == 5)
+                {
+                    product = products[$"0{i.OfferId}"];
+                }
+                return new CreateOrderItem()
+                {
+                    Count = i.Quantity,
+                    Price = i.Price,
+                    Sum = i.Quantity * i.Price,
+                    ExternalId = i.ItemIndex,
+                    ProductId = product
+                };
             })
         });
     }

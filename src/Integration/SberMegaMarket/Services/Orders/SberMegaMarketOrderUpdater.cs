@@ -123,7 +123,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
             throw new Exception("Unexpected order update response." +
                                 $"{Environment.NewLine}Url: {ApiUrls.GetOrders}" +
                                 $"{Environment.NewLine}Request: {request.ToJson()}" +
-                                $"{Environment.NewLine}Response: {response}");
+                                $"{Environment.NewLine}Response: {content}");
         }
 
         foreach (UpdateOrderResponseDataShipment shipment in response.Data.Shipments)

@@ -21,6 +21,7 @@ public class ProductCache : IProductCache
     {
         var result = new Dictionary<string, int>();
         var uncached = new List<string>();
+        var notFound = new List<string>();
 
         foreach (var articul in articuls)
         {
@@ -36,16 +37,26 @@ public class ProductCache : IProductCache
 
         if (uncached.Count > 0)
         {
-            Dictionary<string, int> fromContext = await _context.Products
-                .AsNoTracking()
-                .Where(p => p.Articul != null && uncached.Contains(p.Articul))
-                .Select(p => new { p.Id, p.Articul })
-                .ToDictionaryAsync(p => p.Articul!, p => p.Id);
-
-            foreach (KeyValuePair<string, int> keyValue in fromContext)
+            foreach (var articul in uncached)
             {
-                result.TryAdd(keyValue.Key, keyValue.Value);
-                _cache.Set(ArticulCacheKey(keyValue.Key), keyValue.Value);
+                var productId = await _context.Products
+                    .AsNoTracking()
+                    .Where(p =>
+                        p.Articul != null && p.Articul == articul || p.Articul == $"0{articul}" ||
+                        p.Articul == $"00{articul}")
+                    .Select(p => p.Id)
+                    .SingleOrDefaultAsync();
+
+                if (productId == default)
+                {
+                    notFound.Add(articul);
+                }
+                else
+                {
+                    result.TryAdd(articul, productId);
+                    _cache.Set(ArticulCacheKey(articul), productId);
+                }
+
             }
         }
 
@@ -53,8 +64,6 @@ public class ProductCache : IProductCache
         {
             return result;
         }
-
-        List<string> notFound = articuls.Except(result.Keys).ToList();
 
         if (notFound.Any())
         {

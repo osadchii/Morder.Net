@@ -50,15 +50,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         CreateSberMegaMarketOrdersRequest data = createRequest.Data;
         SberMegaMarketDto sber = await GetMarketplaceByMerchantId(data.MerchantId);
         List<string> requestArticuls = data.Shipments
-            .SelectMany(s => s.Items.Select(i =>
-            {
-                return i.OfferId.Length switch
-                {
-                    5 => $"0{i.OfferId}",
-                    4 => $"00{i.OfferId}",
-                    _ => i.OfferId
-                };
-            }))
+            .SelectMany(s => s.Items.Select(i => i.OfferId))
             .Distinct()
             .ToList();
 
@@ -73,26 +65,13 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             ExternalId = Guid.NewGuid(),
             MarketplaceId = sber.Id,
             ShippingDate = s.Shipping.ShippingDate.ToCommonTime().ToUtcTime(),
-            Items = s.Items.Select(i =>
+            Items = s.Items.Select(i => new CreateOrderItem()
             {
-                // TODO: Find better solution
-                if (!products.TryGetValue(i.OfferId, out var product))
-                {
-                    product = i.OfferId.Length switch
-                    {
-                        5 => products[$"0{i.OfferId}"],
-                        4 => products[$"00{i.OfferId}"],
-                        _ => product
-                    };
-                }
-                return new CreateOrderItem()
-                {
-                    Count = i.Quantity,
-                    Price = i.Price,
-                    Sum = i.Quantity * i.Price,
-                    ExternalId = i.ItemIndex,
-                    ProductId = product
-                };
+                Count = i.Quantity,
+                Price = i.Price,
+                Sum = i.Quantity * i.Price,
+                ExternalId = i.ItemIndex,
+                ProductId = products[i.OfferId]
             })
         });
     }

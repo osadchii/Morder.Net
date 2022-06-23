@@ -50,7 +50,15 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         CreateSberMegaMarketOrdersRequest data = createRequest.Data;
         SberMegaMarketDto sber = await GetMarketplaceByMerchantId(data.MerchantId);
         List<string> requestArticuls = data.Shipments
-            .SelectMany(s => s.Items.Select(i => i.OfferId))
+            .SelectMany(s => s.Items.Select(i =>
+            {
+                return i.OfferId.Length switch
+                {
+                    5 => $"0{i.OfferId}",
+                    4 => $"00{i.OfferId}",
+                    _ => i.OfferId
+                };
+            }))
             .Distinct()
             .ToList();
 

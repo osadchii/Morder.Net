@@ -11,5 +11,6 @@ public class SberMegaMarketSettings
     public int WarehouseId { get; set; } = 1;
     public int OrderBefore { get; set; } = 1;
     public int ShippingDays { get; set; } = 1;
-    public bool LoadArchiveOrders { get; set; }
+    public bool LoadOrdersAsArchived { get; set; }
+    public bool LoadOrders { get; set; }
 }

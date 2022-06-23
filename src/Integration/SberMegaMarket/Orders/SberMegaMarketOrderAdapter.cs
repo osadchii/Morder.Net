@@ -24,7 +24,7 @@ public interface ISberMegaMarketOrderAdapter
         BaseSberMegaMarketOrderRequest<CancelSberMegaMarketOrdersRequest> cancelRequest);
 
     public Task<CreateOrdersRequest>
-        CreateArchiveOrdersRequest(UpdateOrderResponseDataShipment[] shipments, SberMegaMarketDto sber);
+        CreateOrdersRequest(UpdateOrderResponseDataShipment[] shipments, SberMegaMarketDto sber);
 }
 
 public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
@@ -90,7 +90,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         });
     }
 
-    public async Task<CreateOrdersRequest> CreateArchiveOrdersRequest(UpdateOrderResponseDataShipment[] shipments,
+    public async Task<CreateOrdersRequest> CreateOrdersRequest(UpdateOrderResponseDataShipment[] shipments,
         SberMegaMarketDto sber)
     {
         var result = new CreateOrdersRequest();
@@ -108,7 +108,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
                 DateTime creationDate = s.CreationDate.ToCommonTime().ToUtcTime();
                 return new CreateOrderRequest()
                 {
-                    Archived = true,
+                    Archived = sber.Settings.LoadOrdersAsArchived,
                     Customer = s.CustomerFullName,
                     Number = s.ShipmentId,
                     Date = s.CreationDate.ToCommonTime().ToUtcTime(),

@@ -4,6 +4,7 @@ using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Orders;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.Orders.Marketplace.Common.Handlers;
@@ -25,9 +26,18 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
 
     public async Task<Order> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = _mapper.Map<Order>(request);
+        Order? order =
+            await _context.Orders.FirstOrDefaultAsync(o => o.MarketplaceId == request.MarketplaceId && o.Number == request.Number, cancellationToken: cancellationToken);
 
-        await _context.Orders.AddAsync(order, cancellationToken);
+        if (order is null)
+        {
+            order = _mapper.Map<Order>(request);
+            await _context.Orders.AddAsync(order, cancellationToken);
+        }
+        else
+        {
+            _mapper.Map(request, order);
+        }
         await _context.SaveChangesAsync(cancellationToken);
 
         if (!order.Archived)

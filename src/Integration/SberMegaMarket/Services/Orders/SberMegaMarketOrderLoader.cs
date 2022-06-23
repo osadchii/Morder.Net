@@ -29,12 +29,12 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
 
     public override async Task LoadOrders()
     {
-        if (!_sberMegaMarketDto.Settings.LoadArchiveOrders)
+        if (!_sberMegaMarketDto.Settings.LoadOrders)
         {
             return;
         }
 
-        string[] numbers = await LoadOrderNumbers();
+        var numbers = await LoadOrderNumbers();
 
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
         var adapter = ServiceProvider.GetRequiredService<ISberMegaMarketOrderAdapter>();
@@ -46,7 +46,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
         });
 
         UpdateOrderResponseDataShipment[] shipments = await LoadShipments(doesNotExists.ToArray());
-        CreateOrdersRequest request = await adapter.CreateArchiveOrdersRequest(shipments, _sberMegaMarketDto);
+        CreateOrdersRequest request = await adapter.CreateOrdersRequest(shipments, _sberMegaMarketDto);
 
         await mediatr.Send(request);
     }

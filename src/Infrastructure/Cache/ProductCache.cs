@@ -22,7 +22,7 @@ public class ProductCache : IProductCache
         var result = new Dictionary<string, int>();
         var uncached = new List<string>();
 
-        foreach (string articul in articuls)
+        foreach (var articul in articuls)
         {
             if (_cache.TryGetValue(ArticulCacheKey(articul), out int id))
             {

@@ -68,9 +68,14 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             Items = s.Items.Select(i =>
             {
                 // TODO: Find better solution
-                if (!products.TryGetValue(i.OfferId, out var product) && i.OfferId.Length == 5)
+                if (!products.TryGetValue(i.OfferId, out var product))
                 {
-                    product = products[$"0{i.OfferId}"];
+                    product = i.OfferId.Length switch
+                    {
+                        5 => products[$"0{i.OfferId}"],
+                        4 => products[$"00{i.OfferId}"],
+                        _ => product
+                    };
                 }
                 return new CreateOrderItem()
                 {

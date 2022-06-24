@@ -36,6 +36,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
         }
         else
         {
+            request.ExternalId = order.ExternalId;
             _mapper.Map(request, order);
         }
         await _context.SaveChangesAsync(cancellationToken);

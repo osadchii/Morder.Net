@@ -20,6 +20,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<Result> GetAllProducts()
+    {
+        return (await _mediator.Send(new GetAllProductsRequest())).AsResult();
+    }
+
+    [HttpGet]
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
@@ -39,5 +45,25 @@ public class ProductController : ControllerBase
     public Task<Result> UpdateProduct([Required] [FromBody] UpdateProductRequest command)
     {
         return _mediator.Send(command);
+    }
+
+    [HttpDelete]
+    [Route("{externalId:guid}")]
+    public async Task<Result> DeleteProductByExternalId([Required] Guid externalId)
+    {
+        return (await _mediator.Send(new DeleteProductByExternalIdRequest
+        {
+            ExternalId = externalId
+        })).AsResult();
+    }
+
+    [HttpDelete]
+    [Route("{articul}")]
+    public async Task<Result> DeleteProductByArticul([Required] string articul)
+    {
+        return (await _mediator.Send(new DeleteProductByArticulRequest
+        {
+            Articul = articul
+        })).AsResult();
     }
 }

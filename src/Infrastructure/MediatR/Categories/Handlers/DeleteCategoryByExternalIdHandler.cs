@@ -20,7 +20,7 @@ public class DeleteCategoryByExternalIdHandler : IRequestHandler<DeleteCategoryB
     public async Task<CategoryDto> Handle(DeleteCategoryByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        int? id = await _extractor.GetIdAsync(request.ExternalId!.Value);
+        var id = await _extractor.GetIdAsync(request.ExternalId!.Value);
 
         if (!id.HasValue)
         {

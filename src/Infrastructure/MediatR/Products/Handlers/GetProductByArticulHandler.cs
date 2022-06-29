@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Products;
@@ -22,6 +23,12 @@ public class GetProductByArticulHandler : IRequestHandler<GetProductByArticulReq
         Product? dbEntry = await _context.Products
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.Articul == request.Articul, cancellationToken);
+
+        if (dbEntry is null)
+        {
+            throw new HttpRequestException($"Product with {request.Articul} articul not found", null,
+                HttpStatusCode.NotFound);
+        }
         return _mapper.Map<ProductDto>(dbEntry);
     }
 }

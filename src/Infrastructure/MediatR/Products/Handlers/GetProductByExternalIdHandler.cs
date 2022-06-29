@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Products;
@@ -21,7 +22,15 @@ public class GetProductByExternalIdHandler : IRequestHandler<GetProductByExterna
     {
         Product? dbEntry = await _context.Products
             .AsNoTracking()
+            .Include(p => p.Category)
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
+
+        if (dbEntry is null)
+        {
+            throw new HttpRequestException($"Product with {request.ExternalId} external Id not found", null,
+                HttpStatusCode.NotFound);
+        }
+        
         return _mapper.Map<ProductDto>(dbEntry);
     }
 }

@@ -27,6 +27,8 @@ public class GetSberMegaMarketByIdHandler : IRequestHandler<GetSberMegaMarketByI
     {
         SberMegaMarketDto? result = await _context.Marketplaces
             .AsNoTracking()
+            .Include(m => m.Warehouse)
+            .Include(m => m.PriceType)
             .Where(m => m.Id == request.Id && m.Type == MarketplaceType.SberMegaMarket)
             .Select(m => _mapper.Map<SberMegaMarketDto>(m))
             .SingleOrDefaultAsync(cancellationToken);

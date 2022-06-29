@@ -11,10 +11,10 @@ public class MarketplaceProductSetting : BaseEntity
 {
     [ForeignKey("Product")] public int ProductId { get; set; }
 
-    public Product Product { get; set; }
+    public Product Product { get; set; } = null!;
 
     [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
-    public Marketplace Marketplace { get; set; }
+    public Marketplace Marketplace { get; set; } = null!;
 
     public bool NullifyStock { get; set; }
     public bool IgnoreRestrictions { get; set; }

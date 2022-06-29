@@ -1,5 +1,6 @@
 namespace Infrastructure.Cache.Interfaces;
 
+// ReSharper disable once UnusedTypeParameter
 public interface IEntityIdCacheService<T>
 {
     bool TryGetValue(string key, out int value);

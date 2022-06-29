@@ -2,7 +2,7 @@ using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Warehouses;
-using Integration.Common.Services.Stocks;
+using Integration.Common.Services.StocksAndPrices.Stocks;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Stocks.Messages;
 using MediatR;

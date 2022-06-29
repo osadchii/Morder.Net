@@ -43,10 +43,10 @@ public abstract class BackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Service stopped");
 
-        _timer?.Change(Timeout.Infinite, 0);
+        _timer.Change(Timeout.Infinite, 0);
 
         return Task.CompletedTask;
     }
 
-    public void Dispose() => _timer?.Dispose();
+    public void Dispose() => _timer.Dispose();
 }

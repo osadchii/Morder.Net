@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Integration.Common.Services.Prices;
+namespace Integration.Common.Services.StocksAndPrices.Prices;
 
 public interface ISendPriceService
 {
@@ -74,11 +74,11 @@ public class SendPriceService : ISendPriceService
 
                     await _mediator.Send(new DeletePriceChangesRequest(marketplace.Id,
                         prices.Select(s => s.ProductId).ToList()));
-                    _logger.LogInformation($"Sent {prices.Length} prices to {marketplace.Name}");
+                    _logger.LogInformation("Sent {Count} prices to {MarketplaceName}", prices.Length, marketplace.Name);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error while sending prices to {marketplace.Name}");
+                    _logger.LogError(ex, "Error while sending prices to {MarketplaceName}", marketplace.Name);
                 }
             }
         }

@@ -66,7 +66,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
     {
         var client = ServiceProvider.GetRequiredService<IOzonRejectOrderClient>();
 
-        var taskContext = OrderTask.TaskContext.FromJson<RejectOrderContext>()!;
+        var taskContext = OrderTask.TaskContext!.FromJson<RejectOrderContext>()!;
         
         IEnumerable<int> productIds = taskContext.Items.Select(b => b.ProductId).Distinct();
         Dictionary<int, string> externalIds = await Mediator.Send(new GetExternalIdsByProductIdsRequest()

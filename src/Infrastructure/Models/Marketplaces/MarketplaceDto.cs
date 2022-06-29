@@ -7,12 +7,12 @@ namespace Infrastructure.Models.Marketplaces;
 public abstract class MarketplaceDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public List<ProductType> ProductTypes { get; set; }
+    public string Name { get; set; } = null!;
+    public List<ProductType> ProductTypes { get; set; } = null!;
     public decimal MinimalPrice { get; set; }
     public decimal MinimalStock { get; set; }
     public Guid WarehouseExternalId { get; set; }
-    public Warehouse Warehouse { get; set; }
+    public Warehouse Warehouse { get; set; } = null!;
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
     public bool StockChangesTracking { get; set; }

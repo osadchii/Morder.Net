@@ -4,7 +4,7 @@ namespace Integration.SberMegaMarket.Clients.Prices.Messages;
 
 public class SberMegaMarketPrice
 {
-    [JsonProperty("offerId")] public string OfferId { get; set; }
+    [JsonProperty("offerId")] public string OfferId { get; set; } = null!;
 
     [JsonProperty("price")] public decimal Price { get; set; }
 

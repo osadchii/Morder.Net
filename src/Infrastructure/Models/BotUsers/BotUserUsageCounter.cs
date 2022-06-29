@@ -7,7 +7,7 @@ public class BotUserUsageCounter : BaseEntity
 {
     [ForeignKey("BotUser")] public int BotUserId { get; set; }
 
-    public BotUser BotUser { get; set; }
+    public BotUser BotUser { get; set; } = null!;
 
     public long Count { get; set; }
 

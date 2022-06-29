@@ -2,7 +2,7 @@ using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Prices;
-using Integration.Common.Services.Prices;
+using Integration.Common.Services.StocksAndPrices.Prices;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Prices.Messages;
 using Microsoft.Extensions.DependencyInjection;

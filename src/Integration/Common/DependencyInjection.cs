@@ -1,8 +1,9 @@
 using Integration.Common.Services.Feeds;
 using Integration.Common.Services.Orders;
-using Integration.Common.Services.Prices;
 using Integration.Common.Services.Products;
-using Integration.Common.Services.Stocks;
+using Integration.Common.Services.StocksAndPrices;
+using Integration.Common.Services.StocksAndPrices.Prices;
+using Integration.Common.Services.StocksAndPrices.Stocks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Integration.Common;
@@ -18,5 +19,6 @@ public static class DependencyInjection
         services.AddTransient<IUpdateOrdersService, UpdateOrdersService>();
         services.AddTransient<ILoadOrdersService, LoadOrdersService>();
         services.AddTransient<IFeedService, FeedService>();
+        services.AddTransient<ITrackAllStocksAndPricesService, TrackAllStocksAndPricesService>();
     }
 }

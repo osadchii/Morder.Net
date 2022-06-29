@@ -4,7 +4,7 @@ using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Prices;
-using Integration.Common.Services.Prices;
+using Integration.Common.Services.StocksAndPrices.Prices;
 using Integration.Ozon.Clients.Prices;
 using Integration.Ozon.Clients.Prices.Messages;
 using Microsoft.Extensions.DependencyInjection;

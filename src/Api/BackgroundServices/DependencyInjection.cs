@@ -13,5 +13,6 @@ public static class DependencyInjection
         services.AddHostedService<MarketplaceOrderTaskExecutorService>();
         services.AddHostedService<UpdateOrdersBackgroundService>();
         services.AddHostedService<LoadOrdersBackgroundService>();
+        services.AddHostedService<TrackAllStocksAndPricesBackgroundService>();
     }
 }

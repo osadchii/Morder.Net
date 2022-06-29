@@ -2,7 +2,7 @@ using AutoMapper;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
 
-namespace Integration.Common.Services.Prices;
+namespace Integration.Common.Services.StocksAndPrices.Prices;
 
 public abstract class MarketplaceSendPriceService
 {

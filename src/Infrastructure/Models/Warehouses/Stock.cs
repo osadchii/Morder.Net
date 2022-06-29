@@ -10,11 +10,11 @@ public class Stock : BaseEntity
 {
     [ForeignKey("Product")] public int ProductId { get; set; }
 
-    public Product Product { get; set; }
+    public Product Product { get; set; } = null!;
 
     [ForeignKey("Warehouse")] public int WarehouseId { get; set; }
 
-    public Warehouse Warehouse { get; set; }
+    public Warehouse Warehouse { get; set; } = null!;
 
     [Range(Limits.MinimalStock, Limits.MaximalStock)]
     public decimal Value { get; set; }

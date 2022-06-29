@@ -25,7 +25,9 @@ public static class CommonExtensions
 #if DEBUG
             throw;
 #endif
+#pragma warning disable CS0162
             return default;
+#pragma warning restore CS0162
         }
     }
 

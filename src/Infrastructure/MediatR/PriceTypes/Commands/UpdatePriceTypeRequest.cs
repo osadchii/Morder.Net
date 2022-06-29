@@ -8,7 +8,7 @@ public class UpdatePriceTypeRequest : IRequest<Unit>
 {
     [Required]
     [MaxLength(Limits.PriceTypeName)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Required] public Guid? ExternalId { get; set; }
 

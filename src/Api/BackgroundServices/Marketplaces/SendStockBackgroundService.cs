@@ -1,4 +1,4 @@
-using Integration.Common.Services.Stocks;
+using Integration.Common.Services.StocksAndPrices.Stocks;
 
 namespace Api.BackgroundServices.Marketplaces;
 

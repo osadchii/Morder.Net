@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Integration.Common.Services.Stocks;
+namespace Integration.Common.Services.StocksAndPrices.Stocks;
 
 public interface ISendStockService
 {

@@ -8,18 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="11.0.1"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
-        <PackageReference Include="MediatR" Version="10.0.1"/>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
-        <PackageReference Include="Telegram.Bot" Version="17.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.6" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+        <PackageReference Include="Telegram.Bot" Version="18.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,29 +32,29 @@
             <Link>appsettings.json</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include=".github\workflows\main.yml"/>
-        <Content Remove=".github\**"/>
+        <Content Include=".github\workflows\main.yml" />
+        <Content Remove=".github\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
-        <ProjectReference Include="..\Integration\Integration.csproj"/>
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Integration\Integration.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove=".github\**"/>
+        <Compile Remove=".github\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove=".github\**"/>
+        <EmbeddedResource Remove=".github\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove=".github\**"/>
+        <None Remove=".github\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="Api.Integration"/>
+        <InternalsVisibleTo Include="Api.Integration" />
     </ItemGroup>
 
 </Project>

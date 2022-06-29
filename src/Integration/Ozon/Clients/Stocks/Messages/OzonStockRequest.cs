@@ -4,7 +4,7 @@ namespace Integration.Ozon.Clients.Stocks.Messages;
 
 public class OzonStockRequest
 {
-    [JsonProperty("stocks")] public IEnumerable<OzonStock> Stocks { get; set; }
+    [JsonProperty("stocks")] public IEnumerable<OzonStock> Stocks { get; set; } = null!;
 }
 
 public class OzonStock

@@ -7,7 +7,7 @@ public abstract class BackgroundService : IHostedService, IDisposable
     private readonly ILogger _logger;
     private Task? _task;
 
-    private Timer _timer = null!;
+    private Timer? _timer;
 
     protected BackgroundService(ILogger logger, IServiceProvider services)
     {
@@ -43,10 +43,13 @@ public abstract class BackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Service stopped");
 
-        _timer.Change(Timeout.Infinite, 0);
+        _timer?.Change(Timeout.Infinite, 0);
 
         return Task.CompletedTask;
     }
 
-    public void Dispose() => _timer.Dispose();
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
 }

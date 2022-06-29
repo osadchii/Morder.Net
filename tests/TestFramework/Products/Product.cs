@@ -38,15 +38,21 @@ public class Product
 
     public ProductType ProductType { get; set; }
 
-    public static Product Create(Guid id)
+    public static Product Create(Guid id, Guid? categoryId = null)
     {
         return new Product()
         {
             Name = id.ToString(),
-            Articul = id.ToString(),
+            Articul = id.ToString().Split('-')[0],
             DeletionMark = false,
             ExternalId = id,
+            CategoryId = categoryId
         };
+    }
+
+    public static string GetRandomArticul()
+    {
+        return Guid.NewGuid().ToString().Split('-')[0];
     }
 }
 public enum Vat

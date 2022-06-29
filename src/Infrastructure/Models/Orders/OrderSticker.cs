@@ -9,11 +9,11 @@ public class OrderSticker : BaseEntity
 {
     [Required] [ForeignKey("Order")] public int OrderId { get; set; }
 
-    public Order Order { get; set; }
+    public Order Order { get; set; } = null!;
 
     [Required]
     [MaxLength(Limits.OrderStickerName)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public byte[] StickerData { get; set; }
+    public byte[] StickerData { get; set; } = null!;
 }

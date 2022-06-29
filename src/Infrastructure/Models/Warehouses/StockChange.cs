@@ -12,6 +12,6 @@ public class StockChange
 
     [Required] [ForeignKey("Product")] public int ProductId { get; set; }
 
-    public Marketplace Marketplace { get; set; }
-    public Product Product { get; set; }
+    public Marketplace Marketplace { get; set; } = null!;
+    public Product Product { get; set; } = null!;
 }

@@ -4,7 +4,7 @@ namespace Integration.Ozon.Clients.Prices.Messages;
 
 public class OzonPriceRequest
 {
-    [JsonProperty("prices")] public IEnumerable<OzonPrice> Prices { get; set; }
+    [JsonProperty("prices")] public IEnumerable<OzonPrice> Prices { get; set; } = null!;
 }
 
 public class OzonPrice
@@ -15,5 +15,5 @@ public class OzonPrice
 
     [JsonProperty("old_price")] public string OldPrice { get; set; } = "0";
 
-    [JsonProperty("price")] public string Price { get; set; }
+    [JsonProperty("price")] public string Price { get; set; } = null!;
 }

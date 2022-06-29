@@ -3,7 +3,7 @@ using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Warehouses;
-using Integration.Common.Services.Stocks;
+using Integration.Common.Services.StocksAndPrices.Stocks;
 using Integration.Ozon.Clients.Stocks;
 using Integration.Ozon.Clients.Stocks.Messages;
 using MediatR;

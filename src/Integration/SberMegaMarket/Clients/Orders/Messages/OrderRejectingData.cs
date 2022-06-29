@@ -14,7 +14,7 @@ public class OrderRejectingData : SberMegaMarketMessageData
     {
     }
 
-    [JsonProperty("shipments")] public IEnumerable<OrderRejectingShipment> Shipments { get; set; }
+    [JsonProperty("shipments")] public IEnumerable<OrderRejectingShipment> Shipments { get; set; } = null!;
 }
 
 public class OrderRejectingShipment

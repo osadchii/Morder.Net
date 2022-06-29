@@ -3,7 +3,7 @@ namespace Infrastructure.Models.Products;
 public class CategoryDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public Guid? ParentId { get; set; }
 

@@ -4,7 +4,7 @@ using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.Warehouses.Handlers;
+namespace Infrastructure.MediatR.PriceTypes.Handlers;
 
 public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExternalIdRequest, PriceTypeDto?>
 {

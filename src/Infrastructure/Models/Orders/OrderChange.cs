@@ -6,5 +6,5 @@ namespace Infrastructure.Models.Orders;
 public class OrderChange : BaseEntity
 {
     [ForeignKey("Order")] public int OrderId { get; set; }
-    public Order Order { get; set; }
+    public Order Order { get; set; } = null!;
 }

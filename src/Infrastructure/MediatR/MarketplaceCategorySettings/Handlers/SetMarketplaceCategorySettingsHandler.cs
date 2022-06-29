@@ -1,4 +1,3 @@
-using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.MarketplaceCategorySettings.Commands;
 using Infrastructure.Models.MarketplaceCategorySettings;
@@ -27,6 +26,7 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
         List<Category> categories;
         if (request.Recursive)
         {
+#pragma warning disable CS8620
             categories = await _context.Categories
                 .AsNoTracking()
                 .Where(c => c.Id == request.CategoryId)
@@ -42,6 +42,7 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
                 .ThenInclude(c => c.Children)
                 .ThenInclude(c => c.Children)
                 .ToListAsync(cancellationToken);
+#pragma warning restore CS8620
         }
         else
         {

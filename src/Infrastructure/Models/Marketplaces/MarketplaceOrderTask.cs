@@ -16,11 +16,11 @@ public class MarketplaceOrderTask : BaseEntity, IHasId
 
     [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    public Marketplace Marketplace { get; set; }
+    public Marketplace Marketplace { get; set; } = null!;
 
     [Required] [ForeignKey("Order")] public int OrderId { get; set; }
 
-    public Order Order { get; set; }
+    public Order Order { get; set; } = null!;
 
     public int TryCount { get; set; } = 0;
     public string? TaskContext { get; set; } = null!;

@@ -5,7 +5,6 @@ using Infrastructure.Common;
 using Infrastructure.Models.Marketplaces;
 using Integration.Meso.Feeds;
 using Integration.SberMegaMarket.Feeds;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,16 +17,14 @@ public interface IFeedService
 
 public class FeedService : IFeedService
 {
-    private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly MContext _context;
     private readonly ILogger<FeedService> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public FeedService(IMediator mediator, IMapper mapper, MContext context, ILogger<FeedService> logger,
+    public FeedService(IMapper mapper, MContext context, ILogger<FeedService> logger,
         IServiceProvider serviceProvider)
     {
-        _mediator = mediator;
         _mapper = mapper;
         _context = context;
         _logger = logger;

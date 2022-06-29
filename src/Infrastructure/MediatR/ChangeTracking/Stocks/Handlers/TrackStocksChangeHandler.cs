@@ -2,16 +2,19 @@ using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.ChangeTracking.Stocks.Handlers;
 
 public class TrackStocksChangeHandler : IRequestHandler<TrackStocksChangeRequest, Unit>
 {
     private readonly MContext _context;
+    private readonly ILogger<TrackStocksChangeHandler> _logger;
 
-    public TrackStocksChangeHandler(MContext context)
+    public TrackStocksChangeHandler(MContext context, ILogger<TrackStocksChangeHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     // Don't checking registration conditions
@@ -23,7 +26,7 @@ public class TrackStocksChangeHandler : IRequestHandler<TrackStocksChangeRequest
             .Select(pc => pc.ProductId)
             .ToListAsync(cancellationToken);
 
-        IEnumerable<int> toTrack = request.ProductIds.Except(alreadyTracked);
+        var toTrack = request.ProductIds.Except(alreadyTracked).ToArray();
 
         await _context.AddRangeAsync(toTrack.Select(h => new StockChange
         {
@@ -32,6 +35,8 @@ public class TrackStocksChangeHandler : IRequestHandler<TrackStocksChangeRequest
         }), cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
+        
+        _logger.LogInformation("Tracked {Count} stocks to marketplace {Id}", toTrack.Length, request.MarketplaceId);
 
         return Unit.Value;
     }

@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Infrastructure.Models.Products;
 
 public enum Vat

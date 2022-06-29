@@ -58,8 +58,8 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
                     MarketplaceId = _ozon.Id,
                     OrderNumber = posting.PostingNumber,
                     Status = StatusConverter.OzonStatusToOrderStatus(posting.Status),
-                    CustomerAddress = posting.Custromer?.Address?.AddressTail,
-                    CustomerFullName = posting.Custromer?.Name,
+                    CustomerAddress = posting.Customer?.Address?.AddressTail,
+                    CustomerFullName = posting.Customer?.Name,
                     ShippingDate = posting.ShipmentDate,
                     TrackNumber = posting.TrackingNumber,
                     Items = posting.Products.Select(p => new UpdateOzonOrderItem()

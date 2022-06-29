@@ -10,11 +10,11 @@ public class Price : BaseEntity
 {
     [ForeignKey("Product")] public int ProductId { get; set; }
 
-    public Product Product { get; set; }
+    public Product Product { get; set; } = null!;
 
     [ForeignKey("PriceType")] public int PriceTypeId { get; set; }
 
-    public PriceType PriceType { get; set; }
+    public PriceType PriceType { get; set; } = null!;
 
     [Range(Limits.MinimalPrice, Limits.MaximalPrice)]
     public decimal Value { get; set; }

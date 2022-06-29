@@ -6,10 +6,10 @@ public class GetOrderListResponse
 {
     [JsonProperty("has_next")] public bool HasNext { get; set; }
 
-    [JsonProperty("result")] public GetOrderListResult Result { get; set; }
+    [JsonProperty("result")] public GetOrderListResult Result { get; set; } = null!;
 }
 
 public class GetOrderListResult
 {
-    [JsonProperty("postings")] public IEnumerable<OzonPosting> Postings { get; set; }
+    [JsonProperty("postings")] public IEnumerable<OzonPosting> Postings { get; set; } = null!;
 }

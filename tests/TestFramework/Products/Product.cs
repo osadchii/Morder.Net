@@ -57,12 +57,14 @@ public class Product
 }
 public enum Vat
 {
+    // ReSharper disable InconsistentNaming
     Vat_20,
     Vat_20_120,
     Vat_10,
     Vat_10_110,
     Vat_0,
     No_vat
+    // ReSharper restore InconsistentNaming
 }
 
 public enum ProductType

@@ -10,7 +10,7 @@ public class GetOrderListRequest
 
     [JsonProperty("offset")] public int Offset { get; set; }
 
-    [JsonProperty("filter")] public GetOrderListFilter Filter { get; set; }
+    [JsonProperty("filter")] public GetOrderListFilter Filter { get; set; } = null!;
 }
 
 public class GetOrderListFilter

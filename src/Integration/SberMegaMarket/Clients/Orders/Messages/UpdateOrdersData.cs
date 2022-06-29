@@ -12,5 +12,5 @@ public class UpdateOrdersData : SberMegaMarketMessageData
     {
     }
 
-    [JsonProperty("shipments")] public IEnumerable<string> Shipments { get; set; }
+    [JsonProperty("shipments")] public IEnumerable<string> Shipments { get; set; } = null!;
 }

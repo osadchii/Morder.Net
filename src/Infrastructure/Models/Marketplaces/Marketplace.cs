@@ -14,19 +14,19 @@ public class Marketplace : BaseEntity, IHasId
 
     [Required]
     [MaxLength(Limits.MarketplaceName)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Required] public MarketplaceType Type { get; set; }
 
-    [Required] public string ProductTypes { get; set; }
+    [Required] public string ProductTypes { get; set; } = null!;
 
     [Required] public decimal MinimalPrice { get; set; }
     [Required] public decimal MinimalStock { get; set; }
 
-    [Required] public string Settings { get; set; }
+    [Required] public string Settings { get; set; } = null!;
 
     [Required] [ForeignKey("Warehouse")] public int WarehouseId { get; set; }
-    public Warehouse Warehouse { get; set; }
+    public Warehouse Warehouse { get; set; } = null!;
 
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }

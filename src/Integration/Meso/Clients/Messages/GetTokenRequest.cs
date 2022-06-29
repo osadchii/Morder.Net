@@ -4,7 +4,7 @@ namespace Integration.Meso.Clients.Messages;
 
 public record GetTokenRequest
 {
-    [JsonProperty("username")] public string Username { get; set; }
+    [JsonProperty("username")] public string Username { get; set; } = null!;
 
-    [JsonProperty("password")] public string Password { get; set; }
+    [JsonProperty("password")] public string Password { get; set; } = null!;
 }

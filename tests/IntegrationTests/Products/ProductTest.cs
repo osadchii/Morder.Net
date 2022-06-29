@@ -148,9 +148,10 @@ public class ProductTest : BaseTest
         var productId = Guid.NewGuid();
         
         ServiceActionResult<Product> result = await _productService.PostProduct(productId);
-        var articul = result.Entity.Articul;
         
         Assert.True(result.Response.IsSuccessStatusCode);
+        
+        var articul = result.Entity.Articul!;
 
         ServiceActionResult<ApiResult<Product>> getResult = await _productService.GetProductByArticul(articul);
 

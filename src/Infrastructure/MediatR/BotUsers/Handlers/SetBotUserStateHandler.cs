@@ -2,7 +2,6 @@ using Infrastructure.MediatR.BotUsers.Commands;
 using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.MediatR.BotUsers.Handlers;
 

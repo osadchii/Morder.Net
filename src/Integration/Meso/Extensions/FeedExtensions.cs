@@ -13,17 +13,17 @@ public static class FeedExtensions
         return File.WriteAllTextAsync(fileName, feed.ToJson());
     }
 
-    public static MesoProduct? ToMesoProduct(this Product product, MarketplaceProductData productData, MesoDto _meso)
+    public static MesoProduct? ToMesoProduct(this Product product, MarketplaceProductData productData, MesoDto meso)
     {
         if (product.Barcode.IsNullOrEmpty())
         {
             return null;
         }
 
-        decimal price = productData.GetProductPrice(product);
-        decimal stock = productData.GetProductStock(product, price);
+        var price = productData.GetProductPrice(product);
+        var stock = productData.GetProductStock(product, price);
 
-        if (stock < _meso.MinimalStock || price < _meso.MinimalPrice)
+        if (stock < meso.MinimalStock || price < meso.MinimalPrice)
         {
             return null;
         }

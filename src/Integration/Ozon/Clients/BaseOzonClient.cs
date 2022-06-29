@@ -7,15 +7,11 @@ namespace Integration.Ozon.Clients;
 
 public abstract class BaseOzonClient
 {
-    protected BaseOzonClient()
-    {
-    }
-
     protected static async Task<HttpResponseMessage> PostAsync(OzonDto ozon, string url, object obj)
     {
         var client = new HttpClient();
 
-        string fullUrl =
+        var fullUrl =
             $"https://{ozon.Settings.Server}:{ozon.Settings.Port}/{url}";
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
@@ -32,11 +28,11 @@ public abstract class BaseOzonClient
             return httpResponse;
         }
 
-        string body = await httpResponse.Content.ReadAsStringAsync();
-        string message = $"Send Ozon request failure." +
-                         $"{Environment.NewLine}Url: {fullUrl}" +
-                         $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
-                         $"{Environment.NewLine}Message: {body}";
+        var body = await httpResponse.Content.ReadAsStringAsync();
+        var message = $"Send Ozon request failure." +
+                      $"{Environment.NewLine}Url: {fullUrl}" +
+                      $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
+                      $"{Environment.NewLine}Message: {body}";
 
         throw new Exception(message);
     }

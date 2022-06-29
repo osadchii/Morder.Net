@@ -41,7 +41,7 @@ public class OzonOrderAdapter : IOzonOrderAdapter
             {
                 return new CreateOrderRequest()
                 {
-                    Customer = p.Custromer?.Name ?? Customer,
+                    Customer = p.Customer?.Name ?? Customer,
                     Date = p.InProcessAt.ToUtcTime(),
                     Number = p.PostingNumber,
                     Status = StatusConverter.OzonStatusToOrderStatus(p.Status),

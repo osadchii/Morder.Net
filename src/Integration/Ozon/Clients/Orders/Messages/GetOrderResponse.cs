@@ -4,5 +4,5 @@ namespace Integration.Ozon.Clients.Orders.Messages;
 
 public class GetOrderResponse
 {
-    [JsonProperty("result")] public OzonPosting Result { get; set; }
+    [JsonProperty("result")] public OzonPosting Result { get; set; } = null!;
 }

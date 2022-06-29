@@ -2,7 +2,7 @@ namespace Infrastructure.Models.Prices;
 
 public class PriceTypeDto
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public Guid ExternalId { get; set; }
 

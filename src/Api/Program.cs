@@ -1,12 +1,14 @@
 using System.Globalization;
 using Api.BackgroundServices;
 using Api.Bot;
+using Api.Extensions;
 using Api.Filters;
 using Infrastructure;
 using Infrastructure.Bot;
 using Infrastructure.Constants;
 using Integration;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -43,7 +45,11 @@ public class Program
 
         builder.Configuration.AddEnvironmentVariables();
 
-        builder.Services.AddControllers(options => { options.Filters.Add<ServiceExceptionFilter>(); })
+        builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ServiceExceptionFilter>();
+                options.Filters.Add(new AuthorizeFilter());
+            })
             .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -55,6 +61,7 @@ public class Program
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
+        builder.Services.AddJwtAuthentication(builder.Configuration);
         builder.Services.AddLogging(logBuilder =>
         {
             logBuilder.AddConfiguration(builder.Configuration);
@@ -97,9 +104,12 @@ public class Program
         app.UseHsts();
 
         app.UseHttpLogging();
+        app.UseHttpsRedirection();
 
         app.UseRouting();
-        app.UseHttpsRedirection();
+
+        app.UseAuthentication();	
+        app.UseAuthorization();
         app.UseStaticFiles();
 
         app.MapControllers();

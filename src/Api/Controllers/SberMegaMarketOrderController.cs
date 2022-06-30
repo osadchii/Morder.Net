@@ -3,11 +3,13 @@ using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Integration.SberMegaMarket.Orders;
 using Integration.SberMegaMarket.Orders.Messages;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/v1/sbermegamarketorder")]
 public class SberMegaMarketOrderController : ControllerBase
 {

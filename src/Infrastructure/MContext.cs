@@ -7,14 +7,16 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
+using Infrastructure.Models.Users;
 using Infrastructure.Models.Warehouses;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure;
 
-public class MContext : DbContext
+public class MContext : IdentityDbContext<ApplicationUser>
 {
     #region Company
 

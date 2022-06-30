@@ -4,6 +4,7 @@ using Api.Bot;
 using Api.Filters;
 using Infrastructure;
 using Infrastructure.Bot;
+using Infrastructure.Constants;
 using Integration;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -77,14 +78,14 @@ public class Program
 
         builder.Services.AddMorder(builder.Configuration);
 
-        if (env.EnvironmentName != "Testing")
+        if (env.EnvironmentName != EnvironmentNames.TestEnvironment)
         {
             builder.Services.AddMorderBot(builder.Configuration);
+            builder.Services.AddBackgroundServices();
         }
         
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
-        builder.Services.AddBackgroundServices();
 
         WebApplication app = builder.Build();
 
@@ -103,7 +104,7 @@ public class Program
 
         app.MapControllers();
 
-        if (env.EnvironmentName != "Testing")
+        if (env.EnvironmentName != EnvironmentNames.TestEnvironment)
         {
             InitializeDatabase(app);
         }

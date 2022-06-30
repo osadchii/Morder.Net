@@ -10,11 +10,11 @@ public class UserService : BaseService
     {
     }
 
-    public  Task RegisterUser(User user) => PostAsync($"{BaseUrl}/register", user);
+    public  Task RegisterUser(User user) => PostAsync($"{BaseUrl}/register", user, true);
 
     public async Task<ServiceActionResult<ApiResult<TokenDto>>> GetToken(User user)
     {
-        HttpResponseMessage response = await PostAsync($"{BaseUrl}/gettoken", user);
+        HttpResponseMessage response = await PostAsync($"{BaseUrl}/gettoken", user, true);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<TokenDto>>(response);
 

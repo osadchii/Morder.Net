@@ -90,7 +90,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
             throw new Exception("Unexpected sticker print response." +
                                 $"{Environment.NewLine}Url: {ApiUrls.StickerPrint}" +
                                 $"{Environment.NewLine}Request: {request.ToJson()}" +
-                                $"{Environment.NewLine}Response: {response}");
+                                $"{Environment.NewLine}Response: {content}");
         }
 
         var mediator = ServiceProvider.GetRequiredService<IMediator>();

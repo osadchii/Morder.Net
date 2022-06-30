@@ -21,24 +21,24 @@ public class SberMegaMarketClient<T> : ISberMegaMarketClient<T> where T : SberMe
 
     public async Task<string> SendRequest(string url, SberMegaMarketDto sber, SberMegaMarketMessage<T> request)
     {
-        string fullUrl =
+        var fullUrl =
             $"https://{sber.Settings.Server}:{sber.Settings.Port}{url}";
 
-        string json = request.ToJson();
+        var json = request.ToJson();
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         HttpResponseMessage responseMessage = await _client.PostAsync(fullUrl, content);
-        string body = await responseMessage.Content.ReadAsStringAsync();
+        var body = await responseMessage.Content.ReadAsStringAsync();
 
         if (responseMessage.StatusCode == HttpStatusCode.OK)
         {
             return body;
         }
 
-        string message = $"Send SberMegaMarket request failure." +
-                         $"{Environment.NewLine}Url: {fullUrl}" +
-                         $"{Environment.NewLine}Status code: {responseMessage.StatusCode}" +
-                         $"{Environment.NewLine}Request: {json}" +
-                         $"{Environment.NewLine}Response: {body}";
+        var message = $"Send SberMegaMarket request failure." +
+                      $"{Environment.NewLine}Url: {fullUrl}" +
+                      $"{Environment.NewLine}Status code: {responseMessage.StatusCode}" +
+                      $"{Environment.NewLine}Request: {json}" +
+                      $"{Environment.NewLine}Response: {body}";
 
         throw new Exception(message);
     }

@@ -80,11 +80,11 @@ public class Program
         if (env.EnvironmentName != "Testing")
         {
             builder.Services.AddMorderBot(builder.Configuration);
+            builder.Services.AddBackgroundServices();
         }
         
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
-        builder.Services.AddBackgroundServices();
 
         WebApplication app = builder.Build();
 

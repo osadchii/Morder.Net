@@ -1,9 +1,11 @@
 using Infrastructure.Bot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
 
 namespace Api.Controllers;
 
+[AllowAnonymous]
 public class TelegramController : ControllerBase
 {
     [HttpPost]

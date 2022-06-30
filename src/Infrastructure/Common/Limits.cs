@@ -53,4 +53,7 @@ public static class Limits
     public const int MarketplaceName = 128;
 
     public const int MarketplaceProductSettingExternalId = 128;
+
+    public const int UserNameLength = 128;
+    public const int UserPasswordLength = 128;
 }

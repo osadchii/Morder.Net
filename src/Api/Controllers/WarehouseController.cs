@@ -20,6 +20,12 @@ public class WarehouseController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<Result> GetAllWarehouses()
+    {
+        return (await _mediator.Send(new GetAllWarehousesRequest())).AsResult();
+    }
+
+    [HttpGet]
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
@@ -32,5 +38,15 @@ public class WarehouseController : ControllerBase
     {
         await _mediator.Send(command);
         return Result.Ok;
+    }
+
+    [HttpDelete]
+    [Route("{externalId:guid}")]
+    public async Task<Result> DeleteWarehouseByExternalId([Required] Guid externalId)
+    {
+        return (await _mediator.Send(new DeleteWarehouseByExternalIdRequest()
+        {
+            ExternalId = externalId
+        })).AsResult();
     }
 }

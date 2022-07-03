@@ -41,7 +41,8 @@ public class GetOrderStickerHandler : IRequestHandler<GetOrderStickerRequest, Or
             throw new HttpRequestException($"Sticker for order {request.ExternalId} not found");
         }
 
-        _logger.LogInformation($"Received {orderData.Number} order with {orderData.ExternalId} external id sticker");
+        _logger.LogInformation("Received {OrderNumber} order with {OrderExternalId} external id sticker",
+            orderData.Number, orderData.ExternalId);
 
         return stickerData;
     }

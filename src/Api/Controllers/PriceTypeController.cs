@@ -20,6 +20,12 @@ public class PriceTypeController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<Result> GetAllPriceTypes()
+    {
+        return (await _mediator.Send(new GetAllPriceTypesRequest())).AsResult();
+    }
+
+    [HttpGet]
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
@@ -32,5 +38,15 @@ public class PriceTypeController : ControllerBase
     {
         await _mediator.Send(command);
         return Result.Ok;
+    }
+
+    [HttpDelete]
+    [Route("{externalId:guid}")]
+    public async Task<Result> DeletePriceTypeByExternalId([Required] Guid externalId)
+    {
+        return (await _mediator.Send(new DeletePriceTypeByExternalIdRequest()
+        {
+            ExternalId = externalId
+        })).AsResult();
     }
 }

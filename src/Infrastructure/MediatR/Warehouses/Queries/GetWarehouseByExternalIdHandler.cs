@@ -1,10 +1,15 @@
+using System.Net;
 using AutoMapper;
-using Infrastructure.MediatR.Warehouses.Queries;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.Warehouses.Handlers;
+namespace Infrastructure.MediatR.Warehouses.Queries;
+
+public class GetWarehouseByExternalIdRequest : IRequest<WarehouseDto>
+{
+    public Guid ExternalId { get; set; }
+}
 
 public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExternalIdRequest, WarehouseDto?>
 {
@@ -23,6 +28,13 @@ public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExt
         Warehouse? dbEntry = await _context.Warehouses
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
+
+        if (dbEntry is null)
+        {
+            throw new HttpRequestException($"Warehouse with {request.ExternalId} external Id not found", null,
+                HttpStatusCode.NotFound);
+        }
+
         return _mapper.Map<WarehouseDto>(dbEntry);
     }
 }

@@ -1,11 +1,23 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using Infrastructure.MediatR.Warehouses.Commands;
+using Infrastructure.Common;
 using Infrastructure.Models.Warehouses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.MediatR.Warehouses.Handlers;
+namespace Infrastructure.MediatR.Warehouses.Commands;
+
+public class UpdateWarehouseRequest : IRequest<Unit>
+{
+    [Required]
+    [MaxLength(Limits.WarehouseName)]
+    public string? Name { get; set; }
+
+    [Required] public Guid? ExternalId { get; set; }
+
+    public bool DeletionMark { get; set; }
+}
 
 public class UpdateWarehouseHandler : IRequestHandler<UpdateWarehouseRequest, Unit>
 {

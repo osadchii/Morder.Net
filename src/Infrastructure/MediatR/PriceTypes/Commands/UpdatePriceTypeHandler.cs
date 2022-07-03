@@ -1,11 +1,23 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using Infrastructure.MediatR.PriceTypes.Commands;
+using Infrastructure.Common;
 using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.MediatR.PriceTypes.Handlers;
+namespace Infrastructure.MediatR.PriceTypes.Commands;
+
+public class UpdatePriceTypeRequest : IRequest<Unit>
+{
+    [Required]
+    [MaxLength(Limits.PriceTypeName)]
+    public string Name { get; set; } = null!;
+
+    [Required] public Guid? ExternalId { get; set; }
+
+    public bool DeletionMark { get; set; }
+}
 
 public class UpdatePriceTypeHandler : IRequestHandler<UpdatePriceTypeRequest, Unit>
 {

@@ -1,10 +1,15 @@
+using System.Net;
 using AutoMapper;
-using Infrastructure.MediatR.PriceTypes.Queries;
 using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.MediatR.PriceTypes.Handlers;
+namespace Infrastructure.MediatR.PriceTypes.Queries;
+
+public class GetPriceTypeByExternalIdRequest : IRequest<PriceTypeDto?>
+{
+    public Guid ExternalId { get; set; }
+}
 
 public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExternalIdRequest, PriceTypeDto?>
 {
@@ -23,6 +28,13 @@ public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExt
         PriceType? dbEntry = await _context.PriceTypes
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
+
+        if (dbEntry is null)
+        {
+            throw new HttpRequestException($"Price type with {request.ExternalId} external id not found", null,
+                HttpStatusCode.NotFound);
+        }
+
         return _mapper.Map<PriceTypeDto>(dbEntry);
     }
 }

@@ -19,20 +19,6 @@ public class PackPostingProduct
     [JsonProperty("quantity")] public int Quantity { get; set; }
 
     [JsonProperty("product_id")] public int ProductId { get; set; }
-
-    [JsonProperty("exemplar_info")] public IEnumerable<PackPostingProductExemplarInfo> ExemplarInfo { get; set; } = new []
-    {
-        new PackPostingProductExemplarInfo()
-    };
-}
-
-public class PackPostingProductExemplarInfo
-{
-    [JsonProperty("mandatory_mark")] public string MandatoryMark { get; set; } = "";
-
-    [JsonProperty("gtd")] public string Gtd { get; set; } = "";
-
-    [JsonProperty("is_gtd_absent")] public bool IsGtdAbsent { get; set; } = true;
 }
 
 public class PackPostingResponse

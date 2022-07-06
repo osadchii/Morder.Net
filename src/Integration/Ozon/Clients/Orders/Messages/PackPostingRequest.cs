@@ -20,7 +20,10 @@ public class PackPostingProduct
 
     [JsonProperty("product_id")] public int ProductId { get; set; }
 
-    [JsonProperty("exemplar_info")] public PackPostingProductExemplarInfo ExemplarInfo { get; set; } = new();
+    [JsonProperty("exemplar_info")] public IEnumerable<PackPostingProductExemplarInfo> ExemplarInfo { get; set; } = new []
+    {
+        new PackPostingProductExemplarInfo()
+    };
 }
 
 public class PackPostingProductExemplarInfo

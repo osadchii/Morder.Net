@@ -16,7 +16,9 @@ public abstract class BaseOzonClient
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
 
-        httpMessage.Content = new StringContent(obj.ToJson(), Encoding.UTF8, "application/json");
+        var jsonObj = obj.ToJson();
+
+        httpMessage.Content = new StringContent(jsonObj, Encoding.UTF8, "application/json");
         httpMessage.Headers.Add("Client-Id", ozon.Settings.ClientId);
         httpMessage.Headers.Add("Api-Key", ozon.Settings.ApiKey);
         httpMessage.Headers.Add("cache-disable", Guid.NewGuid().ToString());
@@ -31,6 +33,7 @@ public abstract class BaseOzonClient
         var body = await httpResponse.Content.ReadAsStringAsync();
         var message = $"Send Ozon request failure." +
                       $"{Environment.NewLine}Url: {fullUrl}" +
+                      $"{Environment.NewLine}Body: {jsonObj}" +
                       $"{Environment.NewLine}Status code: {httpResponse.StatusCode}" +
                       $"{Environment.NewLine}Message: {body}";
 

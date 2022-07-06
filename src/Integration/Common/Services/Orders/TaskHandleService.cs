@@ -48,6 +48,9 @@ public class TaskHandleService : ITaskHandleService
                     .Include(t => t.Order)
                     .ThenInclude(o => o.Items)
                     .ThenInclude(i => i.Product)
+                    .Include(t => t.Order)
+                    .ThenInclude(o => o.Boxes)
+                    .ThenInclude(b => b.Product)
                     .ToListAsync();
 
                 foreach (MarketplaceOrderTask task in tasks)

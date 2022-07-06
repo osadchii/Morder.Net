@@ -14,14 +14,17 @@ public class OzonLoadProductIdsClient : BaseOzonClient, IOzonLoadProductIdsClien
     public async Task<Dictionary<string, string>> LoadProductIdsAsync(OzonDto ozon)
     {
         var result = new Dictionary<string, string>();
-        var currentPage = 1;
+        var lastId = string.Empty;
+        var currentPage = 0;
         var loaded = false;
         const int pageLimit = 500;
 
         while (!loaded)
         {
-            int total = await LoadProductPageAsync(ozon, result, currentPage++);
-            if (result.Count >= total || currentPage > pageLimit)
+            (int, string) response = await LoadProductPageAsync(ozon, result, lastId);
+            lastId = response.Item2;
+            
+            if (result.Count >= response.Item1 || currentPage++ > pageLimit)
             {
                 loaded = true;
             }
@@ -30,23 +33,23 @@ public class OzonLoadProductIdsClient : BaseOzonClient, IOzonLoadProductIdsClien
         return result;
     }
 
-    private async Task<int> LoadProductPageAsync(OzonDto ozon, IDictionary<string, string> result, int page)
+    private async Task<(int, string)> LoadProductPageAsync(OzonDto ozon, IDictionary<string, string> result, string lastId)
     {
         var request = new OzonProductIdsRequest
         {
-            Page = page,
-            PageSize = ozon.Settings.LoadProductIdsPageSize
+            LastId = lastId,
+            Limit = ozon.Settings.LoadProductIdsPageSize
         };
 
         HttpResponseMessage httpResponse = await PostAsync(ozon, "v1/product/list", request);
-        string body = await httpResponse.Content.ReadAsStringAsync();
+        var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<OzonProductIdsResponse>();
 
         if (response is null)
         {
-            string message = $"Ozon update product ids error." +
-                             $"{Environment.NewLine}Can't deserialize body: {body}";
+            var message = $"Ozon update product ids error." +
+                          $"{Environment.NewLine}Can't deserialize body: {body}";
 
             throw new Exception(message);
         }
@@ -56,6 +59,6 @@ public class OzonLoadProductIdsClient : BaseOzonClient, IOzonLoadProductIdsClien
             result.TryAdd(item.OfferId, item.ProductId.ToString());
         }
 
-        return response.Result.Total;
+        return (response.Result.Total, response.Result.LastId);
     }
 }

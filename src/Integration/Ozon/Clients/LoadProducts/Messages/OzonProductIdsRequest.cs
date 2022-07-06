@@ -4,7 +4,7 @@ namespace Integration.Ozon.Clients.LoadProducts.Messages;
 
 public record OzonProductIdsRequest
 {
-    [JsonProperty("page")] public int Page { get; set; }
+    [JsonProperty("last_id")] public string LastId { get; set; }
 
-    [JsonProperty("page_size")] public int PageSize { get; set; }
+    [JsonProperty("limit")] public int Limit { get; set; }
 }

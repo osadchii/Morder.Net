@@ -12,6 +12,8 @@ public class OzonProductIdsResponseResult
     [JsonProperty("items")] public List<OzonProductIdsResponseItem> Items { get; set; } = null!;
 
     [JsonProperty("total")] public int Total { get; set; }
+
+    [JsonProperty("last_id")] public string LastId { get; set; } = null!;
 }
 
 public class OzonProductIdsResponseItem

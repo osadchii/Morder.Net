@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Infrastructure.Common;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 
@@ -18,7 +16,4 @@ public class MarketplaceProductSetting : BaseEntity
 
     public bool NullifyStock { get; set; }
     public bool IgnoreRestrictions { get; set; }
-
-    [MaxLength(Limits.MarketplaceProductSettingExternalId)]
-    public string? ExternalId { get; set; }
 }

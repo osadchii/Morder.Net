@@ -2,10 +2,12 @@ using System.Diagnostics;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Companies;
+using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,13 +20,15 @@ public class
     private readonly MContext _context;
     private readonly ILogger<GetMarketplacePricesHandler> _logger;
     private readonly IMediator _mediator;
-
+    private readonly IProductIdentifierService _identifierService;
+    
     public GetMarketplacePricesHandler(MContext context, IMediator mediator,
-        ILogger<GetMarketplacePricesHandler> logger)
+        ILogger<GetMarketplacePricesHandler> logger, IProductIdentifierService identifierService)
     {
         _context = context;
         _mediator = mediator;
         _logger = logger;
+        _identifierService = identifierService;
     }
 
     public async Task<IEnumerable<MarketplacePriceDto>> Handle(GetMarketplacePricesRequest request,
@@ -49,12 +53,10 @@ public class
             return result;
         }
 
-        IEnumerable<int> productIds = products.Select(p => p.Id);
+        IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
 
-        Dictionary<int, MarketplaceProductSetting> productSettings = await _context.MarketplaceProductSettings
-            .AsNoTracking()
-            .Where(ps => ps.MarketplaceId == request.MarketplaceId && productIds.Contains(ps.ProductId))
-            .ToDictionaryAsync(ps => ps.ProductId, ps => ps, cancellationToken);
+        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+            ProductIdentifierType.StockAndPrice);
 
         CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
         Marketplace marketplace = await _context.Marketplaces
@@ -76,17 +78,14 @@ public class
                 .ToDictionaryAsync(p => p.ProductId, p => p.Value, cancellationToken);
         }
 
-        foreach (Product product in products)
-        {
-            productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting);
-
-            string? externalId = marketplace.Type switch
+        result.AddRange(from product in products
+            let externalId = marketplace.Type switch
             {
-                MarketplaceType.Ozon => productSetting?.ExternalId,
-                MarketplaceType.YandexMarket => productSetting?.ExternalId,
+                MarketplaceType.Ozon => externalIds[product.Id],
+                MarketplaceType.YandexMarket => externalIds[product.Id],
                 _ => string.Empty
-            };
-            result.Add(new MarketplacePriceDto()
+            }
+            select new MarketplacePriceDto()
             {
                 Articul = product.Articul!,
                 MarketplaceId = marketplace.Id,
@@ -94,30 +93,22 @@ public class
                 Value = GetPrice(product),
                 ProductExternalId = externalId ?? string.Empty
             });
-        }
 
         stopwatch.Stop();
 
-        _logger.LogInformation($"Handled price request for " +
-                               $"{marketplace.Name} with " +
-                               $"{products.Count} products elapsed " +
-                               $"{stopwatch.ElapsedMilliseconds} ms");
+        _logger.LogInformation("Handled price request for {MarketplaceName} with {Count} products elapsed {ElapsedMs} ms",
+            marketplace.Name, products.Count, stopwatch.ElapsedMilliseconds);
 
         return result;
 
-        decimal GetPrice(Product product)
+        decimal GetPrice(IHasId product)
         {
-            if (specialPrices.TryGetValue(product.Id, out decimal value) && value > 0)
+            if (specialPrices.TryGetValue(product.Id, out var value) && value > 0)
             {
                 return value;
             }
 
-            if (basePrices.TryGetValue(product.Id, out value))
-            {
-                return value;
-            }
-
-            return 0;
+            return basePrices.TryGetValue(product.Id, out value) ? value : 0;
         }
     }
 }

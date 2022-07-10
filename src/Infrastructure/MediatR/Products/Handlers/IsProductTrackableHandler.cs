@@ -2,6 +2,7 @@ using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Products;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ namespace Infrastructure.MediatR.Products.Handlers;
 public class IsProductTrackableHandler : IRequestHandler<IsProductTrackableRequest, bool>
 {
     private readonly MContext _context;
+    private readonly IProductIdentifierService _identifierService;
 
-    public IsProductTrackableHandler(MContext context)
+    public IsProductTrackableHandler(MContext context, IProductIdentifierService identifierService)
     {
         _context = context;
+        _identifierService = identifierService;
     }
 
     public async Task<bool> Handle(IsProductTrackableRequest request, CancellationToken cancellationToken)
@@ -43,10 +46,9 @@ public class IsProductTrackableHandler : IRequestHandler<IsProductTrackableReque
             return true;
         }
 
-        return await _context.MarketplaceProductSettings
-            .AsNoTracking()
-            .AnyAsync(
-                s => s.ProductId == request.ProductId && s.MarketplaceId == request.MarketplaceId &&
-                     s.ExternalId != null, cancellationToken);
+        var identifier = await _identifierService.GetIdentifierAsync(request.MarketplaceId, request.ProductId,
+            ProductIdentifierType.StockAndPrice);
+
+        return identifier is not null;
     }
 }

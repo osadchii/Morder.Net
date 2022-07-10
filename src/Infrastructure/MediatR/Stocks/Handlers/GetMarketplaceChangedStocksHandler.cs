@@ -8,6 +8,7 @@ using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Infrastructure.Models.Warehouses;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,13 +21,15 @@ public class
     private readonly MContext _context;
     private readonly ILogger<GetMarketplaceStocksHandler> _logger;
     private readonly IMediator _mediator;
+    private readonly IProductIdentifierService _identifierService;
 
     public GetMarketplaceStocksHandler(MContext context, ILogger<GetMarketplaceStocksHandler> logger,
-        IMediator mediator)
+        IMediator mediator, IProductIdentifierService identifierService)
     {
         _context = context;
         _logger = logger;
         _mediator = mediator;
+        _identifierService = identifierService;
     }
 
     public async Task<IEnumerable<MarketplaceStockDto>> Handle(GetMarketplaceStocksRequest request,
@@ -61,7 +64,11 @@ public class
             return result;
         }
 
-        IEnumerable<int> productIds = products.Select(p => p.Id);
+        IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
+
+        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+            ProductIdentifierType.StockAndPrice);
+        
         IEnumerable<int> categoryIds = products
             .Where(p => p.CategoryId.HasValue).Select(p => p.CategoryId!.Value);
 
@@ -100,14 +107,14 @@ public class
             productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting);
             categorySettings.TryGetValue(product.CategoryId ?? 0, out MarketplaceCategorySetting? categorySetting);
 
-            string? externalId = marketplace.Type switch
+            var externalId = marketplace.Type switch
             {
-                MarketplaceType.Ozon => productSetting?.ExternalId,
-                MarketplaceType.YandexMarket => productSetting?.ExternalId,
+                MarketplaceType.Ozon => externalIds[product.Id],
+                MarketplaceType.YandexMarket => externalIds[product.Id],
                 _ => string.Empty
             };
 
-            decimal value = GetStocks(product, productSetting, categorySetting);
+            var value = GetStocks(product, productSetting, categorySetting);
 
             var stock = new MarketplaceStockDto
             {
@@ -123,10 +130,8 @@ public class
 
         stopwatch.Stop();
 
-        _logger.LogInformation($"Handled stock request for " +
-                               $"{request.MarketplaceId} with " +
-                               $"{products.Count} elapsed " +
-                               $"{stopwatch.ElapsedMilliseconds} ms");
+        _logger.LogInformation("Handled stock request for {MarketplaceId} with {Count} elapsed {ElapsedMs} ms", 
+            request.MarketplaceId, products.Count, stopwatch.ElapsedMilliseconds);
 
         return result;
 

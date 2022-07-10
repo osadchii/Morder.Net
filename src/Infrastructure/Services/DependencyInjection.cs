@@ -10,5 +10,7 @@ public static class DependencyInjection
     {
         services.AddTransient<IChangeTrackingService, ChangeTrackingService>();
         services.AddTransient<IJwtTokenService, JwtTokenService>();
+        services.AddTransient<IProductIdentifierService, ProductIdentifierService>();
+        services.AddTransient<IProductArticulService, ProductArticulService>();
     }
 }

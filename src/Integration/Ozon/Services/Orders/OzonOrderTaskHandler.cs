@@ -5,6 +5,8 @@ using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Marketplaces.TaskContext;
+using Infrastructure.Models.Products;
+using Infrastructure.Services.Marketplaces;
 using Integration.Common.Services.Orders;
 using Integration.Ozon.Clients.Orders;
 using Integration.Ozon.Clients.Orders.Messages;
@@ -15,11 +17,13 @@ namespace Integration.Ozon.Services.Orders;
 public class OzonOrderTaskHandler : MarketplaceTaskHandler
 {
     private readonly OzonDto _ozonDto;
+    private readonly IProductIdentifierService _identifierService;
 
     public OzonOrderTaskHandler(Marketplace marketplace, MarketplaceOrderTask task, IServiceProvider serviceProvider) :
         base(marketplace, task, serviceProvider)
     {
         var mapper = ServiceProvider.GetRequiredService<IMapper>();
+        _identifierService = ServiceProvider.GetRequiredService<IProductIdentifierService>();
 
         _ozonDto = mapper.Map<OzonDto>(Marketplace);
     }
@@ -40,11 +44,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var client = ServiceProvider.GetRequiredService<IOzonPackOrderClient>();
 
         IEnumerable<int> productIds = Order.Boxes.Select(b => b.ProductId).Distinct();
-        Dictionary<int, string> externalIds = await Mediator.Send(new GetExternalIdsByProductIdsRequest()
-        {
-            MarketplaceId = _ozonDto.Id,
-            ProductIds = productIds
-        });
+        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
 
         var request = new PackPostingRequest
         {
@@ -69,11 +69,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var taskContext = OrderTask.TaskContext!.FromJson<RejectOrderContext>()!;
         
         IEnumerable<int> productIds = taskContext.Items.Select(b => b.ProductId).Distinct();
-        Dictionary<int, string> externalIds = await Mediator.Send(new GetExternalIdsByProductIdsRequest()
-        {
-            MarketplaceId = _ozonDto.Id,
-            ProductIds = productIds
-        });
+        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
         
         await client.RejectOrder(_ozonDto, new RejectPostingRequest()
         {

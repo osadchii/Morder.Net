@@ -50,6 +50,7 @@ public class MContext : IdentityDbContext<ApplicationUser>
     public DbSet<MarketplaceOrderTask> MarketplaceOrderTasks { get; set; }
     public DbSet<OrderSticker> OrderStickers { get; set; }
     public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
+    public DbSet<ProductIdentifier> ProductIdentifiers { get; set; }
 
     #endregion
 
@@ -64,6 +65,18 @@ public class MContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Price>(e => { e.HasKey(p => new { p.ProductId, p.PriceTypeId }); });
 
         modelBuilder.Entity<Stock>(e => { e.HasKey(p => new { p.ProductId, p.WarehouseId }); });
+
+        modelBuilder.Entity<ProductIdentifier>(e =>
+        {
+            e.HasKey(p => new
+            {
+                p.MarketplaceId,
+                p.ProductId,
+                p.Type
+            });
+            e.Property(p => p.Type)
+                .HasConversion(new EnumToStringConverter<ProductIdentifierType>());
+        });
 
         modelBuilder.Entity<MarketplaceCategorySetting>(e =>
         {
@@ -81,8 +94,6 @@ public class MContext : IdentityDbContext<ApplicationUser>
                 p.ProductId,
                 p.MarketplaceId
             });
-
-            e.HasIndex(s => new { s.MarketplaceId, s.ExternalId });
         });
 
         modelBuilder.Entity<PriceChange>(e =>

@@ -3,6 +3,7 @@ using Infrastructure.Extensions;
 using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
+using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ namespace Infrastructure.MediatR.Products.Handlers;
 public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketplaceProductIdsRequest, List<int>>
 {
     private readonly MContext _context;
+    private readonly IProductIdentifierService _identifierService;
 
-    public GetAllMarketplaceProductIdsHandler(MContext context)
+    public GetAllMarketplaceProductIdsHandler(MContext context, IProductIdentifierService identifierService)
     {
         _context = context;
+        _identifierService = identifierService;
     }
 
     public async Task<List<int>> Handle(GetAllMarketplaceProductIdsRequest request, CancellationToken cancellationToken)
@@ -39,11 +42,10 @@ public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketpl
             return products;
         }
 
-        return await _context.MarketplaceProductSettings
-            .AsNoTracking()
-            .Where(s => products.Contains(s.ProductId) && s.MarketplaceId == request.MarketplaceId &&
-                        s.ExternalId != null && s.ExternalId != string.Empty)
-            .Select(s => s.ProductId)
-            .ToListAsync(cancellationToken);
+        Dictionary<int, string?> externalIds =
+            await _identifierService.GetIdentifiersAsync(request.MarketplaceId, products,
+                ProductIdentifierType.StockAndPrice);
+
+        return externalIds.Keys.ToList();
     }
 }

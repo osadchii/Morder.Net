@@ -1,32 +1,28 @@
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Common;
-using Infrastructure.MediatR.MarketplaceProductSettings.Commands;
 using Infrastructure.Models.Marketplaces;
 using Integration.Ozon.Services;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Integration.Common.Services.Products;
 
-public interface ILoadProductIdService
+public interface ILoadProductIdentifiersService
 {
     Task LoadMarketplaceProductIds();
 }
 
-public class LoadProductIdService : ILoadProductIdService
+public class LoadProductIdentifiersService : ILoadProductIdentifiersService
 {
-    private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly MContext _context;
-    private readonly ILogger<LoadProductIdService> _logger;
+    private readonly ILogger<LoadProductIdentifiersService> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public LoadProductIdService(IMediator mediator, MContext context, ILogger<LoadProductIdService> logger,
+    public LoadProductIdentifiersService(MContext context, ILogger<LoadProductIdentifiersService> logger,
         IServiceProvider serviceProvider, IMapper mapper)
     {
-        _mediator = mediator;
         _context = context;
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -46,9 +42,9 @@ public class LoadProductIdService : ILoadProductIdService
             {
                 try
                 {
-                    MarketplaceLoadProductIdsService? sendService = marketplace.Type switch
+                    MarketplaceLoadProductIdentifiersService? sendService = marketplace.Type switch
                     {
-                        MarketplaceType.Ozon => new OzonLoadProductIdsService(_mapper, _serviceProvider),
+                        MarketplaceType.Ozon => new OzonLoadProductIdentifiersService(_mapper, _serviceProvider),
                         _ => null
                     };
 
@@ -57,22 +53,12 @@ public class LoadProductIdService : ILoadProductIdService
                         continue;
                     }
 
-                    Dictionary<string, string> result = await sendService.LoadProductIds(marketplace);
-
-                    if (result.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    await _mediator.Send(new SetMarketplaceProductExternalIdsRequest
-                    {
-                        ExternalIds = result,
-                        MarketplaceId = marketplace.Id
-                    });
+                    await sendService.LoadProductIdentifiersAsync(marketplace);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error while loading product ids from {marketplace.Name}");
+                    _logger.LogError(ex, "Error while loading product identifiers from {MarketplaceName}", 
+                        marketplace.Name);
                 }
             }
         }

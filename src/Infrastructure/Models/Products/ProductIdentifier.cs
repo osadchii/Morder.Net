@@ -5,6 +5,7 @@ using Infrastructure.Models.Marketplaces;
 
 namespace Infrastructure.Models.Products;
 
+[Table("ProductIdentifier", Schema = "dbo")]
 public class ProductIdentifier : BaseEntity
 {
     [ForeignKey("Product")]

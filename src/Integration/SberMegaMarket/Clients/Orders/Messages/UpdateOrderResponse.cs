@@ -6,19 +6,19 @@ public class UpdateOrderResponse
 {
     [JsonProperty("success")] public int Success { get; set; }
 
-    [JsonProperty("data")] public UpdateOrderResponseData Data { get; set; } = null!;
+    [JsonProperty("data")] public UpdateOrderResponseData Data { get; set; }
 }
 
 public class UpdateOrderResponseData
 {
-    [JsonProperty("shipments")] public IEnumerable<UpdateOrderResponseDataShipment> Shipments { get; set; } = null!;
+    [JsonProperty("shipments")] public IEnumerable<UpdateOrderResponseDataShipment> Shipments { get; set; }
 }
 
 public class UpdateOrderResponseDataShipment
 {
-    [JsonProperty("shipmentId")] public string ShipmentId { get; set; } = null!;
+    [JsonProperty("shipmentId")] public string ShipmentId { get; set; }
 
-    [JsonProperty("orderCode")] public string OrderCode { get; set; } = null!;
+    [JsonProperty("orderCode")] public string OrderCode { get; set; }
 
     [JsonProperty("confirmedTimeLimit")] public DateTime? ConfirmedTimeLimit { get; set; }
 
@@ -30,20 +30,20 @@ public class UpdateOrderResponseDataShipment
 
     [JsonProperty("shippingTimeLimit")] public DateTime? ShippingTimeLimit { get; set; }
 
-    [JsonProperty("customerFullName")] public string CustomerFullName { get; set; } = null!;
+    [JsonProperty("customerFullName")] public string CustomerFullName { get; set; }
 
-    [JsonProperty("customerAddress")] public string CustomerAddress { get; set; } = null!;
+    [JsonProperty("customerAddress")] public string CustomerAddress { get; set; }
 
-    [JsonProperty("items")] public IEnumerable<UpdateOrderResponseDataShipmentItem> Items { get; set; } = null!;
+    [JsonProperty("items")] public IEnumerable<UpdateOrderResponseDataShipmentItem> Items { get; set; }
 }
 
 public class UpdateOrderResponseDataShipmentItem
 {
-    [JsonProperty("itemIndex")] public string ItemIndex { get; set; } = null!;
+    [JsonProperty("itemIndex")] public string ItemIndex { get; set; }
 
-    [JsonProperty("status")] public string? Status { get; set; }
+    [JsonProperty("status")] public string Status { get; set; }
 
-    [JsonProperty("offerId")] public string OfferId { get; set; } = null!;
+    [JsonProperty("offerId")] public string OfferId { get; set; }
 
     [JsonProperty("price")] public decimal Price { get; set; }
 

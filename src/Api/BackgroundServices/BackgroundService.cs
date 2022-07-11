@@ -5,9 +5,9 @@ public abstract class BackgroundService : IHostedService, IDisposable
     protected readonly IServiceProvider Services;
     protected int TimerInterval { get; set; }
     private readonly ILogger _logger;
-    private Task? _task;
+    private Task _task;
 
-    private Timer? _timer;
+    private Timer _timer;
 
     protected BackgroundService(ILogger logger, IServiceProvider services)
     {
@@ -25,7 +25,7 @@ public abstract class BackgroundService : IHostedService, IDisposable
         return Task.CompletedTask;
     }
 
-    private void DoWork(object? state)
+    private void DoWork(object state)
     {
         if (!(_task is null
               || _task.Status is TaskStatus.Canceled or TaskStatus.Faulted or TaskStatus.RanToCompletion))

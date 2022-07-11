@@ -22,7 +22,7 @@ public class MorderWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
                 options.UseInMemoryDatabase("InMemoryDbForTesting");
             });
 
-            ServiceProvider? sp = services.BuildServiceProvider();
+            ServiceProvider sp = services.BuildServiceProvider();
 
             using IServiceScope scope = sp.CreateScope();
             IServiceProvider scopedServices = scope.ServiceProvider;

@@ -161,7 +161,7 @@ public class MContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<BotUserUsageCounter>(e => { e.HasKey(t => t.BotUserId); });
 
-        foreach (IMutableEntityType? entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) != null)
             {

@@ -10,7 +10,7 @@ public class SberMegaMarketResponse
 
     [JsonProperty("success")] public int Success { get; set; } = 1;
 
-    public SberMegaMarketResponse(Dictionary<string, object> meta, string? error = null)
+    public SberMegaMarketResponse(Dictionary<string, object> meta, string error = null)
     {
         Meta = meta;
 

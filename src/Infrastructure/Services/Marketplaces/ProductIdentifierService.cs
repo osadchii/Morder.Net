@@ -11,9 +11,9 @@ public interface IProductIdentifierService
 
     Task<Dictionary<int, bool>> SetIdentifiersAsync(int marketplaceId, Dictionary<int, string> productIdentifiers,
         ProductIdentifierType type);
-    Task<string?> GetIdentifierAsync(int marketplaceId, int productId, ProductIdentifierType type);
+    Task<string> GetIdentifierAsync(int marketplaceId, int productId, ProductIdentifierType type);
 
-    Task<Dictionary<int, string?>> GetIdentifiersAsync(int marketplaceId, IEnumerable<int> productIds,
+    Task<Dictionary<int, string>> GetIdentifiersAsync(int marketplaceId, IEnumerable<int> productIds,
         ProductIdentifierType type);
 }
 
@@ -40,7 +40,7 @@ public class ProductIdentifierService : IProductIdentifierService
             return false;
         }
 
-        ProductIdentifier? currentValue = await _context.ProductIdentifiers
+        ProductIdentifier currentValue = await _context.ProductIdentifiers
             .SingleOrDefaultAsync(pi =>
                 pi.MarketplaceId == marketplaceId && pi.ProductId == productId && pi.Type == type);
 
@@ -86,7 +86,7 @@ public class ProductIdentifierService : IProductIdentifierService
         return result;
     }
 
-    public async Task<string?> GetIdentifierAsync(int marketplaceId, int productId, ProductIdentifierType type)
+    public async Task<string> GetIdentifierAsync(int marketplaceId, int productId, ProductIdentifierType type)
     {
         var cacheKey = GetCacheKey(marketplaceId, productId, type);
 
@@ -95,7 +95,7 @@ public class ProductIdentifierService : IProductIdentifierService
             return cachedValue;
         }
         
-        ProductIdentifier? currentValue = await _context.ProductIdentifiers
+        ProductIdentifier currentValue = await _context.ProductIdentifiers
             .SingleOrDefaultAsync(pi =>
                 pi.MarketplaceId == marketplaceId && pi.ProductId == productId && pi.Type == type);
 
@@ -106,9 +106,9 @@ public class ProductIdentifierService : IProductIdentifierService
         return currentValue.Value;
     }
 
-    public async Task<Dictionary<int, string?>> GetIdentifiersAsync(int marketplaceId, IEnumerable<int> productIds, ProductIdentifierType type)
+    public async Task<Dictionary<int, string>> GetIdentifiersAsync(int marketplaceId, IEnumerable<int> productIds, ProductIdentifierType type)
     {
-        var result = new Dictionary<int, string?>();
+        var result = new Dictionary<int, string>();
 
         foreach (var productId in productIds)
         {

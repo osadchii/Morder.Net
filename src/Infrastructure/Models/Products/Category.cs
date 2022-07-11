@@ -12,15 +12,15 @@ public class Category : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.CategoryName)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [ForeignKey("Parent")] public int? ParentId { get; set; }
 
-    public Category? Parent { get; set; }
+    public Category Parent { get; set; }
 
     public bool DeletionMark { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
 
-    public ICollection<Category>? Children { get; set; }
+    public ICollection<Category> Children { get; set; }
 }

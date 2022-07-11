@@ -17,7 +17,7 @@ public class CreateOrderRequest : IRequest<Order>
     public DateTime PackingTimeLimit { get; set; }
     public DateTime ShippingTimeLimit { get; set; }
     public bool ExpressOrder { get; set; }
-    public string? TrackNumber { get; set; }
+    public string TrackNumber { get; set; }
     public IEnumerable<CreateOrderItem> Items { get; set; } = null!;
 }
 
@@ -27,5 +27,5 @@ public class CreateOrderItem
     public decimal Price { get; set; }
     public decimal Count { get; set; }
     public decimal Sum { get; set; }
-    public string? ExternalId { get; set; }
+    public string ExternalId { get; set; }
 }

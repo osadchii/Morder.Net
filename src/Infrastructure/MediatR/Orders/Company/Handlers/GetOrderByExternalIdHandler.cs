@@ -18,7 +18,7 @@ public class GetOrderByExternalIdHandler : IRequestHandler<GetOrderByExternalIdR
 
     public async Task<Result> Handle(GetOrderByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .AsNoTracking()
             .Include(o => o.Items)
             .ThenInclude(p => p.Product)

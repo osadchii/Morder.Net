@@ -24,7 +24,7 @@ public class GetTokenHandler : IRequestHandler<GetTokenRequest, Result<TokenDto>
     
     public async Task<Result<TokenDto>> Handle(GetTokenRequest request, CancellationToken cancellationToken)
     {
-        ApplicationUser? identityUser = await _userManager.FindByNameAsync(request.Name);
+        ApplicationUser identityUser = await _userManager.FindByNameAsync(request.Name);
 
         if (identityUser is null)
         {

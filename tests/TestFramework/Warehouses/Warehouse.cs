@@ -2,7 +2,7 @@ namespace TestFramework.Warehouses;
 
 public class Warehouse
 {
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public Guid ExternalId { get; set; }
 

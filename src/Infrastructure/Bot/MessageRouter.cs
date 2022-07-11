@@ -54,7 +54,7 @@ public class MessageRouter : IMessageRouter
             return;
         }
 
-        ScreenHandler? handler = user.CurrentState switch
+        ScreenHandler handler = user.CurrentState switch
         {
             ScreenIds.MainMenu => new MainMenuScreenHandler(_serviceProvider, message, user),
             ScreenIds.ReportMenu => new ReportMenuScreenHandler(_serviceProvider, message, user),

@@ -28,7 +28,7 @@ public class SaveOrderStickerFromStringHandler : IRequestHandler<SaveOrderSticke
             data = request.Bytes;
         }
 
-        OrderSticker? dbEntry = await _context.OrderStickers
+        OrderSticker dbEntry = await _context.OrderStickers
             .FirstOrDefaultAsync(s => s.OrderId == request.OrderId, cancellationToken);
 
         if (dbEntry is null)

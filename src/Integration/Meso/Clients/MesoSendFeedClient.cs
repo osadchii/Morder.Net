@@ -23,7 +23,7 @@ public class MesoSendFeedClient : IMesoSendFeedClient
 
     public async Task SendFeed(MesoDto meso, Feed feed)
     {
-        string token = await GetToken(meso);
+        var token = await GetToken(meso);
         await PostAsync(meso, "api/store/integration/catalog/upload", feed, token);
     }
 
@@ -36,7 +36,7 @@ public class MesoSendFeedClient : IMesoSendFeedClient
         };
 
         HttpResponseMessage response = await PostAsync(meso, "api/store/token/request", request);
-        string content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync();
 
         var mesoResponse = content.FromJson<GetTokenResponse>();
 
@@ -49,9 +49,9 @@ public class MesoSendFeedClient : IMesoSendFeedClient
         return mesoResponse.Token;
     }
 
-    private async Task<HttpResponseMessage> PostAsync(MesoDto meso, string url, object obj, string? token = null)
+    private async Task<HttpResponseMessage> PostAsync(MesoDto meso, string url, object obj, string token = null)
     {
-        string fullUrl =
+        var fullUrl =
             $"https://{meso.Settings.Server}:{meso.Settings.Port}/{url}";
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
@@ -67,11 +67,11 @@ public class MesoSendFeedClient : IMesoSendFeedClient
 
         if (httpResponse.StatusCode != HttpStatusCode.OK)
         {
-            string body = await httpResponse.Content.ReadAsStringAsync();
-            string message = $"Send Meso request failure." +
-                             $"{Environment.NewLine}Url: ${fullUrl}" +
-                             $"{Environment.NewLine}Status code: ${httpResponse.StatusCode}" +
-                             $"{Environment.NewLine}Message: {body}";
+            var body = await httpResponse.Content.ReadAsStringAsync();
+            var message = $"Send Meso request failure." +
+                          $"{Environment.NewLine}Url: ${fullUrl}" +
+                          $"{Environment.NewLine}Status code: ${httpResponse.StatusCode}" +
+                          $"{Environment.NewLine}Message: {body}";
 
             throw new Exception(message);
         }

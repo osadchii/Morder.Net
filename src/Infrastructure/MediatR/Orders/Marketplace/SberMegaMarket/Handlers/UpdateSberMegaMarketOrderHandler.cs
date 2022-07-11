@@ -24,7 +24,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
 
     public async Task<Unit> Handle(UpdateSberMegaMarketOrderRequest request, CancellationToken cancellationToken)
     {
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .SingleOrDefaultAsync(o => o.Number == request.ShipmentId
                                        && o.MarketplaceId == request.MarketplaceId, cancellationToken);
 

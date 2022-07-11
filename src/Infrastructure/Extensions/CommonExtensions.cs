@@ -13,7 +13,7 @@ public static class CommonExtensions
         return JsonConvert.SerializeObject(obj, settings);
     }
 
-    public static T? FromJson<T>(this string s)
+    public static T FromJson<T>(this string s)
     {
         try
         {
@@ -31,7 +31,7 @@ public static class CommonExtensions
         }
     }
 
-    public static bool IsNullOrEmpty(this string? value)
+    public static bool IsNullOrEmpty(this string value)
     {
         return string.IsNullOrEmpty(value);
     }

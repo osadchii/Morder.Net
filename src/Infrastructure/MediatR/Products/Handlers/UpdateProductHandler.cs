@@ -25,7 +25,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
     {
         if (request.CategoryId.HasValue && request.CategoryId != Guid.Empty)
         {
-            Category? parent =
+            Category parent =
                 await _context.Categories.SingleOrDefaultAsync(c => c.ExternalId == request.CategoryId.Value,
                     cancellationToken);
             if (parent is null)
@@ -36,7 +36,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
             request.Category = parent;
         }
 
-        bool unUniqueArticul = await _context.Products
+        var unUniqueArticul = await _context.Products
             .AsNoTracking()
             .AnyAsync(p => p.Articul == request.Articul && p.ExternalId != request.ExternalId, cancellationToken);
 
@@ -47,7 +47,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
             return ResultCode.Error.AsResult(message);
         }
 
-        Product? dbEntry = await _context.Products
+        Product dbEntry = await _context.Products
             .Include(c => c.Category)
             .SingleOrDefaultAsync(c => c.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 
@@ -67,7 +67,8 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Created product {dbEntry.Name} ({dbEntry.Articul}) with id {dbEntry.Id}");
+        _logger.LogInformation("Created product {ProductName} ({ProductArticul}) with id {ProductId}", 
+            dbEntry.Name, dbEntry.Articul, dbEntry.Id);
 
         return dbEntry.AsResult();
     }
@@ -79,7 +80,8 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Updated product {dbEntry.Name} ({dbEntry.Articul}) with id {dbEntry.Id}");
+        _logger.LogInformation("Updated product {ProductName} ({ProductArticul}) with id {ProductId}", 
+            dbEntry.Name, dbEntry.Articul, dbEntry.Id);
 
         return dbEntry.AsResult();
     }

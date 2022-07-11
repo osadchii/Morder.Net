@@ -16,14 +16,14 @@ public class MarketplaceOrderTask : BaseEntity, IHasId
 
     [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    public Marketplace Marketplace { get; set; } = null!;
+    public Marketplace Marketplace { get; set; }
 
     [Required] [ForeignKey("Order")] public int OrderId { get; set; }
 
-    public Order Order { get; set; } = null!;
+    public Order Order { get; set; }
 
     public int TryCount { get; set; } = 0;
-    public string? TaskContext { get; set; } = null!;
+    public string TaskContext { get; set; }
 }
 
 public enum TaskType

@@ -12,22 +12,22 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.ProductName)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Required]
     [MaxLength(Limits.ProductArticul)]
-    public string? Articul { get; set; }
+    public string Articul { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
 
     [ForeignKey("Category")] public int? CategoryId { get; set; }
 
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
 
     public bool DeletionMark { get; set; }
 
     [MaxLength(Limits.ProductCountryOfOrigin)]
-    public string? CountryOfOrigin { get; set; }
+    public string CountryOfOrigin { get; set; }
 
     [Range(Limits.MinimalLength, Limits.MaximalLength)]
     public decimal? Length { get; set; }
@@ -41,13 +41,13 @@ public class Product : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
     [Range(Limits.MinimalWeight, Limits.MaximalWeight)]
     public decimal? Weight { get; set; }
 
-    [MaxLength(Limits.ProductBrand)] public string? Brand { get; set; }
+    [MaxLength(Limits.ProductBrand)] public string Brand { get; set; }
 
-    [MaxLength(Limits.ProductVendor)] public string? Vendor { get; set; }
+    [MaxLength(Limits.ProductVendor)] public string Vendor { get; set; }
 
-    [MaxLength(Limits.ProductVendorCode)] public string? VendorCode { get; set; }
+    [MaxLength(Limits.ProductVendorCode)] public string VendorCode { get; set; }
 
-    [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
+    [MaxLength(Limits.ProductBarcode)] public string Barcode { get; set; }
 
     public Vat? Vat { get; set; }
 

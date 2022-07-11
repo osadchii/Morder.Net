@@ -11,7 +11,7 @@ public class GetWarehouseByExternalIdRequest : IRequest<WarehouseDto>
     public Guid ExternalId { get; set; }
 }
 
-public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExternalIdRequest, WarehouseDto?>
+public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExternalIdRequest, WarehouseDto>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
@@ -22,10 +22,10 @@ public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExt
         _mapper = mapper;
     }
 
-    public async Task<WarehouseDto?> Handle(GetWarehouseByExternalIdRequest request,
+    public async Task<WarehouseDto> Handle(GetWarehouseByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        Warehouse? dbEntry = await _context.Warehouses
+        Warehouse dbEntry = await _context.Warehouses
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 

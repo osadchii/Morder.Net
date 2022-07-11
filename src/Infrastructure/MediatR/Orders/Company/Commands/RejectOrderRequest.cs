@@ -7,7 +7,7 @@ public class RejectOrderRequest : IRequest<Unit>
 {
     [Required] public Guid? ExternalId { get; set; }
 
-    [Required] public IEnumerable<RejectOrderItem>? Items { get; set; }
+    [Required] public IEnumerable<RejectOrderItem> Items { get; set; }
     public string User { get; set; } = null!;
 }
 

@@ -4,16 +4,16 @@ namespace Integration.Ozon.Clients.Prices.Messages;
 
 public class OzonPriceRequest
 {
-    [JsonProperty("prices")] public IEnumerable<OzonPrice> Prices { get; set; } = null!;
+    [JsonProperty("prices")] public IEnumerable<OzonPrice> Prices { get; set; }
 }
 
 public class OzonPrice
 {
-    [JsonProperty("offer_id")] public string? OfferId { get; set; }
+    [JsonProperty("offer_id")] public string OfferId { get; set; }
 
     [JsonProperty("product_id")] public int? ProductId { get; set; }
 
     [JsonProperty("old_price")] public string OldPrice { get; set; } = "0";
 
-    [JsonProperty("price")] public string Price { get; set; } = null!;
+    [JsonProperty("price")] public string Price { get; set; }
 }

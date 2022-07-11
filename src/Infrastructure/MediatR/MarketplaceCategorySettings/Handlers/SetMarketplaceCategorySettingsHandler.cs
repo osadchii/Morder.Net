@@ -102,7 +102,7 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
         await _changeTrackingService.TrackStocksChange(marketplaceId, productIds, cancellationToken);
     }
 
-    private static void FillCategoryIds(ICollection<Category>? categories, ICollection<int> result)
+    private static void FillCategoryIds(ICollection<Category> categories, ICollection<int> result)
     {
         if (categories is null)
         {

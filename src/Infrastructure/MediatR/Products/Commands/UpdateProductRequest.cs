@@ -9,20 +9,20 @@ public class UpdateProductRequest : IRequest<Result>
 {
     [Required]
     [MaxLength(Limits.ProductName)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Required]
     [MaxLength(Limits.ProductArticul)]
-    public string? Articul { get; set; }
+    public string Articul { get; set; }
 
     [MaxLength(Limits.ProductCountryOfOrigin)]
-    public string? CountryOfOrigin { get; set; }
+    public string CountryOfOrigin { get; set; }
 
     [Required] public Guid? ExternalId { get; set; }
 
     public Guid? CategoryId { get; set; }
 
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
 
     public bool DeletionMark { get; set; }
 
@@ -38,13 +38,13 @@ public class UpdateProductRequest : IRequest<Result>
     [Range(Limits.MinimalWeight, Limits.MaximalWeight)]
     public decimal? Weight { get; set; }
 
-    [MaxLength(Limits.ProductBrand)] public string? Brand { get; set; }
+    [MaxLength(Limits.ProductBrand)] public string Brand { get; set; }
 
-    [MaxLength(Limits.ProductVendor)] public string? Vendor { get; set; }
+    [MaxLength(Limits.ProductVendor)] public string Vendor { get; set; }
 
-    [MaxLength(Limits.ProductVendorCode)] public string? VendorCode { get; set; }
+    [MaxLength(Limits.ProductVendorCode)] public string VendorCode { get; set; }
 
-    [MaxLength(Limits.ProductBarcode)] public string? Barcode { get; set; }
+    [MaxLength(Limits.ProductBarcode)] public string Barcode { get; set; }
 
     [EnumDataType(typeof(Vat))] public Vat? Vat { get; set; }
 

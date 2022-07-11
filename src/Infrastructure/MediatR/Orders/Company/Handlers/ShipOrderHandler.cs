@@ -25,7 +25,7 @@ public class ShipOrderHandler : IRequestHandler<ShipOrderRequest, Unit>
 
     public async Task<Unit> Handle(ShipOrderRequest request, CancellationToken cancellationToken)
     {
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);

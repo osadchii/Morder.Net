@@ -9,9 +9,9 @@ public abstract class BaseUpdateMarketplaceRequest
 {
     public int? Id { get; set; }
 
-    [Required] public string? Name { get; set; }
+    [Required] public string Name { get; set; }
 
-    [Required] public List<ProductType>? ProductTypes { get; set; }
+    [Required] public List<ProductType> ProductTypes { get; set; }
 
     [Required] public decimal? MinimalPrice { get; set; }
 
@@ -19,7 +19,7 @@ public abstract class BaseUpdateMarketplaceRequest
 
     [Required] public Guid? WarehouseExternalId { get; set; }
 
-    public Warehouse? Warehouse { get; set; }
+    public Warehouse Warehouse { get; set; }
 
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
@@ -30,5 +30,5 @@ public abstract class BaseUpdateMarketplaceRequest
 
     public Guid? PriceTypeExternalId { get; set; }
 
-    public PriceType? PriceType { get; set; }
+    public PriceType PriceType { get; set; }
 }

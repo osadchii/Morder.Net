@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MediatR.PriceTypes.Queries;
 
-public class GetPriceTypeByExternalIdRequest : IRequest<PriceTypeDto?>
+public class GetPriceTypeByExternalIdRequest : IRequest<PriceTypeDto>
 {
     public Guid ExternalId { get; set; }
 }
 
-public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExternalIdRequest, PriceTypeDto?>
+public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExternalIdRequest, PriceTypeDto>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
@@ -22,10 +22,10 @@ public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExt
         _mapper = mapper;
     }
 
-    public async Task<PriceTypeDto?> Handle(GetPriceTypeByExternalIdRequest request,
+    public async Task<PriceTypeDto> Handle(GetPriceTypeByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        PriceType? dbEntry = await _context.PriceTypes
+        PriceType dbEntry = await _context.PriceTypes
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 

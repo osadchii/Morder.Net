@@ -23,11 +23,11 @@ public class Feed
 
 public class Shop
 {
-    [XmlElement("name")] public string? Name { get; set; }
+    [XmlElement("name")] public string Name { get; set; }
 
-    [XmlElement("company")] public string? Company { get; set; }
+    [XmlElement("company")] public string Company { get; set; }
 
-    [XmlElement("url")] public string? Url { get; set; }
+    [XmlElement("url")] public string Url { get; set; }
 
     [XmlArray("currencies")]
     [XmlArrayItem("currency")]
@@ -85,10 +85,10 @@ public class Offer
     [XmlElement("barcode")] public string Barcode { get; set; }
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public string? Vendor { get; set; }
+    public string Vendor { get; set; }
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public string? VendorCode { get; set; }
+    public string VendorCode { get; set; }
 
     [XmlIgnore] public decimal? Weight { get; set; }
 
@@ -98,9 +98,9 @@ public class Offer
 
     [XmlIgnore] public decimal? Height { get; set; }
 
-    [XmlIgnore] public string? Brand { get; set; }
+    [XmlIgnore] public string Brand { get; set; }
 
-    [XmlIgnore] public string? CountryOfOrigin { get; set; }
+    [XmlIgnore] public string CountryOfOrigin { get; set; }
 
     [XmlElement("param")]
     public List<OfferParam> Params

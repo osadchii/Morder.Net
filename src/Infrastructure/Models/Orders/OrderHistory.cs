@@ -11,10 +11,10 @@ public class OrderStatusHistory : BaseEntity, IHasId
 
     [Required] [ForeignKey("Order")] public int OrderId { get; set; }
 
-    public Order Order { get; set; } = null!;
+    public Order Order { get; set; }
 
     [Required] public DateTime Date { get; set; }
 
     [Required] public OrderStatus Status { get; set; }
-    public string? User { get; set; }
+    public string User { get; set; }
 }

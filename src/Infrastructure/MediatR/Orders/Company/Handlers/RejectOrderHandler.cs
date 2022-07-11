@@ -33,7 +33,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             throw new HttpRequestException("Need one or more items");
         }
 
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);

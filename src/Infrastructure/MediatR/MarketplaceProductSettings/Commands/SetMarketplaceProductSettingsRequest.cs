@@ -13,5 +13,5 @@ public class SetMarketplaceProductSettingsRequest : IRequest<Unit>
 
     [Required] public bool IgnoreRestrictions { get; set; }
 
-    public string? Externalid { get; set; }
+    public string Externalid { get; set; }
 }

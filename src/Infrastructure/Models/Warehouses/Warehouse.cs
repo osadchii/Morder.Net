@@ -12,7 +12,7 @@ public class Warehouse : BaseEntity, IHasId, IHasExternalId, IHasDeletionMark
 
     [Required]
     [MaxLength(Limits.WarehouseName)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Required] public Guid ExternalId { get; set; }
 

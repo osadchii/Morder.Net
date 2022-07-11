@@ -9,17 +9,17 @@ namespace Integration.SberMegaMarket.Extensions;
 
 public static class FeedExtensions
 {
-    public static Offer? ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
+    public static Offer ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
     {
         if (!int.TryParse(product.Articul, out int articul))
         {
             return null;
         }
 
-        decimal price = productData.GetProductPrice(product);
-        decimal stock = productData.GetProductStock(product, price);
+        var price = productData.GetProductPrice(product);
+        var stock = productData.GetProductStock(product, price);
 
-        bool available = stock > 0;
+        var available = stock > 0;
 
         var offer = new Offer
         {

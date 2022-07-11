@@ -12,7 +12,7 @@ public class UpdateWarehouseRequest : IRequest<Unit>
 {
     [Required]
     [MaxLength(Limits.WarehouseName)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Required] public Guid? ExternalId { get; set; }
 
@@ -35,7 +35,7 @@ public class UpdateWarehouseHandler : IRequestHandler<UpdateWarehouseRequest, Un
 
     public async Task<Unit> Handle(UpdateWarehouseRequest request, CancellationToken cancellationToken)
     {
-        Warehouse? dbEntry =
+        Warehouse dbEntry =
             await _context.Warehouses
                 .SingleOrDefaultAsync(w => w.ExternalId == request.ExternalId,
                     cancellationToken: cancellationToken);

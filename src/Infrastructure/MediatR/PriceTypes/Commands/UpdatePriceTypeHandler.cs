@@ -35,7 +35,7 @@ public class UpdatePriceTypeHandler : IRequestHandler<UpdatePriceTypeRequest, Un
 
     public async Task<Unit> Handle(UpdatePriceTypeRequest request, CancellationToken cancellationToken)
     {
-        PriceType? dbEntry =
+        PriceType dbEntry =
             await _context.PriceTypes
                 .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 
@@ -54,7 +54,7 @@ public class UpdatePriceTypeHandler : IRequestHandler<UpdatePriceTypeRequest, Un
         await _context.AddAsync(dbEntry, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Created price type {request.Name}");
+        _logger.LogInformation("Created price type {PriceTypeName}", request.Name);
 
         return Unit.Value;
     }
@@ -66,7 +66,7 @@ public class UpdatePriceTypeHandler : IRequestHandler<UpdatePriceTypeRequest, Un
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Updated price type {request.Name}");
+        _logger.LogInformation("Updated price type {PriceTypeName}", request.Name);
 
         return Unit.Value;
     }

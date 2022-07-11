@@ -3,6 +3,7 @@ using Infrastructure.Extensions;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Stocks.Queries;
 using Infrastructure.Models.Companies;
+using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.MarketplaceCategorySettings;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
@@ -66,7 +67,7 @@ public class
 
         IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
 
-        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
             ProductIdentifierType.StockAndPrice);
         
         IEnumerable<int> categoryIds = products
@@ -104,8 +105,8 @@ public class
 
         foreach (Product product in products)
         {
-            productSettings.TryGetValue(product.Id, out MarketplaceProductSetting? productSetting);
-            categorySettings.TryGetValue(product.CategoryId ?? 0, out MarketplaceCategorySetting? categorySetting);
+            productSettings.TryGetValue(product.Id, out MarketplaceProductSetting productSetting);
+            categorySettings.TryGetValue(product.CategoryId ?? 0, out MarketplaceCategorySetting categorySetting);
 
             var externalId = marketplace.Type switch
             {
@@ -135,15 +136,15 @@ public class
 
         return result;
 
-        decimal GetStocks(Product product, MarketplaceProductSetting? productSetting,
-            MarketplaceCategorySetting? categorySetting)
+        decimal GetStocks(Product product, MarketplaceProductSetting productSetting,
+            MarketplaceCategorySetting categorySetting)
         {
             if (product.Category is null || product.Category.DeletionMark)
             {
                 return 0;
             }
 
-            if (!stocks.TryGetValue(product.Id, out decimal value))
+            if (!stocks.TryGetValue(product.Id, out var value))
             {
                 return 0;
             }
@@ -153,7 +154,7 @@ public class
                 return 0;
             }
 
-            decimal price = GetPrice(product);
+            var price = GetPrice(product);
 
             if (price == 0)
             {
@@ -183,9 +184,9 @@ public class
             return value;
         }
 
-        decimal GetPrice(Product product)
+        decimal GetPrice(IHasId product)
         {
-            if (specialPrices.TryGetValue(product.Id, out decimal value) && value > 0)
+            if (specialPrices.TryGetValue(product.Id, out var value) && value > 0)
             {
                 return value;
             }

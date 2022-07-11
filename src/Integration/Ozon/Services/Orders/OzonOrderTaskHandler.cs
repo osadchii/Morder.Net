@@ -1,7 +1,6 @@
 using AutoMapper;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Company.Commands;
-using Infrastructure.MediatR.Products.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Marketplaces.TaskContext;
@@ -44,7 +43,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var client = ServiceProvider.GetRequiredService<IOzonPackOrderClient>();
 
         IEnumerable<int> productIds = Order.Boxes.Select(b => b.ProductId).Distinct();
-        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
+        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
 
         var request = new PackPostingRequest
         {
@@ -69,7 +68,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var taskContext = OrderTask.TaskContext!.FromJson<RejectOrderContext>()!;
         
         IEnumerable<int> productIds = taskContext.Items.Select(b => b.ProductId).Distinct();
-        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
+        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
         
         await client.RejectOrder(_ozonDto, new RejectPostingRequest()
         {

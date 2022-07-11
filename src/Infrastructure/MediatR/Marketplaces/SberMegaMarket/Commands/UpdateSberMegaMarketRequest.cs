@@ -6,5 +6,5 @@ namespace Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
 
 public class UpdateSberMegaMarketRequest : BaseUpdateMarketplaceRequest, IRequest<SberMegaMarketDto>
 {
-    [Required] public SberMegaMarketSettings? Settings { get; set; }
+    [Required] public SberMegaMarketSettings Settings { get; set; }
 }

@@ -25,7 +25,7 @@ public class GetSberMegaMarketByIdHandler : IRequestHandler<GetSberMegaMarketByI
     
     public async Task<SberMegaMarketDto> Handle(GetSberMegaMarketByIdRequest request, CancellationToken cancellationToken)
     {
-        SberMegaMarketDto? result = await _context.Marketplaces
+        SberMegaMarketDto result = await _context.Marketplaces
             .AsNoTracking()
             .Include(m => m.Warehouse)
             .Include(m => m.PriceType)

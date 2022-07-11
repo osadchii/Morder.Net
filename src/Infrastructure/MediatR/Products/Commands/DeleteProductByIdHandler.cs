@@ -27,7 +27,7 @@ public class DeleteProductByIdHandler : IRequestHandler<DeleteProductByIdRequest
 
     public async Task<ProductDto> Handle(DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        Product? product = await _context.Products
+        Product product = await _context.Products
             .SingleOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         if (product is null)

@@ -23,7 +23,7 @@ public class SetMarketplaceProductSettingsHandler : IRequestHandler<SetMarketpla
 
     public async Task<Unit> Handle(SetMarketplaceProductSettingsRequest request, CancellationToken cancellationToken)
     {
-        MarketplaceProductSetting? dbEntry = await _context.MarketplaceProductSettings
+        MarketplaceProductSetting dbEntry = await _context.MarketplaceProductSettings
             .SingleOrDefaultAsync(s => s.MarketplaceId == request.MarketplaceId
                                        && s.ProductId == request.ProductId, cancellationToken: cancellationToken);
 

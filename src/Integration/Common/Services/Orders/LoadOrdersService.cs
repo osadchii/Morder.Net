@@ -47,7 +47,7 @@ public class LoadOrdersService : ILoadOrdersService
             {
                 try
                 {
-                    MarketplaceOrderLoader? loader = marketplace.Type switch
+                    MarketplaceOrderLoader loader = marketplace.Type switch
                     {
                         MarketplaceType.Ozon => new OzonOrderLoader(marketplace, _serviceProvider, _mapper, startDate),
                         MarketplaceType.SberMegaMarket => new SberMegaMarketOrderLoader(marketplace, _serviceProvider,

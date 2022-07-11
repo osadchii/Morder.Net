@@ -36,34 +36,34 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Result>
             return ResultCode.Error.AsResult("Bad request");
         }
 
-        int? warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId.Value);
+        var warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId.Value);
 
         if (warehouseId is null)
         {
-            string message = $"Warehouse with external id {request.WarehouseExternalId} not found";
+            var message = $"Warehouse with external id {request.WarehouseExternalId} not found";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
-        int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
+        var productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
 
         if (productId is null)
         {
-            string message = $"Product with external id {request.ProductExternalId} not found";
+            var message = $"Product with external id {request.ProductExternalId} not found";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
-            string message = $"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}";
+            var message = $"Empty stock for product {productId.Value} at warehouse {warehouseId.Value}";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
         await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
-        Stock? dbEntry = await _context.Stocks
+        Stock dbEntry = await _context.Stocks
             .SingleOrDefaultAsync(s => s.ProductId == productId && s.WarehouseId == warehouseId,
                 cancellationToken);
 

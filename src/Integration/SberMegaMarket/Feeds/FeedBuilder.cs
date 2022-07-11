@@ -34,7 +34,7 @@ public class FeedBuilder
 
     private void AddProducts(IEnumerable<Product> products, MarketplaceProductData marketplaceProductData)
     {
-        foreach (Offer? offer in products
+        foreach (Offer offer in products
                      .Select(product => product.ToOffer(marketplaceProductData, _sber.Settings.WarehouseId))
                      .Where(offer => offer is not null && offer.Price != 0))
         {

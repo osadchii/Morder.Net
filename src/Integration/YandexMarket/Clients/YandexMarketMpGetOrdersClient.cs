@@ -24,11 +24,11 @@ public class YandexMarketMpGetOrdersClient : IYandexMarketMpGetOrdersClient
         const string fullUrl = "http://mporders.osadchiidev.ru/api/v1/order/GetOrdersByMarketplace/?marketplaceId=2";
 
         HttpResponseMessage responseMessage = await _client.GetAsync(fullUrl);
-        string body = await responseMessage.Content.ReadAsStringAsync();
+        var body = await responseMessage.Content.ReadAsStringAsync();
 
         if (responseMessage.StatusCode == HttpStatusCode.OK)
         {
-            MpOrder[]? result = body.FromJson<MpOrder[]>();
+            MpOrder[] result = body.FromJson<MpOrder[]>();
 
             if (result is null)
             {
@@ -38,10 +38,10 @@ public class YandexMarketMpGetOrdersClient : IYandexMarketMpGetOrdersClient
             return result;
         }
 
-        string message = $"Get Mp Orders request failure." +
-                         $"{Environment.NewLine}Url: {fullUrl}" +
-                         $"{Environment.NewLine}Status code: {responseMessage.StatusCode}" +
-                         $"{Environment.NewLine}Response: {body}";
+        var message = $"Get Mp Orders request failure." +
+                      $"{Environment.NewLine}Url: {fullUrl}" +
+                      $"{Environment.NewLine}Status code: {responseMessage.StatusCode}" +
+                      $"{Environment.NewLine}Response: {body}";
 
         throw new Exception(message);
     }

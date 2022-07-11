@@ -18,11 +18,11 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     [Required] [ForeignKey("Marketplace")] public int MarketplaceId { get; set; }
 
-    public Marketplace Marketplace { get; set; } = null!;
+    public Marketplace Marketplace { get; set; }
 
     [Required]
     [MaxLength(Limits.OrderNumber)]
-    public string Number { get; set; } = null!;
+    public string Number { get; set; }
 
     public bool Archived { get; set; }
 
@@ -32,10 +32,10 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     [Required] public DateTime ShippingDate { get; set; }
 
-    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; } = null!;
+    [MaxLength(Limits.OrderCustomer)] public string Customer { get; set; }
 
     [MaxLength(Limits.OrderCustomerAddress)]
-    public string? CustomerAddress { get; set; }
+    public string CustomerAddress { get; set; }
 
     public DateTime? ConfirmedTimeLimit { get; set; }
 
@@ -44,13 +44,13 @@ public class Order : BaseEntity, IHasId, IHasExternalId
     public DateTime? ShippingTimeLimit { get; set; }
 
     public bool ExpressOrder { get; set; }
-    public string? TrackNumber { get; set; }
+    public string TrackNumber { get; set; }
 
     public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 
-    public Collection<OrderItem> Items { get; set; } = null!;
+    public Collection<OrderItem> Items { get; set; }
 
-    public Collection<OrderBox> Boxes { get; set; } = null!;
+    public Collection<OrderBox> Boxes { get; set; }
 
     [Owned]
     public class OrderItem
@@ -59,7 +59,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         [ForeignKey("Product")] public int ProductId { get; set; }
 
-        [Required] public Product Product { get; set; } = null!;
+        [Required] public Product Product { get; set; }
 
         [Required]
         [Range(Limits.OrderMinimalPrice, Limits.OrderMaximalPrice)]
@@ -71,7 +71,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         public decimal Sum { get; set; }
 
-        public string? ExternalId { get; set; }
+        public string ExternalId { get; set; }
 
         public bool Canceled { get; set; }
     }
@@ -83,7 +83,7 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
         [ForeignKey("Product")] public int ProductId { get; set; }
 
-        [Required] public Product Product { get; set; } = null!;
+        [Required] public Product Product { get; set; }
 
         [Required]
         [Range(Limits.OrderMinimalCount, Limits.OrderMaximalCount)]

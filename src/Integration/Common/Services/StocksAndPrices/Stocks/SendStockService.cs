@@ -59,7 +59,7 @@ public class SendStockService : ISendStockService
                         continue;
                     }
 
-                    MarketplaceSendStockService? sendService = marketplace.Type switch
+                    MarketplaceSendStockService sendService = marketplace.Type switch
                     {
                         MarketplaceType.SberMegaMarket => new SberMegaMarketSendStockService(_mediator, _mapper,
                             _serviceProvider),

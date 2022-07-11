@@ -21,7 +21,7 @@ public class FeedBuilder
 
     private void AddProducts(IEnumerable<Product> products, MarketplaceProductData marketplaceProductData)
     {
-        foreach (MesoProduct? mesoProduct in products
+        foreach (MesoProduct mesoProduct in products
                      .Select(product => product.ToMesoProduct(marketplaceProductData, _meso))
                      .Where(offer => offer is not null && offer.Price != 0))
         {

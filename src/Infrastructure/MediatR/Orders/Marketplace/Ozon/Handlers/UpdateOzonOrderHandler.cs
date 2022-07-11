@@ -23,7 +23,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
 
     public async Task<Unit> Handle(UpdateOzonOrderRequest request, CancellationToken cancellationToken)
     {
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.Number == request.OrderNumber && o.MarketplaceId == request.MarketplaceId,

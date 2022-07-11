@@ -42,7 +42,7 @@ public class LoadProductIdentifiersService : ILoadProductIdentifiersService
             {
                 try
                 {
-                    MarketplaceLoadProductIdentifiersService? sendService = marketplace.Type switch
+                    MarketplaceLoadProductIdentifiersService sendService = marketplace.Type switch
                     {
                         MarketplaceType.Ozon => new OzonLoadProductIdentifiersService(_mapper, _serviceProvider),
                         _ => null

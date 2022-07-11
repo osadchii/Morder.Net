@@ -26,7 +26,7 @@ public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderIt
 
     public async Task<Unit> Handle(CancelOrderItemsByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        Order? order = await _context.Orders
+        Order order = await _context.Orders
             .SingleOrDefaultAsync(o => o.MarketplaceId == request.MarketplaceId && o.Number == request.OrderNumber,
                 cancellationToken);
 

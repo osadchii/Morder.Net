@@ -43,7 +43,7 @@ public class UpdateOrdersService : IUpdateOrdersService
             {
                 try
                 {
-                    MarketplaceOrderUpdater? loader = marketplace.Type switch
+                    MarketplaceOrderUpdater loader = marketplace.Type switch
                     {
                         MarketplaceType.SberMegaMarket => new SberMegaMarketOrderUpdater(marketplace, _serviceProvider,
                             _mapper),

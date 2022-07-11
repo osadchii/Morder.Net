@@ -157,7 +157,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             .Where(m => m.IsActive && m.Type == MarketplaceType.SberMegaMarket)
             .ToListAsync();
 
-        SberMegaMarketDto? sberContext = marketplace
+        SberMegaMarketDto sberContext = marketplace
             .Select(m => _mapper.Map<SberMegaMarketDto>(m))
             .SingleOrDefault(s => s.Settings.MerchantId == merchantId);
 

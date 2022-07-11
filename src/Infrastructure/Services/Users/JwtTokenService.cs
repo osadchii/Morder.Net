@@ -37,7 +37,7 @@ public class JwtTokenService : IJwtTokenService
             Issuer = _configuration["JWT:Issuer"],
             Audience = _configuration["JWT:Audience"]
         };
-        SecurityToken? token = tokenHandler.CreateToken(tokenDescriptor);
+        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
 
     }

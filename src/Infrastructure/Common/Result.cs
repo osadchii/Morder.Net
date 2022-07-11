@@ -63,7 +63,7 @@ public static class ResultExtensions
         return new Result(exception);
     }
 
-    public static Result AsResult(this ResultCode code, string? error = null)
+    public static Result AsResult(this ResultCode code, string error = null)
     {
         var result = new Result(code);
         if (!error.IsNullOrEmpty())

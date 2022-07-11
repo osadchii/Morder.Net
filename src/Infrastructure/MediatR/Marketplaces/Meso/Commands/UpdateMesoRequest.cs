@@ -6,5 +6,5 @@ namespace Infrastructure.MediatR.Marketplaces.Meso.Commands;
 
 public class UpdateMesoRequest : BaseUpdateMarketplaceRequest, IRequest<MesoDto>
 {
-    [Required] public MesoSettings? Settings { get; set; }
+    [Required] public MesoSettings Settings { get; set; }
 }

@@ -13,15 +13,15 @@ public class Company : BaseEntity, IHasId
 
     [Required]
     [MaxLength(Limits.CompanyName)]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     [Required]
     [MaxLength(Limits.ShopName)]
-    public string Shop { get; set; } = null!;
+    public string Shop { get; set; }
 
-    [MaxLength(Limits.ShopUrl)] public string Url { get; set; } = null!;
+    [MaxLength(Limits.ShopUrl)] public string Url { get; set; }
 
     [ForeignKey("PriceType")] public int? PriceTypeId { get; set; }
 
-    public PriceType? PriceType { get; set; }
+    public PriceType PriceType { get; set; }
 }

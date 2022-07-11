@@ -42,7 +42,7 @@ public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketpl
             return products;
         }
 
-        Dictionary<int, string?> externalIds =
+        Dictionary<int, string> externalIds =
             await _identifierService.GetIdentifiersAsync(request.MarketplaceId, products,
                 ProductIdentifierType.StockAndPrice);
 

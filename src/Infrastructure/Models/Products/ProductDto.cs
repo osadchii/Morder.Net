@@ -3,9 +3,9 @@ namespace Infrastructure.Models.Products;
 public class ProductDto
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
-    public string? Articul { get; set; }
+    public string Articul { get; set; }
 
     public Guid ExternalId { get; set; }
 
@@ -21,15 +21,15 @@ public class ProductDto
 
     public decimal? Weight { get; set; }
 
-    public string? Brand { get; set; }
+    public string Brand { get; set; }
 
-    public string? CountryOfOrigin { get; set; }
+    public string CountryOfOrigin { get; set; }
 
-    public string? Vendor { get; set; }
+    public string Vendor { get; set; }
 
-    public string? VendorCode { get; set; }
+    public string VendorCode { get; set; }
 
-    public string? Barcode { get; set; }
+    public string Barcode { get; set; }
 
     public Vat? Vat { get; set; }
 

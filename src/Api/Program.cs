@@ -135,7 +135,7 @@ public class Program
 
     private static void InitializeDatabase(IApplicationBuilder app)
     {
-        using IServiceScope? scope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+        using IServiceScope scope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
         scope?.ServiceProvider.GetRequiredService<MContext>().Database.Migrate();
     }
 }

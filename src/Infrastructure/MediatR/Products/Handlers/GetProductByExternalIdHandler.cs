@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MediatR.Products.Handlers;
 
-public class GetProductByExternalIdHandler : IRequestHandler<GetProductByExternalIdRequest, ProductDto?>
+public class GetProductByExternalIdHandler : IRequestHandler<GetProductByExternalIdRequest, ProductDto>
 {
     private readonly MContext _context;
     private readonly IMapper _mapper;
@@ -18,9 +18,9 @@ public class GetProductByExternalIdHandler : IRequestHandler<GetProductByExterna
         _mapper = mapper;
     }
 
-    public async Task<ProductDto?> Handle(GetProductByExternalIdRequest request, CancellationToken cancellationToken)
+    public async Task<ProductDto> Handle(GetProductByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        Product? dbEntry = await _context.Products
+        Product dbEntry = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);

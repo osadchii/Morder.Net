@@ -55,7 +55,7 @@ public class TaskHandleService : ITaskHandleService
 
                 foreach (MarketplaceOrderTask task in tasks)
                 {
-                    MarketplaceTaskHandler? handler = marketplace.Type switch
+                    MarketplaceTaskHandler handler = marketplace.Type switch
                     {
                         MarketplaceType.SberMegaMarket => new SberMegaMarketOrderTaskHandler(marketplace, task,
                             _serviceProvider),

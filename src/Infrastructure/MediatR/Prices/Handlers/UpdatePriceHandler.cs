@@ -36,27 +36,27 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
             return ResultCode.Error.AsResult("Bad request");
         }
 
-        int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
+        var priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
 
         if (priceTypeId is null)
         {
-            string message = $"Price type with external id {request.PriceTypeExternalId} not found";
+            var message = $"Price type with external id {request.PriceTypeExternalId} not found";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
-        int? productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
+        var productId = await _productIdExtractor.GetIdAsync(request.ProductExternalId.Value);
 
         if (productId is null)
         {
-            string message = $"Product with external id {request.ProductExternalId} not found";
+            var message = $"Product with external id {request.ProductExternalId} not found";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
 
         if (!request.Value.HasValue)
         {
-            string message = $"Empty price for product {productId.Value} at price type {priceTypeId.Value}";
+            var message = $"Empty price for product {productId.Value} at price type {priceTypeId.Value}";
             _logger.LogWarning(message);
             return ResultCode.Error.AsResult(message);
         }
@@ -64,7 +64,7 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         await _changeTrackingService.TrackPriceChange(productId.Value, cancellationToken);
         await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
-        Price? dbEntry = await _context.Prices
+        Price dbEntry = await _context.Prices
             .SingleOrDefaultAsync(s => s.ProductId == productId.Value && s.PriceTypeId == priceTypeId.Value,
                 cancellationToken);
 
@@ -95,7 +95,8 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         await _context.AddAsync(stock, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation($"Created price for product {productId} at price type {priceTypeId} to {value}");
+        _logger.LogInformation("Created price for product {ProductId} at price type {PriceTypeId} to {Value}", 
+            productId, priceTypeId, value);
 
         return stock.AsResult();
     }
@@ -108,7 +109,8 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         await _context.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation(
-            $"Updated stock for product {dbEntry.ProductId} at price type {dbEntry.PriceTypeId} to {value}");
+            "Updated stock for product {ProductId} at price type {PriceTypeId} to {Value}", 
+            dbEntry.ProductId, dbEntry.PriceTypeId, value);
 
         return dbEntry.AsResult();
     }

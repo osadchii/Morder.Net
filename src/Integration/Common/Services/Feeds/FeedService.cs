@@ -44,7 +44,7 @@ public class FeedService : IFeedService
             {
                 try
                 {
-                    MarketplaceFeedService? feedService = marketplace.Type switch
+                    MarketplaceFeedService feedService = marketplace.Type switch
                     {
                         MarketplaceType.SberMegaMarket => new SberMegaMarketFeedService(_mapper, _serviceProvider,
                             marketplace),

@@ -13,7 +13,7 @@ public static class FeedExtensions
         return File.WriteAllTextAsync(fileName, feed.ToJson());
     }
 
-    public static MesoProduct? ToMesoProduct(this Product product, MarketplaceProductData productData, MesoDto meso)
+    public static MesoProduct ToMesoProduct(this Product product, MarketplaceProductData productData, MesoDto meso)
     {
         if (product.Barcode.IsNullOrEmpty())
         {

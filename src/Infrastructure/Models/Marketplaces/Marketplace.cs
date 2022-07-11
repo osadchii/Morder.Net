@@ -14,19 +14,19 @@ public class Marketplace : BaseEntity, IHasId
 
     [Required]
     [MaxLength(Limits.MarketplaceName)]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     [Required] public MarketplaceType Type { get; set; }
 
-    [Required] public string ProductTypes { get; set; } = null!;
+    [Required] public string ProductTypes { get; set; }
 
     [Required] public decimal MinimalPrice { get; set; }
     [Required] public decimal MinimalStock { get; set; }
 
-    [Required] public string Settings { get; set; } = null!;
+    [Required] public string Settings { get; set; }
 
     [Required] [ForeignKey("Warehouse")] public int WarehouseId { get; set; }
-    public Warehouse Warehouse { get; set; } = null!;
+    public Warehouse Warehouse { get; set; }
 
     public bool IsActive { get; set; }
     public bool NullifyStocks { get; set; }
@@ -36,5 +36,5 @@ public class Marketplace : BaseEntity, IHasId
     public int PriceSendLimit { get; set; }
 
     [ForeignKey("PriceType")] public int? PriceTypeId { get; set; }
-    public PriceType? PriceType { get; set; }
+    public PriceType PriceType { get; set; }
 }

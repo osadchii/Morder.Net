@@ -3,7 +3,6 @@ using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
-using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
@@ -55,7 +54,7 @@ public class
 
         IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
 
-        Dictionary<int, string?> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
             ProductIdentifierType.StockAndPrice);
 
         CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);

@@ -11,10 +11,10 @@ public class UpdateOzonOrderRequest : IRequest<Unit>
 
     public DateTime ShippingDate { get; set; }
 
-    public string? CustomerFullName { get; set; }
+    public string CustomerFullName { get; set; }
 
-    public string? CustomerAddress { get; set; }
-    public string? TrackNumber { get; set; }
+    public string CustomerAddress { get; set; }
+    public string TrackNumber { get; set; }
 
     public IEnumerable<UpdateOzonOrderItem> Items { get; set; } = null!;
 }

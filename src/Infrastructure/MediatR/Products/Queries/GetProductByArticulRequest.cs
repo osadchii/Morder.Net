@@ -5,9 +5,9 @@ using MediatR;
 
 namespace Infrastructure.MediatR.Products.Queries;
 
-public class GetProductByArticulRequest : IRequest<ProductDto?>
+public class GetProductByArticulRequest : IRequest<ProductDto>
 {
     [Required]
     [MaxLength(Limits.ProductArticul)]
-    public string Articul { get; set; } = null!;
+    public string Articul { get; set; }
 }

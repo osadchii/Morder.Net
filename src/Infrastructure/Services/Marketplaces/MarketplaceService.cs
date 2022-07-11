@@ -45,7 +45,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
 
     public async Task<TDto> UpdateMarketplaceAsync(TRequest request, CancellationToken cancellationToken)
     {
-        int? warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId!.Value);
+        var warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId!.Value);
 
         if (!warehouseId.HasValue)
         {
@@ -58,7 +58,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
 
         if (request.PriceTypeExternalId.HasValue)
         {
-            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
+            var priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
 
             if (!priceTypeId.HasValue)
             {
@@ -72,7 +72,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
 
         _changeTrackingService.ResetCaches();
 
-        Marketplace? marketplace;
+        Marketplace marketplace;
 
         if (request.Id.HasValue)
         {
@@ -111,7 +111,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
             await _changeTrackingService.TrackAllStocks(dbEntry.Id, cancellationToken);
         }
 
-        _logger.LogInformation($@"Created marketplace {request.Name}");
+        _logger.LogInformation("Created marketplace {MarketplaceName}", request.Name);
 
         return _mapper.Map<TDto>(dbEntry);
     }
@@ -119,12 +119,12 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
     private async Task<TDto> UpdateMarketplace(Marketplace dbEntry, TRequest request,
         CancellationToken cancellationToken)
     {
-        decimal oldMinimalPrice = dbEntry.MinimalPrice;
-        decimal oldMinimalStock = dbEntry.MinimalStock;
+        var oldMinimalPrice = dbEntry.MinimalPrice;
+        var oldMinimalStock = dbEntry.MinimalStock;
 
-        bool oldIsActive = dbEntry.IsActive;
-        bool oldTrackPrices = dbEntry.PriceChangesTracking;
-        bool oldTrackStocks = dbEntry.StockChangesTracking;
+        var oldIsActive = dbEntry.IsActive;
+        var oldTrackPrices = dbEntry.PriceChangesTracking;
+        var oldTrackStocks = dbEntry.StockChangesTracking;
 
         _mapper.Map(request, dbEntry);
 
@@ -152,7 +152,7 @@ public class MarketplaceUpdateService<TRequest, TDto> : IMarketplaceUpdateServic
             }
         }
 
-        _logger.LogInformation("Updated marketplace {Name}", request.Name);
+        _logger.LogInformation("Updated marketplace {MarketplaceName}", request.Name);
 
         return _mapper.Map<TDto>(dbEntry);
     }

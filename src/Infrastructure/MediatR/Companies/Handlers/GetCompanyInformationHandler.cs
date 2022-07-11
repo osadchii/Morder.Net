@@ -28,7 +28,7 @@ public class GetCompanyInformationHandler : IRequestHandler<GetCompanyInformatio
             return result;
         }
 
-        Company? dbEntry = await _context.Companies
+        Company dbEntry = await _context.Companies
             .AsNoTracking()
             .SingleOrDefaultAsync(cancellationToken);
 

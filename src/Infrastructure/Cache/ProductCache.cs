@@ -39,12 +39,11 @@ public class ProductCache : IProductCache
         {
             foreach (var articul in uncached)
             {
+                var fullArticul = GetFullArticul(articul);
                 var productId = await _context.Products
                     .AsNoTracking()
                     .Where(p =>
-                        p.Articul != null && p.Articul == articul || p.Articul == $"0{articul}" ||
-                        p.Articul == $"00{articul}" ||
-                        p.Articul == $"000{articul}")
+                        p.Articul != null && p.Articul == fullArticul)
                     .Select(p => p.Id)
                     .SingleOrDefaultAsync();
 
@@ -72,6 +71,19 @@ public class ProductCache : IProductCache
         }
 
         return result;
+    }
+
+    private static string GetFullArticul(string articul)
+    {
+        return articul.Length switch
+        {
+            1 => $"00000{articul}",
+            2 => $"0000{articul}",
+            3 => $"000{articul}",
+            4 => $"00{articul}",
+            5 => $"0{articul}",
+            _ => articul
+        };
     }
 
     private static string ArticulCacheKey(string articul)

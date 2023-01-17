@@ -43,7 +43,8 @@ public class ProductCache : IProductCache
                     .AsNoTracking()
                     .Where(p =>
                         p.Articul != null && p.Articul == articul || p.Articul == $"0{articul}" ||
-                        p.Articul == $"00{articul}")
+                        p.Articul == $"00{articul}" ||
+                        p.Articul == $"000{articul}")
                     .Select(p => p.Id)
                     .SingleOrDefaultAsync();
 
@@ -56,7 +57,6 @@ public class ProductCache : IProductCache
                     result.TryAdd(articul, productId);
                     _cache.Set(ArticulCacheKey(articul), productId);
                 }
-
             }
         }
 

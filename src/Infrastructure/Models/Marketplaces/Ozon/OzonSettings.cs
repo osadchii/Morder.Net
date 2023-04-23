@@ -13,4 +13,5 @@ public class OzonSettings
     public bool LoadOrdersAsArchived { get; set; } = true;
     public int LoadOrdersThreads { get; set; } = 10;
     public int UpdateOrdersThreads { get; set; } = 10;
+    public long[] WarehouseIds { get; set; } = Array.Empty<long>();
 }

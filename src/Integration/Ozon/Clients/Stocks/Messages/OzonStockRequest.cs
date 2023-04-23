@@ -14,4 +14,6 @@ public class OzonStock
     [JsonProperty("product_id")] public int? ProductId { get; set; }
 
     [JsonProperty("stock")] public int Stock { get; set; }
+    
+    [JsonProperty("warehouse_id")] public long WarehouseId { get; set; }
 }

@@ -27,22 +27,23 @@ public class OzonSendStockService : MarketplaceSendStockService
         var request = new OzonStockRequest
         {
             Stocks = stocks
-                .Where(s => !s.ProductExternalId.IsNullOrEmpty()).Select(s =>
+                .Where(s => !s.ProductExternalId.IsNullOrEmpty()).SelectMany(s =>
                 {
-                    if (!int.TryParse(s.ProductExternalId, out int productId))
+                    if (!int.TryParse(s.ProductExternalId, out var productId))
                     {
                         throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
                     }
 
-                    return new OzonStock
+                    return ozon.Settings.WarehouseIds.Select(warehouse => new OzonStock
                     {
                         Stock = Convert.ToInt32(s.Value),
-                        ProductId = productId
-                    };
+                        ProductId = productId,
+                        WarehouseId = warehouse
+                    });
                 })
         };
 
-        int emptyExternalIdCount = stocks.Count(p => p.ProductExternalId.IsNullOrEmpty());
+        var emptyExternalIdCount = stocks.Count(p => p.ProductExternalId.IsNullOrEmpty());
 
         if (emptyExternalIdCount > 0)
         {

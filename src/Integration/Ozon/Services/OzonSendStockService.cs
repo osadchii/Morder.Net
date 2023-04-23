@@ -24,24 +24,46 @@ public class OzonSendStockService : MarketplaceSendStockService
         var client = ServiceProvider.GetRequiredService<IOzonStockClient>();
         var logger = ServiceProvider.GetRequiredService<ILogger<OzonSendStockService>>();
         var ozon = Mapper.Map<OzonDto>(marketplace);
-        var request = new OzonStockRequest
-        {
-            Stocks = stocks
-                .Where(s => !s.ProductExternalId.IsNullOrEmpty()).SelectMany(s =>
-                {
-                    if (!int.TryParse(s.ProductExternalId, out var productId))
-                    {
-                        throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
-                    }
 
-                    return ozon.Settings.WarehouseIds.Select(warehouse => new OzonStock
+        const int limit = 100;
+        var requests = new List<OzonStockRequest>();
+        var currentRequest = new OzonStockRequest();
+        
+        requests.Add(currentRequest);
+        
+        List<MarketplaceStockDto> stocksWithExternalId = stocks
+            .Where(s => !s.ProductExternalId.IsNullOrEmpty())
+            .ToList();
+
+        foreach (MarketplaceStockDto stock in stocksWithExternalId)
+        {
+            if (!int.TryParse(stock.ProductExternalId, out var productId))
+            {
+                throw new Exception($"Wrong ozon external id: {stock.ProductExternalId} for product {stock.ProductId}");
+            }
+
+            var stockValue = Convert.ToInt32(stock.Value);
+            IEnumerable<OzonStock> ozonStocks = ozon.Settings.WarehouseIds.Select(warehouseId => new OzonStock
+            {
+                Stock = stockValue,
+                ProductId = productId,
+                WarehouseId = warehouseId
+            });
+
+            foreach (OzonStock ozonStock in ozonStocks)
+            {
+                currentRequest.Stocks.Add(ozonStock);
+
+                if (currentRequest.Stocks.Count >= limit)
+                {
+                    currentRequest = new OzonStockRequest
                     {
-                        Stock = Convert.ToInt32(s.Value),
-                        ProductId = productId,
-                        WarehouseId = warehouse
-                    });
-                })
-        };
+                        Stocks = new List<OzonStock>()
+                    };
+                    requests.Add(currentRequest);
+                }
+            }
+        }
 
         var emptyExternalIdCount = stocks.Count(p => p.ProductExternalId.IsNullOrEmpty());
 
@@ -51,9 +73,10 @@ public class OzonSendStockService : MarketplaceSendStockService
                 emptyExternalIdCount);
         }
 
-        if (request.Stocks.Any())
-        {
-            await client.SendStocks(ozon, request);
-        }
+        IEnumerable<Task> tasks = requests
+            .Where(x => x.Stocks.Any())
+            .Select(x => client.SendStocks(ozon, x));
+
+        await Task.WhenAll(tasks);
     }
 }

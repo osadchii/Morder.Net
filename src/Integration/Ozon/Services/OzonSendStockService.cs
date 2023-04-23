@@ -36,7 +36,8 @@ public class OzonSendStockService : MarketplaceSendStockService
 
                     return ozon.Settings.WarehouseIds.Select(warehouse => new OzonStock
                     {
-                        Stock = Convert.ToInt32(s.Value),
+                        // Max value = 100
+                        Stock = Math.Min(Convert.ToInt32(s.Value), 100),
                         ProductId = productId,
                         WarehouseId = warehouse
                     });

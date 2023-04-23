@@ -27,13 +27,15 @@ public class OzonSendStockService : MarketplaceSendStockService
 
         const int limit = 100;
         var requests = new List<OzonStockRequest>();
-        var currentRequest = new OzonStockRequest();
+        var currentRequest = new OzonStockRequest
+        {
+            Stocks = new List<OzonStock>()
+        };
         
         requests.Add(currentRequest);
         
-        List<MarketplaceStockDto> stocksWithExternalId = stocks
-            .Where(s => !s.ProductExternalId.IsNullOrEmpty())
-            .ToList();
+        IEnumerable<MarketplaceStockDto> stocksWithExternalId = stocks
+            .Where(s => !s.ProductExternalId.IsNullOrEmpty());
 
         foreach (MarketplaceStockDto stock in stocksWithExternalId)
         {

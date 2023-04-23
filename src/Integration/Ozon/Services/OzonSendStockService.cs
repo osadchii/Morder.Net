@@ -51,6 +51,9 @@ public class OzonSendStockService : MarketplaceSendStockService
                 emptyExternalIdCount);
         }
 
-        await client.SendStocks(ozon, request);
+        if (request.Stocks.Any())
+        {
+            await client.SendStocks(ozon, request);
+        }
     }
 }

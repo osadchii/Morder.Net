@@ -26,8 +26,10 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
 
     public async Task<Order> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        Order order =
-            await _context.Orders.FirstOrDefaultAsync(o => o.MarketplaceId == request.MarketplaceId && o.Number == request.Number, cancellationToken: cancellationToken);
+        Order order = await _context.Orders
+            .Where(o =>  o.Number == request.Number)
+            .Where(o => o.MarketplaceId == request.MarketplaceId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (order is null)
         {
@@ -37,6 +39,10 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
         else
         {
             request.ExternalId = order.ExternalId;
+            if (order.Status != OrderStatus.Created && request.Status == OrderStatus.Created)
+            {
+                request.Status = order.Status;
+            }
             _mapper.Map(request, order);
         }
         await _context.SaveChangesAsync(cancellationToken);

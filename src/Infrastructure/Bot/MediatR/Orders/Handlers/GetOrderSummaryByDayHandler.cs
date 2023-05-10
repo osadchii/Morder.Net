@@ -48,9 +48,12 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
 
     private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName, bool express, bool total = false)
     {
-        if (orders.Length == 0 && total)
+        if (orders.Length == 0)
         {
-            sb.AppendLine(MessageConstants.NoOrders);
+            if (total)
+            {
+                sb.AppendLine(MessageConstants.NoOrders);
+            }
             return;
         }
 

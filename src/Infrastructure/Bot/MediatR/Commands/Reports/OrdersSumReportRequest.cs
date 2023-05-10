@@ -65,9 +65,12 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
     private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool extrapolation,
         DateTime from, DateTime to, bool express, bool total = false)
     {
-        if (orders.Length == 0 && total)
+        if (orders.Length == 0)
         {
-            sb.AppendLine(MessageConstants.NoOrders);
+            if (total)
+            {
+                sb.AppendLine(MessageConstants.NoOrders);
+            }
             return;
         }
 

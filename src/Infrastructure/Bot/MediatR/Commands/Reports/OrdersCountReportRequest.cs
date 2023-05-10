@@ -77,7 +77,7 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
         DateTime bestDay = sumsPerDay.First(s => s.Count() == bestDayCount).Key;
 
         var expressSuffix = express ? " (экспресс)" : "";
-        sb.AppendLine($"<b>{marketplaceName}{express}</b>");
+        sb.AppendLine($"<b>{marketplaceName}{expressSuffix}</b>");
         sb.AppendLine($"Количество заказов: {orders.Length}");
         sb.AppendLine($"В среднем в день: {Math.Round(avgPerDay)}");
         sb.AppendLine($"Рекордный день: {bestDay.ToString("dd.MM.yyyy")}");

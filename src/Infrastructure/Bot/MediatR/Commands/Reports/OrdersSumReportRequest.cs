@@ -36,20 +36,26 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
 
         IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
 
-        bool extrapolation = DateTime.Now >= request.From && DateTime.Now <= request.To;
+        var extrapolation = DateTime.Now >= request.From && DateTime.Now <= request.To;
 
         var sb = new StringBuilder();
 
         foreach (MarketplaceType type in types)
         {
             AppendReport(sb, orders
-                    .Where(o => o.Marketplace.Type == type).ToArray(),
+                    .Where(o => o.Marketplace.Type == type)
+                    .Where(o => !o.ExpressOrder).ToArray(),
                 type.ToString(), false,
-                request.From, request.To);
+                request.From, request.To, false);
+            AppendReport(sb, orders
+                    .Where(o => o.Marketplace.Type == type)
+                    .Where(o => o.ExpressOrder).ToArray(),
+                type.ToString(), false,
+                request.From, request.To, true);
         }
 
         AppendReport(sb, orders, "Всего", extrapolation,
-            request.From, request.To);
+            request.From, request.To, false);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
@@ -57,7 +63,7 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
     }
 
     private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool extrapolation,
-        DateTime from, DateTime to)
+        DateTime from, DateTime to, bool express)
     {
         if (orders.Length == 0)
         {
@@ -69,13 +75,14 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
             .GroupBy(o => new DateTime(o.Date.Year, o.Date.Month, o.Date.Day))
             .ToArray();
 
-        decimal avgPerDay = sumsPerDay.Average(s => s.Sum(o => o.Sum));
-        decimal bestDaySum = sumsPerDay.Max(s => s.Sum(o => o.Sum));
+        var avgPerDay = sumsPerDay.Average(s => s.Sum(o => o.Sum));
+        var bestDaySum = sumsPerDay.Max(s => s.Sum(o => o.Sum));
         DateTime bestDay = sumsPerDay.First(s => s.Sum(o => o.Sum) == bestDaySum).Key;
 
-        decimal sum = orders.Sum(o => o.Sum);
+        var sum = orders.Sum(o => o.Sum);
 
-        sb.AppendLine($"<b>{marketplaceName}</b>");
+        var expressSuffix = express ? " (экспресс)" : "";
+        sb.AppendLine($"<b>{marketplaceName}{expressSuffix}</b>");
         sb.AppendLine($"Сумма заказов: {sum.ToFormatString()}");
         sb.AppendLine($"Средний чек: {(sum / orders.Length).ToFormatString()}");
         sb.AppendLine($"Максимальный чек: {orders.Max(o => o.Sum).ToFormatString()}");
@@ -87,10 +94,10 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
         if (extrapolation)
         {
             TimeSpan span = DateTime.Now - from;
-            decimal perSecond = sum / Convert.ToDecimal(span.TotalSeconds);
+            var perSecond = sum / Convert.ToDecimal(span.TotalSeconds);
             var totalSeconds = Convert.ToDecimal((to - from).TotalSeconds);
 
-            decimal total = totalSeconds * perSecond;
+            var total = totalSeconds * perSecond;
 
             sb.AppendLine($"Экстраполированная сумма на конец месяца: {total.ToFormatString()}");
             sb.AppendLine();

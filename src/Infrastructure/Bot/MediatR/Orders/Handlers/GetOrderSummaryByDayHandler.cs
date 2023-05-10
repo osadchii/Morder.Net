@@ -33,17 +33,20 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
 
         foreach (MarketplaceType type in types)
         {
-            AppendSummary(sb, orders.Where(o => o.Marketplace.Type == type).ToArray(), type.ToString());
+            AppendSummary(sb, orders.Where(o => o.Marketplace.Type == type)
+                .Where(x => !x.ExpressOrder).ToArray(), type.ToString(), false);
+            AppendSummary(sb, orders.Where(o => o.Marketplace.Type == type)
+                .Where(x => x.ExpressOrder).ToArray(), type.ToString(), true);
         }
 
-        AppendSummary(sb, orders.ToArray(), "Всего");
+        AppendSummary(sb, orders.ToArray(), "Всего", false);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
         return Unit.Value;
     }
 
-    private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName)
+    private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName, bool express)
     {
         if (orders.Length == 0)
         {
@@ -51,9 +54,11 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
             return;
         }
 
-        decimal sum = orders.Sum(o => o.Sum);
+        var sum = orders.Sum(o => o.Sum);
+        
+        var expressSuffix = express ? " (экспресс)" : string.Empty;
 
-        sb.AppendLine($"<b>{marketplaceName}</b>");
+        sb.AppendLine($"<b>{marketplaceName}{expressSuffix}</b>");
         sb.AppendLine($"Сумма заказов: {sum.ToFormatString()}");
         sb.AppendLine($"Количество заказов: {orders.Length}");
         sb.AppendLine($"Средний чек: {(sum / orders.Length).ToFormatString()}");

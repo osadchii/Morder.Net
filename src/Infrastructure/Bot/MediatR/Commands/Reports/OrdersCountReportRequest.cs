@@ -41,18 +41,23 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
         foreach (MarketplaceType type in types)
         {
             AppendReport(sb, orders
-                    .Where(o => o.Marketplace.Type == type).ToArray(),
-                type.ToString());
+                    .Where(o => o.Marketplace.Type == type)
+                    .Where(o => !o.ExpressOrder).ToArray(),
+                type.ToString(), false);
+            AppendReport(sb, orders
+                    .Where(o => o.Marketplace.Type == type)
+                    .Where(o => o.ExpressOrder).ToArray(),
+                type.ToString(), true);
         }
 
-        AppendReport(sb, orders, "Всего");
+        AppendReport(sb, orders, "Всего", false);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
         return Unit.Value;
     }
 
-    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName)
+    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool express)
     {
         if (orders.Length == 0)
         {
@@ -64,11 +69,12 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
             .GroupBy(o => new DateTime(o.Date.Year, o.Date.Month, o.Date.Day))
             .ToArray();
 
-        double avgPerDay = sumsPerDay.Average(s => s.Count());
+        var avgPerDay = sumsPerDay.Average(s => s.Count());
         decimal bestDayCount = sumsPerDay.Max(s => s.Count());
         DateTime bestDay = sumsPerDay.First(s => s.Count() == bestDayCount).Key;
 
-        sb.AppendLine($"<b>{marketplaceName}</b>");
+        var expressSuffix = express ? " (экспресс)" : "";
+        sb.AppendLine($"<b>{marketplaceName}{express}</b>");
         sb.AppendLine($"Количество заказов: {orders.Length}");
         sb.AppendLine($"В среднем в день: {Math.Round(avgPerDay)}");
         sb.AppendLine($"Рекордный день: {bestDay.ToString("dd.MM.yyyy")}");

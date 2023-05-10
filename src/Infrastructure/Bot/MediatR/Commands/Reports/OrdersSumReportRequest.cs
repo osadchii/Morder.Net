@@ -55,7 +55,7 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
         }
 
         AppendReport(sb, orders, "Всего", extrapolation,
-            request.From, request.To, false);
+            request.From, request.To, false, true);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
@@ -63,9 +63,9 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
     }
 
     private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool extrapolation,
-        DateTime from, DateTime to, bool express)
+        DateTime from, DateTime to, bool express, bool total = false)
     {
-        if (orders.Length == 0)
+        if (orders.Length == 0 && total)
         {
             sb.AppendLine(MessageConstants.NoOrders);
             return;
@@ -97,9 +97,9 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
             var perSecond = sum / Convert.ToDecimal(span.TotalSeconds);
             var totalSeconds = Convert.ToDecimal((to - from).TotalSeconds);
 
-            var total = totalSeconds * perSecond;
+            var totalSum = totalSeconds * perSecond;
 
-            sb.AppendLine($"Экстраполированная сумма на конец месяца: {total.ToFormatString()}");
+            sb.AppendLine($"Экстраполированная сумма на конец месяца: {totalSum.ToFormatString()}");
             sb.AppendLine();
         }
     }

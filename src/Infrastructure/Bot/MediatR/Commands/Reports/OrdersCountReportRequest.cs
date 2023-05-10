@@ -50,16 +50,16 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
                 type.ToString(), true);
         }
 
-        AppendReport(sb, orders, "Всего", false);
+        AppendReport(sb, orders, "Всего", false, true);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
         return Unit.Value;
     }
 
-    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool express)
+    private static void AppendReport(StringBuilder sb, Order[] orders, string marketplaceName, bool express, bool total = false)
     {
-        if (orders.Length == 0)
+        if (orders.Length == 0 && total)
         {
             sb.AppendLine(MessageConstants.NoOrders);
             return;

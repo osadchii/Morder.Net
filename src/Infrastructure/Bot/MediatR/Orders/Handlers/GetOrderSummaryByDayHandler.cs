@@ -39,16 +39,16 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
                 .Where(x => x.ExpressOrder).ToArray(), type.ToString(), true);
         }
 
-        AppendSummary(sb, orders.ToArray(), "Всего", false);
+        AppendSummary(sb, orders.ToArray(), "Всего", false, true);
 
         await _client.SendTextAsync(request.ChatId, sb.ToString());
 
         return Unit.Value;
     }
 
-    private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName, bool express)
+    private static void AppendSummary(StringBuilder sb, Order[] orders, string marketplaceName, bool express, bool total = false)
     {
-        if (orders.Length == 0)
+        if (orders.Length == 0 && total)
         {
             sb.AppendLine(MessageConstants.NoOrders);
             return;

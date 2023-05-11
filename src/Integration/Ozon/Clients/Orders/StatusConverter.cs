@@ -12,6 +12,7 @@ public static class StatusConverter
             "awaiting_approve" => OrderStatus.Created,
             "awaiting_packaging" => OrderStatus.Reserved,
             "awaiting_deliver" => OrderStatus.Packed,
+            "awaiting_registration" => OrderStatus.Packed,
             "arbitration" => OrderStatus.Shipped,
             "client_arbitration" => OrderStatus.Shipped,
             "delivering" => OrderStatus.Shipped,

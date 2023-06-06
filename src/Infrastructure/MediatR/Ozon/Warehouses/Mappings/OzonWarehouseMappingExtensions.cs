@@ -10,7 +10,8 @@ public static class OzonWarehouseMappingExtensions
         return new OzonWarehouseGetModel
         {
             OzonWarehouseId = entity.OzonWarehouseId,
-            Name = entity.Name
+            Name = entity.Name,
+            Id = entity.Id
         };
     }
 }

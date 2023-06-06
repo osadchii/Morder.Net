@@ -33,6 +33,7 @@ public static class GetOzonWarehouseBlacklists
             var blacklists = await _context.OzonWarehouseBlacklists
                 .AsNoTracking()
                 .Where(x => x.OzonWarehouseId == request.OzonWarehouseId)
+                .Include(x => x.Product)
                 .ToListAsync(cancellationToken);
 
             var result = blacklists.Map()

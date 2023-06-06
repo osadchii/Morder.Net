@@ -58,6 +58,7 @@ public static class CreateOzonWarehouseBlacklist
 
             var blacklists = await _context.OzonWarehouseBlacklists
                 .Where(x => x.OzonWarehouseId == request.OzonWarehouseId)
+                .Include(x => x.Product)
                 .ToListAsync(cancellationToken);
 
             var result = blacklists

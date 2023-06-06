@@ -39,16 +39,16 @@ public class SendStockService : ISendStockService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && m.StockChangesTracking)
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
                 try
                 {
-                    MarketplaceStockDto[] stocks = (await _mediator.Send(new GetMarketplaceStocksRequest
+                    var stocks = (await _mediator.Send(new GetMarketplaceStocksRequest
                     {
                         MarketplaceId = marketplace.Id,
                         Limit = marketplace.StockSendLimit

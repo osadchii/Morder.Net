@@ -33,7 +33,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
         var logger = ServiceProvider.GetRequiredService<ILogger<OzonOrderLoader>>();
         var client = ServiceProvider.GetRequiredService<IOzonLoadOrderListClient>();
 
-        List<OzonPosting> postings = await client.GetOrders(_ozon, StartDate);
+        var postings = await client.GetOrders(_ozon, StartDate);
 
         logger.LogInformation("Loaded {Count} orders from Ozon", postings.Count);
 
@@ -45,7 +45,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
         var adapter = ServiceProvider.GetRequiredService<IOzonOrderAdapter>();
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
 
-        string[] doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
         {
             MarketplaceId = _ozon.Id,
             Numbers = postings.Select(r => r.PostingNumber)
@@ -53,7 +53,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
 
         logger.LogInformation("Need to create {Count} orders from Ozon", doesNotExists.Length);
 
-        IEnumerable<CreateOrderRequest> requests = await adapter
+        var requests = await adapter
             .CreateOrderRequests(_ozon, postings.IntersectBy(doesNotExists, x => x.PostingNumber).ToArray());
 
         await mediatr.Send(new CreateOrdersRequest()

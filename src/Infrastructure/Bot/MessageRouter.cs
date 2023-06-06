@@ -35,7 +35,7 @@ public class MessageRouter : IMessageRouter
             BotUserId = user.Id
         });
 
-        bool hasAccess = await _mediator.Send(new UserAccessCheckRequest()
+        var hasAccess = await _mediator.Send(new UserAccessCheckRequest()
         {
             User = user
         });

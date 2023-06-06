@@ -28,7 +28,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 
     public override async Task UpdateAsync()
     {
-        List<string> orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
+        var orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
 
         if (orderNumbers.Count == 0)
         {
@@ -42,7 +42,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
 
         while (handled < orderNumbers.Count)
         {
-            List<string> portion = orderNumbers.Skip(handled).Take(PortionSize).ToList();
+            var portion = orderNumbers.Skip(handled).Take(PortionSize).ToList();
             portions.Add(portion);
 
             handled += PortionSize;
@@ -61,7 +61,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
         foreach (UpdateOrderResponseDataShipment shipment in shipments)
         {
-            TryParse(shipment.OrderCode, out int orderId);
+            TryParse(shipment.OrderCode, out var orderId);
 
             await mediator.Send(new UpdateSberMegaMarketOrderRequest()
             {

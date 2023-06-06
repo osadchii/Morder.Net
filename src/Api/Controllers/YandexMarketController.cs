@@ -22,7 +22,7 @@ public class YandexMarketController : ControllerBase
     public async Task<Result> Create([Required] [FromBody] UpdateYandexMarketRequest command)
     {
         command.Id = null;
-        YandexMarketDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -32,7 +32,7 @@ public class YandexMarketController : ControllerBase
         [Required] int id)
     {
         command.Id = id;
-        YandexMarketDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 }

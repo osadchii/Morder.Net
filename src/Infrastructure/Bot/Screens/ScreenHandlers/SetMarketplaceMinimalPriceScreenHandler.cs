@@ -15,7 +15,7 @@ public class SetMarketplaceMinimalPriceScreenHandler : ScreenHandler
 
     public override async Task HandleMessage()
     {
-        if (!int.TryParse(User.CurrentStateKey, out int marketplaceId))
+        if (!int.TryParse(User.CurrentStateKey, out var marketplaceId))
         {
             return;
         }
@@ -30,7 +30,7 @@ public class SetMarketplaceMinimalPriceScreenHandler : ScreenHandler
             return;
         }
 
-        if (!decimal.TryParse(Text, out decimal price))
+        if (!decimal.TryParse(Text, out var price))
         {
             return;
         }

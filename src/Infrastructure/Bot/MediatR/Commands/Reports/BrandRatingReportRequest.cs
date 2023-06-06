@@ -28,7 +28,7 @@ public class BrandRatingReportHandler : IRequestHandler<BrandRatingReportRequest
 
     public async Task<Unit> Handle(BrandRatingReportRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = await _context.Orders
+        var orders = await _context.Orders
             .AsNoTracking()
             .Where(o => o.Status != OrderStatus.Canceled
                         && o.Date >= request.From.ToUtcWithMoscowOffset() &&
@@ -44,11 +44,11 @@ public class BrandRatingReportHandler : IRequestHandler<BrandRatingReportRequest
         {
             foreach (Order.OrderItem item in order.Items.Where(i => !i.Canceled))
             {
-                string key = item.Product.Brand ?? "Пустой бренд";
+                var key = item.Product.Brand ?? "Пустой бренд";
                 if (result.ContainsKey(key))
                 {
-                    decimal count = result[key].Count + item.Count;
-                    decimal sum = result[key].Sum + item.Sum;
+                    var count = result[key].Count + item.Count;
+                    var sum = result[key].Sum + item.Sum;
 
                     result[key] = (count, sum);
                 }
@@ -63,7 +63,7 @@ public class BrandRatingReportHandler : IRequestHandler<BrandRatingReportRequest
         var sb = new StringBuilder();
         sb.AppendLine($"Топ-{ResultCount}");
 
-        foreach (KeyValuePair<string, (decimal Count, decimal Sum)> row in result.OrderByDescending(r => r.Value.Sum)
+        foreach (var row in result.OrderByDescending(r => r.Value.Sum)
                      .Take(ResultCount))
         {
             sb.AppendLine($"{++rowCount}: <b>{row.Key}</b>");

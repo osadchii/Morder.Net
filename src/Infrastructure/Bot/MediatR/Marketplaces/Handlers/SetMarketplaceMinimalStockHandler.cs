@@ -29,7 +29,7 @@ public class SetMarketplaceMinimalStockHandler : IRequestHandler<SetMarketplaceM
         Marketplace marketplace = await _context.Marketplaces
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
-        decimal oldMinimalStock = marketplace.MinimalStock;
+        var oldMinimalStock = marketplace.MinimalStock;
 
         marketplace.MinimalStock = request.MinimalStock;
 

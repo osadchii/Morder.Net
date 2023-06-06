@@ -26,7 +26,7 @@ public class BrandRatingByMarketplaceScreenHandler : ScreenHandler
             return;
         }
 
-        int.TryParse(User.CurrentStateKey, out int marketplaceId);
+        int.TryParse(User.CurrentStateKey, out var marketplaceId);
 
         try
         {

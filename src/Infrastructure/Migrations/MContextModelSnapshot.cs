@@ -274,6 +274,67 @@ namespace Infrastructure.Migrations
                     b.ToTable("MarketplaceOrderTask", "dbo");
                 });
 
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.Ozon.OzonWarehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("OzonId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("OzonWarehouseId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OzonId", "OzonWarehouseId")
+                        .IsUnique();
+
+                    b.ToTable("OzonWarehouses");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.Ozon.OzonWarehouseBlacklist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now() at time zone 'utc'");
+
+                    b.Property<int>("OzonWarehouseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("OzonWarehouseId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("OzonWarehouseBlacklists");
+                });
+
             modelBuilder.Entity("Infrastructure.Models.Orders.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -987,6 +1048,36 @@ namespace Infrastructure.Migrations
                     b.Navigation("Marketplace");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.Ozon.OzonWarehouse", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Marketplaces.Marketplace", "Ozon")
+                        .WithMany()
+                        .HasForeignKey("OzonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ozon");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Marketplaces.Ozon.OzonWarehouseBlacklist", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Marketplaces.Ozon.OzonWarehouse", "OzonWarehouse")
+                        .WithMany()
+                        .HasForeignKey("OzonWarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infrastructure.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OzonWarehouse");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Orders.Order", b =>

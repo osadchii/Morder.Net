@@ -41,14 +41,14 @@ public class
 
         var result = new List<MarketplaceStockDto>();
 
-        CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
-        Marketplace marketplace = await _context.Marketplaces
+        var companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         var productTypes = marketplace.ProductTypes.FromJson<List<ProductType>>();
 
-        List<Product> products = await _context.StockChanges
+        var products = await _context.StockChanges
             .AsNoTracking()
             .Include(s => s.Product)
             .ThenInclude(p => p.Category)
@@ -67,28 +67,28 @@ public class
 
         IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
 
-        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+        var externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
             ProductIdentifierType.StockAndPrice);
         
-        IEnumerable<int> categoryIds = products
+        var categoryIds = products
             .Where(p => p.CategoryId.HasValue).Select(p => p.CategoryId!.Value);
 
-        Dictionary<int, MarketplaceProductSetting> productSettings = await _context.MarketplaceProductSettings
+        var productSettings = await _context.MarketplaceProductSettings
             .AsNoTracking()
             .Where(ps => ps.MarketplaceId == request.MarketplaceId && productIds.Contains(ps.ProductId))
             .ToDictionaryAsync(ps => ps.ProductId, ps => ps, cancellationToken);
 
-        Dictionary<int, MarketplaceCategorySetting> categorySettings = await _context.MarketplaceCategorySettings
+        var categorySettings = await _context.MarketplaceCategorySettings
             .AsNoTracking()
             .Where(cs => cs.MarketplaceId == request.MarketplaceId && categoryIds.Contains(cs.CategoryId))
             .ToDictionaryAsync(cs => cs.CategoryId, cs => cs, cancellationToken);
 
-        Dictionary<int, decimal> stocks = await _context.Stocks
+        var stocks = await _context.Stocks
             .AsNoTracking()
             .Where(s => s.WarehouseId == marketplace.WarehouseId && productIds.Contains(s.ProductId))
             .ToDictionaryAsync(s => s.ProductId, s => s.Value, cancellationToken);
 
-        Dictionary<int, decimal> basePrices = await _context.Prices
+        var basePrices = await _context.Prices
             .AsNoTracking()
             .Where(p => p.PriceTypeId == companyInformation.PriceTypeId && productIds.Contains(p.ProductId))
             .ToDictionaryAsync(p => p.ProductId, p => p.Value, cancellationToken);
@@ -103,10 +103,10 @@ public class
                 .ToDictionaryAsync(p => p.ProductId, p => p.Value, cancellationToken);
         }
 
-        foreach (Product product in products)
+        foreach (var product in products)
         {
-            productSettings.TryGetValue(product.Id, out MarketplaceProductSetting productSetting);
-            categorySettings.TryGetValue(product.CategoryId ?? 0, out MarketplaceCategorySetting categorySetting);
+            productSettings.TryGetValue(product.Id, out var productSetting);
+            categorySettings.TryGetValue(product.CategoryId ?? 0, out var categorySetting);
 
             var externalId = marketplace.Type switch
             {

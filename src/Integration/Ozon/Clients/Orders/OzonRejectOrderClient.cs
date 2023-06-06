@@ -14,14 +14,14 @@ public class OzonRejectOrderClient : BaseOzonClient, IOzonRejectOrderClient
     public async Task<bool> RejectOrder(OzonDto ozonDto, RejectPostingRequest request)
     {
         HttpResponseMessage httpResponse = await PostAsync(ozonDto, "v2/posting/fbs/cancel", request);
-        string body = await httpResponse.Content.ReadAsStringAsync();
+        var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<RejectPostingResponse>();
 
         if (response is null)
         {
-            string message = $"Ozon reject order error." +
-                             $"{Environment.NewLine}Can't deserialize body: {body}";
+            var message = $"Ozon reject order error." +
+                          $"{Environment.NewLine}Can't deserialize body: {body}";
 
             throw new Exception(message);
         }

@@ -51,14 +51,14 @@ public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
             return;
         }
 
-        string body = await httpResponse.Content.ReadAsStringAsync();
+        var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<GetOrderResponse>();
 
         if (response is null)
         {
-            string message = $"Ozon update orders error." +
-                             $"{Environment.NewLine}Can't deserialize body: {body}";
+            var message = $"Ozon update orders error." +
+                          $"{Environment.NewLine}Can't deserialize body: {body}";
 
             throw new Exception(message);
         }

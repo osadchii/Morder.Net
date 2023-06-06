@@ -13,10 +13,10 @@ public static class TelegramExtensions
     {
         const int maxMessageLength = 4096;
 
-        string[] lines = text.Split(Environment.NewLine);
+        var lines = text.Split(Environment.NewLine);
         var textToSend = new StringBuilder();
 
-        foreach (string line in lines)
+        foreach (var line in lines)
         {
             if (textToSend.Length + line.Length > maxMessageLength)
             {
@@ -59,7 +59,7 @@ public static class TelegramExtensions
     public static string ToRussianMonthYearString(this DateTime date)
     {
         DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
-        string monthName = info.MonthNames[date.Month - 1];
+        var monthName = info.MonthNames[date.Month - 1];
 
         return $"{monthName} {date.Year}";
     }
@@ -82,14 +82,14 @@ public static class TelegramExtensions
         }
 
         DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
-        string[] splitDate = dateString.Split(' ');
+        var splitDate = dateString.Split(' ');
 
         if (splitDate.Length != 2)
         {
             throw new Exception("Wrong date format");
         }
 
-        if (!int.TryParse(splitDate[1], out int year))
+        if (!int.TryParse(splitDate[1], out var year))
         {
             throw new Exception("Wrong date format");
         }
@@ -98,7 +98,7 @@ public static class TelegramExtensions
         {
             if (info.MonthNames[i].Equals(splitDate[0], StringComparison.InvariantCultureIgnoreCase))
             {
-                DateTime from = new DateTime(year, i + 1, 1);
+                var from = new DateTime(year, i + 1, 1);
                 DateTime to = from.AddMonths(1).AddMilliseconds(-1);
                 return (from, to);
             }

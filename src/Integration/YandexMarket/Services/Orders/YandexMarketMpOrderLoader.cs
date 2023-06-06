@@ -33,11 +33,11 @@ public class YandexMarketMpOrderLoader : MarketplaceOrderLoader
         }
 
         var client = ServiceProvider.GetRequiredService<IYandexMarketMpGetOrdersClient>();
-        MpOrder[] orders = await client.GetOrders(_marketDto);
+        var orders = await client.GetOrders(_marketDto);
 
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
 
-        string[] doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
         {
             MarketplaceId = _marketDto.Id,
             Numbers = orders.Where(o => !o.Fake && o.Items.Any(i => !i.Canceled)).Select(r => r.Number)
@@ -49,16 +49,16 @@ public class YandexMarketMpOrderLoader : MarketplaceOrderLoader
         }
 
         var context = ServiceProvider.GetRequiredService<MContext>();
-        IEnumerable<Guid> productGuids = orders
+        var productGuids = orders
             .SelectMany(o => o.Items.Select(i => i.OfferGuid))
             .Distinct();
 
-        Dictionary<Guid, int> products = await context.Products
+        var products = await context.Products
             .AsNoTracking()
             .Where(p => productGuids.Contains(p.ExternalId))
             .ToDictionaryAsync(p => p.ExternalId, p => p.Id);
 
-        IEnumerable<MpOrder> toCreate = orders.IntersectBy(doesNotExists, o => o.Number);
+        var toCreate = orders.IntersectBy(doesNotExists, o => o.Number);
 
         var request = new CreateOrdersRequest
         {

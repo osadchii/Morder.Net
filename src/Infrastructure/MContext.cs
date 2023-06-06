@@ -4,6 +4,7 @@ using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.MarketplaceCategorySettings;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
@@ -51,6 +52,8 @@ public class MContext : IdentityDbContext<ApplicationUser>
     public DbSet<OrderSticker> OrderStickers { get; set; }
     public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
     public DbSet<ProductIdentifier> ProductIdentifiers { get; set; }
+    public DbSet<OzonWarehouse> OzonWarehouses { get; set; }
+    public DbSet<OzonWarehouseBlacklist> OzonWarehouseBlacklists { get; set; }
 
     #endregion
 
@@ -161,12 +164,30 @@ public class MContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<BotUserUsageCounter>(e => { e.HasKey(t => t.BotUserId); });
 
-        foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+        modelBuilder.Entity<OzonWarehouse>(entity =>
+        {
+            entity.HasIndex(e => new
+            {
+                e.OzonId,
+                e.OzonWarehouseId
+            }).IsUnique();
+        });
+
+        modelBuilder.Entity<OzonWarehouseBlacklist>(entity =>
+        {
+            entity.HasIndex(e => new
+            {
+                e.OzonWarehouseId,
+                e.ProductId
+            }).IsUnique();
+        });
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (entityType.ClrType.GetInterface(nameof(IHasExternalId)) != null)
             {
-                IMutableProperty property = entityType.GetProperty("ExternalId");
-                IMutableIndex index = entityType.AddIndex(property, $"UNIQUE_INDEX_ExternalId");
+                var property = entityType.GetProperty("ExternalId");
+                var index = entityType.AddIndex(property, $"UNIQUE_INDEX_ExternalId");
                 index.IsUnique = true;
             }
 

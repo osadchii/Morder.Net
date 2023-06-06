@@ -17,11 +17,11 @@ public class GetChangedOrdersHandler : IRequestHandler<GetChangedOrdersRequest, 
 
     public async Task<Result> Handle(GetChangedOrdersRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<OrderChange> query = request.ClearRegistration
+        var query = request.ClearRegistration
             ? _context.OrderChanges
             : _context.OrderChanges.AsNoTracking();
 
-        List<OrderChange> orders = await query
+        var orders = await query
             .Include(o => o.Order)
             .ThenInclude(o => o.Items)
             .ThenInclude(o => o.Product)
@@ -30,7 +30,7 @@ public class GetChangedOrdersHandler : IRequestHandler<GetChangedOrdersRequest, 
             .ThenInclude(b => b.Product)
             .ToListAsync(cancellationToken);
 
-        Result result = orders.Select(o => o.Order).AsResult();
+        var result = orders.Select(o => o.Order).AsResult();
 
         if (request.ClearRegistration)
         {

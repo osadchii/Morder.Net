@@ -27,7 +27,7 @@ public class KeyboardBuilder
 
     public KeyboardBuilder AddButton(string text)
     {
-        List<KeyboardButton> lastLine = _buttonLines.Last();
+        var lastLine = _buttonLines.Last();
         lastLine.Add(new KeyboardButton(text));
         return this;
     }
@@ -58,7 +58,7 @@ public class KeyboardBuilder
 
         var count = 0;
 
-        foreach (string name in names)
+        foreach (var name in names)
         {
             if (count > 0 && count % buttonsPerLine == 0)
             {

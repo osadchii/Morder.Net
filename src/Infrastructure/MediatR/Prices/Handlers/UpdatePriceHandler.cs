@@ -64,7 +64,7 @@ public class UpdatePriceHandler : IRequestHandler<UpdatePriceRequest, Result>
         await _changeTrackingService.TrackPriceChange(productId.Value, cancellationToken);
         await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
-        Price dbEntry = await _context.Prices
+        var dbEntry = await _context.Prices
             .SingleOrDefaultAsync(s => s.ProductId == productId.Value && s.PriceTypeId == priceTypeId.Value,
                 cancellationToken);
 

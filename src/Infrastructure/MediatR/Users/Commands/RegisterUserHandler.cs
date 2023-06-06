@@ -20,7 +20,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserRequest, Result>
 
     public async Task<Result> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
-        IdentityResult result = await _userManager.CreateAsync(new ApplicationUser
+        var result = await _userManager.CreateAsync(new ApplicationUser
         {
             UserName = request.Name,
             Name = request.Name

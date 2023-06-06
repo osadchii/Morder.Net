@@ -31,7 +31,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             throw new HttpRequestException("Need one or more boxes");
         }
 
-        List<int> numbers = request.Items!.Select(i => i.Number!.Value).Distinct().ToList();
+        var numbers = request.Items!.Select(i => i.Number!.Value).Distinct().ToList();
         numbers.Sort();
 
         if (numbers[0] != 1 || numbers.Where((t, i) => t != i + 1).Any())
@@ -77,20 +77,20 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             });
         }
 
-        Dictionary<int, decimal> itemCounts = order.Items
+        var itemCounts = order.Items
             .Where(i => !i.Canceled).GroupBy(i => i.ProductId, i => i.Count)
             .ToDictionary(i => i.Key, i => i.Sum());
 
-        Dictionary<int, decimal> boxCounts = order.Boxes
+        var boxCounts = order.Boxes
             .GroupBy(i => i.ProductId, i => i.Count)
             .ToDictionary(i => i.Key, i => i.Sum());
 
-        IEnumerable<int> productIds = itemCounts.Keys.Union(boxCounts.Keys).Distinct();
+        var productIds = itemCounts.Keys.Union(boxCounts.Keys).Distinct();
 
-        bool wrongPack = productIds.Any(id =>
+        var wrongPack = productIds.Any(id =>
         {
-            itemCounts.TryGetValue(id, out decimal itemCount);
-            boxCounts.TryGetValue(id, out decimal boxCount);
+            itemCounts.TryGetValue(id, out var itemCount);
+            boxCounts.TryGetValue(id, out var boxCount);
 
             return itemCount != boxCount;
         });

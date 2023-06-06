@@ -34,10 +34,10 @@ public class BrandRatingScreenHandler : ScreenHandler
             return;
         }
 
-        string[] splitText = Text.Split('–');
-        string firstPart = splitText[0].Trim();
+        var splitText = Text.Split('–');
+        var firstPart = splitText[0].Trim();
 
-        if (int.TryParse(firstPart, out int marketplaceId))
+        if (int.TryParse(firstPart, out var marketplaceId))
         {
             await Mediator.Send(new ToBrandRatingByMarketplaceCommand()
             {

@@ -29,7 +29,7 @@ public class IsProductTrackableHandler : IRequestHandler<IsProductTrackableReque
 
         var productTypes = marketplaceData.ProductTypes.FromJson<List<ProductType>>();
 
-        bool validProductType = await _context.Products
+        var validProductType = await _context.Products
             .AsNoTracking()
             .AnyAsync(p => !p.DeletionMark
                            && p.CategoryId.HasValue

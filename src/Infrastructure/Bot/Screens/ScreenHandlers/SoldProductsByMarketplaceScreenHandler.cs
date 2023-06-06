@@ -24,7 +24,7 @@ public class SoldProductsByMarketplaceScreenHandler : ScreenHandler
             return;
         }
 
-        int.TryParse(User.CurrentStateKey, out int marketplaceId);
+        int.TryParse(User.CurrentStateKey, out var marketplaceId);
 
         DateTime startToday = DateTime.Today;
         DateTime endToday = startToday.AddDays(1).AddMilliseconds(-1);

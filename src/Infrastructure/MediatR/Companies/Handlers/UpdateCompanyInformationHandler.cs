@@ -33,7 +33,7 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
     {
         if (request.PriceTypeExternalId.HasValue)
         {
-            int? priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
+            var priceTypeId = await _priceTypeIdExtractor.GetIdAsync(request.PriceTypeExternalId.Value);
 
             if (!priceTypeId.HasValue)
             {

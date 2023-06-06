@@ -29,7 +29,7 @@ public class PriceTypeController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
-        PriceTypeDto result = await _mediator.Send(new GetPriceTypeByExternalIdRequest() { ExternalId = externalId });
+        var result = await _mediator.Send(new GetPriceTypeByExternalIdRequest() { ExternalId = externalId });
         return result.AsResult();
     }
 

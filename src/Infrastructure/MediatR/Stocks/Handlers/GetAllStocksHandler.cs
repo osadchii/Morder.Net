@@ -29,7 +29,7 @@ public class GetAllStocksHandler : IRequestHandler<GetAllStocksRequest, Result>
             return ResultCode.Error.AsResult("Bad request");
         }
 
-        int? warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId.Value);
+        var warehouseId = await _warehouseIdExtractor.GetIdAsync(request.WarehouseExternalId.Value);
 
         if (warehouseId is null)
         {

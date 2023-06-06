@@ -30,7 +30,7 @@ public class OzonSendPriceService : MarketplaceSendPriceService
                 .Where(p => !p.ProductExternalId.IsNullOrEmpty())
                 .Select(s =>
                 {
-                    if (!int.TryParse(s.ProductExternalId, out int productId))
+                    if (!int.TryParse(s.ProductExternalId, out var productId))
                     {
                         throw new Exception($"Wrong ozon external id: {s.ProductExternalId} for product {s.ProductId}");
                     }
@@ -43,7 +43,7 @@ public class OzonSendPriceService : MarketplaceSendPriceService
                 })
         };
 
-        int emptyExternalIdCount = prices.Count(p => p.ProductExternalId.IsNullOrEmpty());
+        var emptyExternalIdCount = prices.Count(p => p.ProductExternalId.IsNullOrEmpty());
 
         if (emptyExternalIdCount > 0)
         {

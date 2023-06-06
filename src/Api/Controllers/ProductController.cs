@@ -29,7 +29,7 @@ public class ProductController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
-        ProductDto result = await _mediator.Send(new GetProductByExternalIdRequest { ExternalId = externalId });
+        var result = await _mediator.Send(new GetProductByExternalIdRequest { ExternalId = externalId });
         return result.AsResult();
     }
 
@@ -37,7 +37,7 @@ public class ProductController : ControllerBase
     [Route("{articul}")]
     public async Task<Result> GetByArticul([Required] string articul)
     {
-        ProductDto result = await _mediator.Send(new GetProductByArticulRequest { Articul = articul });
+        var result = await _mediator.Send(new GetProductByArticulRequest { Articul = articul });
         return result.AsResult();
     }
 

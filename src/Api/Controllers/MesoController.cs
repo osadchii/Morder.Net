@@ -22,7 +22,7 @@ public class MesoController : ControllerBase
     public async Task<Result> CreateMeso([Required] [FromBody] UpdateMesoRequest command)
     {
         command.Id = null;
-        MesoDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -32,7 +32,7 @@ public class MesoController : ControllerBase
         [Required] int id)
     {
         command.Id = id;
-        MesoDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 }

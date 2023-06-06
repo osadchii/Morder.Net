@@ -29,10 +29,10 @@ public class
             .AsNoTracking()
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
-        List<int> productIds = await _mediator.Send(new GetAllMarketplaceProductIdsRequest
+        var productIds = await _mediator.Send(new GetAllMarketplaceProductIdsRequest
             { MarketplaceId = request.MarketplaceId });
 
-        Dictionary<int, decimal> basePrices = await _context.Prices
+        var basePrices = await _context.Prices
             .AsNoTracking()
             .Where(p => p.PriceTypeId == companyInformation.PriceTypeId && productIds.Contains(p.ProductId))
             .ToDictionaryAsync(p => p.ProductId, p => p.Value, cancellationToken);
@@ -54,7 +54,7 @@ public class
 
         decimal GetPrice(int productId)
         {
-            if (specialPrices.TryGetValue(productId, out decimal value) && value > 0)
+            if (specialPrices.TryGetValue(productId, out var value) && value > 0)
             {
                 return value;
             }

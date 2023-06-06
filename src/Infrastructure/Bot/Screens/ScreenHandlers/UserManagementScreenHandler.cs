@@ -23,7 +23,7 @@ public class UserManagementScreenHandler : ScreenHandler
             return;
         }
 
-        if (!int.TryParse(User.CurrentStateKey, out int userId))
+        if (!int.TryParse(User.CurrentStateKey, out var userId))
         {
             return;
         }

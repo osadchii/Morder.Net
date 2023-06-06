@@ -74,7 +74,7 @@ public class ChangeTrackingService : IChangeTrackingService
 
     public async Task TrackStockChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        bool isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
+        var isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
         {
             MarketplaceId = marketplaceId,
             ProductId = productId
@@ -90,7 +90,7 @@ public class ChangeTrackingService : IChangeTrackingService
 
     public async Task TrackPriceChange(int marketplaceId, int productId, CancellationToken cancellationToken)
     {
-        bool isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
+        var isProductTrackable = await _mediator.Send(new IsProductTrackableRequest
         {
             MarketplaceId = marketplaceId,
             ProductId = productId
@@ -124,7 +124,7 @@ public class ChangeTrackingService : IChangeTrackingService
 
     public async Task TrackStockChange(int productId, CancellationToken cancellationToken)
     {
-        IEnumerable<int> marketplaceIds =
+        var marketplaceIds =
             await GetMarketplaceTrackingStockIdsAsync(cancellationToken);
 
         foreach (var marketplaceId in marketplaceIds)
@@ -135,7 +135,7 @@ public class ChangeTrackingService : IChangeTrackingService
 
     public async Task TrackPriceChange(int productId, CancellationToken cancellationToken)
     {
-        IEnumerable<int> marketplaceIds =
+        var marketplaceIds =
             await GetMarketplaceTrackingPriceIdsAsync(cancellationToken);
 
         foreach (var marketplaceId in marketplaceIds)
@@ -157,7 +157,7 @@ public class ChangeTrackingService : IChangeTrackingService
     public async Task TrackStockChangeByMinMaxPrice(int marketplaceId, decimal minimalPrice, decimal maximalPrice,
         CancellationToken token)
     {
-        IEnumerable<int> productIds = await _mediator.Send(new GetProductIdsInMarketplacePriceRangeRequest
+        var productIds = await _mediator.Send(new GetProductIdsInMarketplacePriceRangeRequest
         {
             MarketplaceId = marketplaceId,
             MinimalPrice = minimalPrice,

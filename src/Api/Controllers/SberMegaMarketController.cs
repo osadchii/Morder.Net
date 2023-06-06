@@ -23,7 +23,7 @@ public class SberMegaMarketController : ControllerBase
     public async Task<Result> CreateSberMegaMarket([Required] [FromBody] UpdateSberMegaMarketRequest command)
     {
         command.Id = null;
-        SberMegaMarketDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -33,7 +33,7 @@ public class SberMegaMarketController : ControllerBase
         [Required] int id)
     {
         command.Id = id;
-        SberMegaMarketDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -41,7 +41,7 @@ public class SberMegaMarketController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> GetSberMegaMarketById([Required] int id)
     {
-        SberMegaMarketDto result = await _mediator.Send(new GetSberMegaMarketByIdRequest()
+        var result = await _mediator.Send(new GetSberMegaMarketByIdRequest()
         {
             Id = id
         });

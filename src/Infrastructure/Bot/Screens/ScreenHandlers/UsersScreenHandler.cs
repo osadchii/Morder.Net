@@ -13,10 +13,10 @@ public class UsersScreenHandler : ScreenHandler
 
     public override async Task HandleMessage()
     {
-        string[] splitText = Text.Split('–');
-        string firstPart = splitText[0].Trim();
+        var splitText = Text.Split('–');
+        var firstPart = splitText[0].Trim();
 
-        if (int.TryParse(firstPart, out int userId))
+        if (int.TryParse(firstPart, out var userId))
         {
             await Mediator.Send(new ToUserManagementCommand()
             {

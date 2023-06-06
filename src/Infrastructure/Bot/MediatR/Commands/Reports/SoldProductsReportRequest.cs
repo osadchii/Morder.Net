@@ -27,7 +27,7 @@ public class SoldProductsReportHandler : IRequestHandler<SoldProductsReportReque
 
     public async Task<Unit> Handle(SoldProductsReportRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = await _context.Orders
+        var orders = await _context.Orders
             .AsNoTracking()
             .Where(o => o.Status != OrderStatus.Canceled
                         && o.Date >= request.From.ToUtcWithMoscowOffset() &&
@@ -43,11 +43,11 @@ public class SoldProductsReportHandler : IRequestHandler<SoldProductsReportReque
         {
             foreach (Order.OrderItem item in order.Items.Where(i => !i.Canceled))
             {
-                string key = item.Product.Name!;
+                var key = item.Product.Name!;
                 if (result.ContainsKey(key))
                 {
-                    decimal count = result[key].Count + item.Count;
-                    decimal sum = result[key].Sum + item.Sum;
+                    var count = result[key].Count + item.Count;
+                    var sum = result[key].Sum + item.Sum;
 
                     result[key] = (count, sum);
                 }
@@ -62,7 +62,7 @@ public class SoldProductsReportHandler : IRequestHandler<SoldProductsReportReque
         var sb = new StringBuilder();
         sb.AppendLine($"Проданные товары:");
 
-        foreach (KeyValuePair<string, (decimal Count, decimal Sum)> row in result.OrderByDescending(r => r.Value.Sum))
+        foreach (var row in result.OrderByDescending(r => r.Value.Sum))
         {
             sb.AppendLine(
                 $"{++rowCount}: <b>{row.Key}</b> Количество: {row.Value.Count.ToFormatString()} Сумма: {row.Value.Sum.ToFormatString()}");

@@ -63,7 +63,7 @@ public class UpdateStockHandler : IRequestHandler<UpdateStockRequest, Result>
 
         await _changeTrackingService.TrackStockChange(productId.Value, cancellationToken);
 
-        Stock dbEntry = await _context.Stocks
+        var dbEntry = await _context.Stocks
             .SingleOrDefaultAsync(s => s.ProductId == productId && s.WarehouseId == warehouseId,
                 cancellationToken);
 

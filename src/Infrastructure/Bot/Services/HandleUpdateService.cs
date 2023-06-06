@@ -50,7 +50,7 @@ public class HandleUpdateService
 
     private void HandleError(Exception exception)
     {
-        string errorMessage = exception switch
+        var errorMessage = exception switch
         {
             ApiRequestException apiRequestException =>
                 $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",

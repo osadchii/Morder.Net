@@ -39,7 +39,7 @@ public class ConfigureWebhook : IHostedService
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        using var scope = _services.CreateScope();
+        using IServiceScope scope = _services.CreateScope();
         var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
         // Remove webhook upon app shutdown

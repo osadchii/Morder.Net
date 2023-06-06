@@ -29,9 +29,10 @@ public class Result
         AddError(exception.Message);
     }
 
-    public void AddError(string message)
+    public Result AddError(string message)
     {
         Errors.Add(message);
+        return this;
     }
 }
 

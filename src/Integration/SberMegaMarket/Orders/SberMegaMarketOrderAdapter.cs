@@ -49,12 +49,12 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     {
         CreateSberMegaMarketOrdersRequest data = createRequest.Data;
         SberMegaMarketDto sber = await GetMarketplaceByMerchantId(data.MerchantId);
-        List<string> requestArticuls = data.Shipments
+        var requestArticuls = data.Shipments
             .SelectMany(s => s.Items.Select(i => i.OfferId))
             .Distinct()
             .ToList();
 
-        Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls);
+        var products = await _productCache.GetProductIdsByArticul(requestArticuls);
 
         return data.Shipments.Select(s => new CreateOrderRequest()
         {
@@ -94,12 +94,12 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         SberMegaMarketDto sber)
     {
         var result = new CreateOrdersRequest();
-        List<string> requestArticuls = shipments
+        var requestArticuls = shipments
             .SelectMany(s => s.Items.Select(i => i.OfferId))
             .Distinct()
             .ToList();
 
-        Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
+        var products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
 
         result.CreateOrderRequests = shipments
             .Where(s => s.Items.All(i => products.ContainsKey(i.OfferId)))
@@ -145,7 +145,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     private async Task<SberMegaMarketDto> GetMarketplaceByMerchantId(int merchantId)
     {
         const string cacheKeyBase = "SberMegaMarketByMerchantId";
-        string cacheKey = $"{cacheKeyBase}_{merchantId}";
+        var cacheKey = $"{cacheKeyBase}_{merchantId}";
 
         if (_cache.TryGetValue(cacheKey, out SberMegaMarketDto sber))
         {

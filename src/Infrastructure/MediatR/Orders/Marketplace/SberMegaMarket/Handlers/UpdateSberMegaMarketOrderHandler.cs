@@ -45,7 +45,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
 
         foreach (UpdateSberMegaMarketOrderRequestItem item in request.Items.Where(i => i.Canceled))
         {
-            IEnumerable<Order.OrderItem> orderItems =
+            var orderItems =
                 order.Items.Where(oi => !oi.Canceled && oi.ExternalId == item.ItemIndex);
 
             foreach (Order.OrderItem orderItem in orderItems)
@@ -54,7 +54,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
             }
         }
 
-        int saved = await _context.SaveChangesAsync(cancellationToken);
+        var saved = await _context.SaveChangesAsync(cancellationToken);
 
         if (saved == 0)
         {

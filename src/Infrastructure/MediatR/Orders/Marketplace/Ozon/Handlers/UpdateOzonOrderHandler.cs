@@ -49,18 +49,18 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
 
         foreach (UpdateOzonOrderItem item in request.Items)
         {
-            Order.OrderItem[] orderItems = order.Items
+            var orderItems = order.Items
                 .Where(orderItem => orderItem.Product.Articul == item.Articul && !orderItem.Canceled).ToArray();
 
             foreach (Order.OrderItem orderItem in orderItems)
             {
-                decimal handledCount = Math.Min(item.Count, orderItem.Count);
+                var handledCount = Math.Min(item.Count, orderItem.Count);
                 item.Count -= handledCount;
 
                 if (orderItem.Count > handledCount)
                 {
-                    decimal newLineCount = orderItem.Count - handledCount;
-                    decimal newLineSum = newLineCount * orderItem.Price;
+                    var newLineCount = orderItem.Count - handledCount;
+                    var newLineSum = newLineCount * orderItem.Price;
                     var newLine = new Order.OrderItem()
                     {
                         Canceled = true,
@@ -90,7 +90,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
             order.Status = OrderStatus.Canceled;
         }
 
-        int saved = await _context.SaveChangesAsync(cancellationToken);
+        var saved = await _context.SaveChangesAsync(cancellationToken);
 
         if (saved == 0)
         {

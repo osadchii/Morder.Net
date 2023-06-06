@@ -42,8 +42,8 @@ public class SberMegaMarketFeedService : MarketplaceFeedService
 
         Feed feed = feedBuilder.Build();
 
-        string feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        string path = Path.Combine(feedPath, $"{_sber.Settings.FeedName}.xml");
+        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
+        var path = Path.Combine(feedPath, $"{_sber.Settings.FeedName}.xml");
         if (!Directory.Exists(feedPath))
         {
             Directory.CreateDirectory(feedPath);

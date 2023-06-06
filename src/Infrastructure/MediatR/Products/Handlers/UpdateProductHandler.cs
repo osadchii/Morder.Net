@@ -25,7 +25,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
     {
         if (request.CategoryId.HasValue && request.CategoryId != Guid.Empty)
         {
-            Category parent =
+            var parent =
                 await _context.Categories.SingleOrDefaultAsync(c => c.ExternalId == request.CategoryId.Value,
                     cancellationToken);
             if (parent is null)
@@ -47,7 +47,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Result
             return ResultCode.Error.AsResult(message);
         }
 
-        Product dbEntry = await _context.Products
+        var dbEntry = await _context.Products
             .Include(c => c.Category)
             .SingleOrDefaultAsync(c => c.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 

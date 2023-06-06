@@ -23,7 +23,7 @@ public class OzonController : ControllerBase
     public async Task<Result> CreateOzon([Required] [FromBody] UpdateOzonRequest command)
     {
         command.Id = null;
-        OzonDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -33,7 +33,7 @@ public class OzonController : ControllerBase
         [Required] int id)
     {
         command.Id = id;
-        OzonDto result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return result.AsResult();
     }
 
@@ -41,7 +41,7 @@ public class OzonController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> GetOzonById([Required] int id)
     {
-        OzonDto result = await _mediator.Send(new GetOzonByIdRequest()
+        var result = await _mediator.Send(new GetOzonByIdRequest()
         {
             Id = id
         });

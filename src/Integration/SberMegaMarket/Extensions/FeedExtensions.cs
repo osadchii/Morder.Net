@@ -11,7 +11,7 @@ public static class FeedExtensions
 {
     public static Offer ToOffer(this Product product, MarketplaceProductData productData, int warehouseId)
     {
-        if (!int.TryParse(product.Articul, out int articul))
+        if (!int.TryParse(product.Articul, out var articul))
         {
             return null;
         }

@@ -15,19 +15,19 @@ public class EntityIdCacheService<T> : IEntityIdCacheService<T>
 
     public bool TryGetValue(string key, out int value)
     {
-        string fullKey = GetFullKey(key);
+        var fullKey = GetFullKey(key);
         return _cache.TryGetValue(fullKey, out value);
     }
 
     public void Set(string key, int value)
     {
-        string fullKey = GetFullKey(key);
+        var fullKey = GetFullKey(key);
         _cache.Set(fullKey, value);
     }
 
     public void Remove(string key)
     {
-        string fullKey = GetFullKey(key);
+        var fullKey = GetFullKey(key);
         _cache.Remove(fullKey);
     }
 

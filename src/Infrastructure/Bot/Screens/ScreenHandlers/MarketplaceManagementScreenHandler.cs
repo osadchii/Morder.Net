@@ -24,7 +24,7 @@ public class MarketplaceManagementScreenHandler : ScreenHandler
             return;
         }
 
-        if (!int.TryParse(User.CurrentStateKey, out int marketplaceId))
+        if (!int.TryParse(User.CurrentStateKey, out var marketplaceId))
         {
             return;
         }

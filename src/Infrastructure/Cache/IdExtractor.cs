@@ -18,7 +18,7 @@ public class IdExtractor<T> : IIdExtractor<T> where T : BaseEntity, IHasId, IHas
 
     public async Task<int?> GetIdAsync(Guid externalId)
     {
-        if (_cacheService.TryGetValue(externalId, out int id))
+        if (_cacheService.TryGetValue(externalId, out var id))
         {
             return id;
         }

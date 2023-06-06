@@ -39,13 +39,13 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
         var adapter = ServiceProvider.GetRequiredService<ISberMegaMarketOrderAdapter>();
 
-        IEnumerable<string> doesNotExists = await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = await mediatr.Send(new OrdersDoesNotExistsRequest()
         {
             MarketplaceId = _sberMegaMarketDto.Id,
             Numbers = numbers
         });
 
-        UpdateOrderResponseDataShipment[] shipments = await LoadShipments(doesNotExists.ToArray());
+        var shipments = await LoadShipments(doesNotExists.ToArray());
         CreateOrdersRequest request = await adapter.CreateOrdersRequest(shipments, _sberMegaMarketDto);
 
         await mediatr.Send(request);
@@ -167,7 +167,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
                                 $"{Environment.NewLine}Response: {body}");
         }
 
-        foreach (string shipment in response.Data.Shipments)
+        foreach (var shipment in response.Data.Shipments)
         {
             numbers.Add(shipment);
         }

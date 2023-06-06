@@ -59,7 +59,7 @@ public class MarketplaceProductData
             return 0;
         }
 
-        if (!_stocks.TryGetValue(product.Id, out decimal stock))
+        if (!_stocks.TryGetValue(product.Id, out var stock))
         {
             return 0;
         }

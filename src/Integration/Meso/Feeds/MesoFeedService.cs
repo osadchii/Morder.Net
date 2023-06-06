@@ -37,8 +37,8 @@ public class MesoFeedService : MarketplaceFeedService
 
         if (_meso.Settings.SaveFeed)
         {
-            string feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-            string path = Path.Combine(feedPath, $"{_meso.Settings.FeedName}.json");
+            var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
+            var path = Path.Combine(feedPath, $"{_meso.Settings.FeedName}.json");
             if (!Directory.Exists(feedPath))
             {
                 Directory.CreateDirectory(feedPath);

@@ -49,12 +49,22 @@ public class ProductCache : IProductCache
 
                 if (productId == default)
                 {
+                    productId = await _context.Products
+                        .AsNoTracking()
+                        .Where(p =>
+                            p.Articul != null && p.Articul == articul)
+                        .Select(p => p.Id)
+                        .SingleOrDefaultAsync();
+                }
+
+                if (productId == default)
+                {
                     notFound.Add(articul);
                 }
                 else
                 {
                     result.TryAdd(articul, productId);
-                    _cache.Set(ArticulCacheKey(articul), productId);
+                    _cache.Set(ArticulCacheKey(articul), productId, TimeSpan.FromHours(1));
                 }
             }
         }

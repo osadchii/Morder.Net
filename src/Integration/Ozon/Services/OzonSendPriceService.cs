@@ -43,6 +43,11 @@ public class OzonSendPriceService : MarketplaceSendPriceService
                 })
         };
 
+        if (!request.Prices.Any())
+        {
+            return;
+        }
+
         var emptyExternalIdCount = prices.Count(p => p.ProductExternalId.IsNullOrEmpty());
 
         if (emptyExternalIdCount > 0)

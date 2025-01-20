@@ -12,7 +12,7 @@ public interface IProductImageService
 
 public class ProductImageService : IProductImageService
 {
-    private readonly string _imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images");
+    private readonly string _imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "solos");
     private readonly MContext _mContext;
     private readonly string _baseUrl;
 

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
+using Infrastructure.MediatR.Marketplaces.Kuper.Commands;
 using Infrastructure.MediatR.Marketplaces.Meso.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class KuperController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Result> CreateMeso([Required] [FromBody] UpdateMesoRequest command)
+    public async Task<Result> CreateMeso([Required] [FromBody] UpdateKuperRequest command)
     {
         command.Id = null;
         var result = await _mediator.Send(command);
@@ -27,7 +28,7 @@ public class KuperController : ControllerBase
 
     [HttpPost]
     [Route("{id:int}")]
-    public async Task<Result> UpdateMeso([Required] [FromBody] UpdateMesoRequest command,
+    public async Task<Result> UpdateMeso([Required] [FromBody] UpdateKuperRequest command,
         [Required] int id)
     {
         command.Id = id;

@@ -1,7 +1,6 @@
 using AutoMapper;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
-using Infrastructure.Models.Companies;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Integration.Common.Services.Feeds;
@@ -30,17 +29,17 @@ public class SberMegaMarketFeedService : MarketplaceFeedService
 
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
 
-        CompanyDto companyInformation = await mediator.Send(new GetCompanyInformationRequest());
+        var companyInformation = await mediator.Send(new GetCompanyInformationRequest());
 
-        MarketplaceProductData data = await mediator.Send(new GetMarketplaceProductDataRequest()
+        var data = await mediator.Send(new GetMarketplaceProductDataRequest()
         {
             MarketplaceId = _sber.Id
         });
 
-        FeedBuilder feedBuilder = new FeedBuilder(data, _sber)
+        var feedBuilder = new FeedBuilder(data, _sber)
             .AddCompanyInformation(companyInformation);
 
-        Feed feed = feedBuilder.Build();
+        var feed = feedBuilder.Build();
 
         var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
         var path = Path.Combine(feedPath, $"{_sber.Settings.FeedName}.xml");

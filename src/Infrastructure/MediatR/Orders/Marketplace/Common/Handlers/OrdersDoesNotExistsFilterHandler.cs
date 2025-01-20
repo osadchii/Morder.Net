@@ -16,7 +16,7 @@ public class OrdersDoesNotExistsFilterHandler : IRequestHandler<OrdersDoesNotExi
     public async Task<IEnumerable<string>> Handle(OrdersDoesNotExistsRequest request,
         CancellationToken cancellationToken)
     {
-        List<string> exists = await _context.Orders
+        var exists = await _context.Orders
             .AsNoTracking()
             .Where(o => o.MarketplaceId == request.MarketplaceId && request.Numbers.Contains(o.Number))
             .Select(o => o.Number)

@@ -1,7 +1,6 @@
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Products.Queries;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Infrastructure.Services.Marketplaces;
 using MediatR;
@@ -22,14 +21,14 @@ public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketpl
 
     public async Task<List<int>> Handle(GetAllMarketplaceProductIdsRequest request, CancellationToken cancellationToken)
     {
-        Marketplace marketplace = await _context.Marketplaces
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .Where(m => m.Id == request.MarketplaceId)
             .SingleAsync(cancellationToken);
 
         var productTypes = marketplace.ProductTypes.FromJson<List<ProductType>>();
 
-        List<int> products = await _context.Products
+        var products = await _context.Products
             .AsNoTracking()
             .Where(p => !p.DeletionMark
                         && p.ProductType.HasValue
@@ -42,7 +41,7 @@ public class GetAllMarketplaceProductIdsHandler : IRequestHandler<GetAllMarketpl
             return products;
         }
 
-        Dictionary<int, string> externalIds =
+        var externalIds =
             await _identifierService.GetIdentifiersAsync(request.MarketplaceId, products,
                 ProductIdentifierType.StockAndPrice);
 

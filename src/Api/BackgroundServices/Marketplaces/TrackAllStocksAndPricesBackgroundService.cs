@@ -20,7 +20,7 @@ public class TrackAllStocksAndPricesBackgroundService : BackgroundService
             return;
         }
         
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using var scope = Services.CreateAsyncScope();
         var taskHandler = scope.ServiceProvider.GetRequiredService<ITrackAllStocksAndPricesService>();
 
         await taskHandler.TrackAllStocksAndPrices();

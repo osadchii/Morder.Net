@@ -20,7 +20,7 @@ public class WarehouseTests : BaseTest
     {
         var warehouseId = Guid.NewGuid();
 
-        ServiceActionResult<Warehouse> result = await _warehouseService.PostWarehouse(warehouseId);
+        var result = await _warehouseService.PostWarehouse(warehouseId);
 
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -31,16 +31,16 @@ public class WarehouseTests : BaseTest
         var priceTypeId = Guid.NewGuid();
         const string newName = "new warehouse name";
 
-        ServiceActionResult<Warehouse> result = await _warehouseService.PostWarehouse(priceTypeId);
+        var result = await _warehouseService.PostWarehouse(priceTypeId);
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        Warehouse warehouse = result.Entity;
+        var warehouse = result.Entity;
         warehouse.Name = newName;
         result = await _warehouseService.PostWarehouse(warehouse);
 
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        ServiceActionResult<ApiResult<Warehouse>> getResult =
+        var getResult =
             await _warehouseService.GetWarehouseByExternalId(priceTypeId);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
@@ -53,7 +53,7 @@ public class WarehouseTests : BaseTest
         var warehouseId = Guid.NewGuid();
 
         await _warehouseService.PostWarehouse(warehouseId);
-        ServiceActionResult<ApiResult<IEnumerable<Warehouse>>> getResult = await _warehouseService.GetWarehouses();
+        var getResult = await _warehouseService.GetWarehouses();
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
         Assert.Contains(getResult.Entity.Value, e => e.ExternalId == warehouseId);
@@ -65,7 +65,7 @@ public class WarehouseTests : BaseTest
         var warehouseId = Guid.NewGuid();
 
         await _warehouseService.PostWarehouse(warehouseId);
-        ServiceActionResult<ApiResult<Warehouse>> getResult =
+        var getResult =
             await _warehouseService.GetWarehouseByExternalId(warehouseId);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
@@ -75,7 +75,7 @@ public class WarehouseTests : BaseTest
     public async Task GetWarehouseByExternalIdFail()
     {
         var warehouseId = Guid.NewGuid();
-        ServiceActionResult<ApiResult<Warehouse>> getResult =
+        var getResult =
             await _warehouseService.GetWarehouseByExternalId(warehouseId);
 
         Assert.False(getResult.Response.IsSuccessStatusCode);
@@ -87,7 +87,7 @@ public class WarehouseTests : BaseTest
     {
         var warehouseId = Guid.NewGuid();
 
-        ServiceActionResult<Warehouse> result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
+        var result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
 
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -99,7 +99,7 @@ public class WarehouseTests : BaseTest
 
         await _warehouseService.PostWarehouse(warehouseId);
 
-        ServiceActionResult<Warehouse> result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
+        var result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
 
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -112,7 +112,7 @@ public class WarehouseTests : BaseTest
         await _warehouseService.PostWarehouse(warehouseId);
 
         await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
-        ServiceActionResult<Warehouse> result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
+        var result = await _warehouseService.DeleteWarehouseByExternalId(warehouseId);
 
         Assert.False(result.Response.IsSuccessStatusCode);
     }

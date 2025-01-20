@@ -29,7 +29,7 @@ public class DeletePriceTypeByExternalIdHandler : IRequestHandler<DeletePriceTyp
     public async Task<PriceTypeDto> Handle(DeletePriceTypeByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        PriceType priceType = await _context.PriceTypes
+        var priceType = await _context.PriceTypes
             .SingleOrDefaultAsync(pt => pt.ExternalId == request.ExternalId, cancellationToken);
 
         if (priceType is null)

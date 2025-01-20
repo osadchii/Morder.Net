@@ -1,5 +1,4 @@
 using Infrastructure;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Services.Marketplaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,12 +27,12 @@ public class TrackAllStocksAndPricesService : ITrackAllStocksAndPricesService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive )
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
                 try
                 {

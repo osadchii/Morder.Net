@@ -49,16 +49,16 @@ public static class TelegramExtensions
 
     public static DateTime ToUtcWithMoscowOffset(this DateTime date)
     {
-        TimeZoneInfo moscow = TimeZoneInfo.FindSystemTimeZoneById
+        var moscow = TimeZoneInfo.FindSystemTimeZoneById
             ("Russian Standard Time");
 
-        TimeSpan offset = moscow.GetUtcOffset(date);
+        var offset = moscow.GetUtcOffset(date);
         return date - offset;
     }
 
     public static string ToRussianMonthYearString(this DateTime date)
     {
-        DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
+        var info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
         var monthName = info.MonthNames[date.Month - 1];
 
         return $"{monthName} {date.Year}";
@@ -81,7 +81,7 @@ public static class TelegramExtensions
             return (DateTime.Now.AddDays(-90), DateTime.Now);
         }
 
-        DateTimeFormatInfo info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
+        var info = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat;
         var splitDate = dateString.Split(' ');
 
         if (splitDate.Length != 2)
@@ -99,7 +99,7 @@ public static class TelegramExtensions
             if (info.MonthNames[i].Equals(splitDate[0], StringComparison.InvariantCultureIgnoreCase))
             {
                 var from = new DateTime(year, i + 1, 1);
-                DateTime to = from.AddMonths(1).AddMilliseconds(-1);
+                var to = from.AddMonths(1).AddMilliseconds(-1);
                 return (from, to);
             }
         }

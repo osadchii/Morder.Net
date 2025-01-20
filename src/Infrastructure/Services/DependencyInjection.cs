@@ -12,5 +12,6 @@ public static class DependencyInjection
         services.AddTransient<IJwtTokenService, JwtTokenService>();
         services.AddTransient<IProductIdentifierService, ProductIdentifierService>();
         services.AddTransient<IProductArticulService, ProductArticulService>();
+        services.AddTransient<IProductImageService, ProductImageService>();
     }
 }

@@ -13,7 +13,7 @@ public class SendStockBackgroundService : BackgroundService
 
     protected override async Task ServiceWork()
     {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using var scope = Services.CreateAsyncScope();
         var sendStockService = scope.ServiceProvider.GetRequiredService<ISendStockService>();
 
         await sendStockService.SendMarketplaceStocks();

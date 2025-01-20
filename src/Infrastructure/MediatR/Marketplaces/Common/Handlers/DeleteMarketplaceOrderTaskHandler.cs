@@ -1,5 +1,4 @@
 using Infrastructure.MediatR.Marketplaces.Common.Commands;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +15,7 @@ public class DeleteMarketplaceOrderTaskHandler : IRequestHandler<DeleteMarketpla
 
     public async Task<Unit> Handle(DeleteMarketplaceOrderTaskRequest request, CancellationToken cancellationToken)
     {
-        MarketplaceOrderTask task = await _context.MarketplaceOrderTasks
+        var task = await _context.MarketplaceOrderTasks
             .SingleAsync(t => t.Id == request.MarketplaceOrderTaskId, cancellationToken);
 
         _context.MarketplaceOrderTasks.Remove(task);

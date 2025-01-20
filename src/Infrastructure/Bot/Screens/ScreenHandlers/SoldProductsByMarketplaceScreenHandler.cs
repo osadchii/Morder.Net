@@ -26,8 +26,8 @@ public class SoldProductsByMarketplaceScreenHandler : ScreenHandler
 
         int.TryParse(User.CurrentStateKey, out var marketplaceId);
 
-        DateTime startToday = DateTime.Today;
-        DateTime endToday = startToday.AddDays(1).AddMilliseconds(-1);
+        var startToday = DateTime.Today;
+        var endToday = startToday.AddDays(1).AddMilliseconds(-1);
 
         (DateTime from, DateTime to) dates = Text switch
         {

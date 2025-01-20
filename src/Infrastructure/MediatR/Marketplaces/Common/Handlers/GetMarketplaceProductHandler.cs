@@ -1,9 +1,6 @@
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
-using Infrastructure.Models.Companies;
-using Infrastructure.Models.MarketplaceCategorySettings;
-using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using MediatR;
@@ -25,36 +22,36 @@ public class GetMarketplaceProductHandler : IRequestHandler<GetMarketplaceProduc
     public async Task<MarketplaceProductData> Handle(GetMarketplaceProductDataRequest request,
         CancellationToken cancellationToken)
     {
-        CompanyDto company = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
+        var company = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
 
         if (!company.PriceTypeId.HasValue)
         {
             throw new Exception("Base price type for the company has not been set");
         }
 
-        Marketplace marketplace =
+        var marketplace =
             await _context.Marketplaces
                 .AsNoTracking()
                 .FirstAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         var productTypes = marketplace.ProductTypes.FromJson<List<ProductType>>()!;
 
-        List<Product> products = await _context.Products.AsNoTracking()
+        var products = await _context.Products.AsNoTracking()
             .Where(p => p.ProductType.HasValue && productTypes.Contains(p.ProductType.Value) && !p.DeletionMark &&
                         p.CategoryId.HasValue)
             .ToListAsync(cancellationToken);
 
-        Dictionary<int, Category> categories = await _context.Categories
+        var categories = await _context.Categories
             .AsNoTracking()
             .ToDictionaryAsync(c => c.Id, c => c, cancellationToken);
 
-        Dictionary<int, decimal> stocks = await _context.Stocks
+        var stocks = await _context.Stocks
             .AsNoTracking()
             .Where(s => s.WarehouseId == marketplace.WarehouseId)
             .Select(s => new { s.ProductId, s.Value })
             .ToDictionaryAsync(s => s.ProductId, s => s.Value, cancellationToken);
 
-        Dictionary<int, decimal> basePrices = await _context.Prices
+        var basePrices = await _context.Prices
             .AsNoTracking()
             .Where(p => p.PriceTypeId == company.PriceTypeId.Value)
             .Select(p => new { p.ProductId, p.Value })
@@ -75,12 +72,12 @@ public class GetMarketplaceProductHandler : IRequestHandler<GetMarketplaceProduc
             specialPrices = new Dictionary<int, decimal>();
         }
 
-        Dictionary<int, MarketplaceCategorySetting> categorySettings = await _context.MarketplaceCategorySettings
+        var categorySettings = await _context.MarketplaceCategorySettings
             .AsNoTracking()
             .Where(s => s.MarketplaceId == marketplace.Id)
             .ToDictionaryAsync(s => s.CategoryId, s => s, cancellationToken);
 
-        Dictionary<int, MarketplaceProductSetting> productSettings = await _context.MarketplaceProductSettings
+        var productSettings = await _context.MarketplaceProductSettings
             .AsNoTracking()
             .Where(s => s.MarketplaceId == marketplace.Id)
             .ToDictionaryAsync(s => s.ProductId, s => s, cancellationToken);

@@ -25,7 +25,7 @@ public class GetWarehouseByExternalIdHandler : IRequestHandler<GetWarehouseByExt
     public async Task<WarehouseDto> Handle(GetWarehouseByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        Warehouse dbEntry = await _context.Warehouses
+        var dbEntry = await _context.Warehouses
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 

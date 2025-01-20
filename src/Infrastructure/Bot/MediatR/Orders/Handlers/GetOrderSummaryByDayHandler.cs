@@ -1,6 +1,5 @@
 using System.Text;
 using Infrastructure.Bot.MediatR.Orders.Queries;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,17 +20,17 @@ public class GetOrderSummaryByDayHandler : IRequestHandler<GetOrderSummaryByDayR
 
     public async Task<Unit> Handle(GetOrderSummaryByDayRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = await _context.Orders
+        var orders = await _context.Orders
             .AsNoTracking()
             .Where(o => o.Status != OrderStatus.Canceled && o.Date >= request.Date.ToUtcWithMoscowOffset() &&
                         o.Date <= request.Date.AddDays(1).AddMilliseconds(-1).ToUtcWithMoscowOffset())
             .Include(o => o.Marketplace).ToArrayAsync(cancellationToken);
 
-        IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
+        var types = orders.Select(o => o.Marketplace.Type).Distinct();
 
         var sb = new StringBuilder();
 
-        foreach (MarketplaceType type in types)
+        foreach (var type in types)
         {
             AppendSummary(sb, orders.Where(o => o.Marketplace.Type == type)
                 .Where(x => !x.ExpressOrder).ToArray(), type.ToString(), false);

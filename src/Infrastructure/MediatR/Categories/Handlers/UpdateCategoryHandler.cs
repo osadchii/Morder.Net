@@ -21,7 +21,7 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryRequest, Unit
     {
         if (request.ParentId.HasValue && request.ParentId != Guid.Empty)
         {
-            Category parent =
+            var parent =
                 await _context.Categories.SingleOrDefaultAsync(c => c.ExternalId == request.ParentId.Value,
                     cancellationToken);
             if (parent is null)
@@ -32,7 +32,7 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryRequest, Unit
             request.Parent = parent;
         }
 
-        Category dbEntry = await _context.Categories
+        var dbEntry = await _context.Categories
             .Include(c => c.Parent)
             .SingleOrDefaultAsync(c => c.ExternalId == request.ExternalId!.Value, cancellationToken: cancellationToken);
 

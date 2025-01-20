@@ -34,14 +34,14 @@ public class TaskHandleService : ITaskHandleService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive)
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
-                List<MarketplaceOrderTask> tasks = await _context.MarketplaceOrderTasks
+                var tasks = await _context.MarketplaceOrderTasks
                     .AsNoTracking()
                     .OrderBy(t => t.Date)
                     .Where(t => t.MarketplaceId == marketplace.Id && t.TryCount < maxTryCount)
@@ -53,7 +53,7 @@ public class TaskHandleService : ITaskHandleService
                     .ThenInclude(b => b.Product)
                     .ToListAsync();
 
-                foreach (MarketplaceOrderTask task in tasks)
+                foreach (var task in tasks)
                 {
                     MarketplaceTaskHandler handler = marketplace.Type switch
                     {

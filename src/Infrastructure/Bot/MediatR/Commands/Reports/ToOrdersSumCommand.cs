@@ -27,7 +27,7 @@ public class ToOrdersSumHandler : IRequestHandler<ToOrdersSumCommand, Unit>
 
     public async Task<Unit> Handle(ToOrdersSumCommand request, CancellationToken cancellationToken)
     {
-        DateTime startDate = await _context.Orders.AsNoTracking()
+        var startDate = await _context.Orders.AsNoTracking()
             .MinAsync(o => o.Date, cancellationToken);
 
         await _client.SendReplyKeyboard(request.ChatId, new KeyboardBuilder()

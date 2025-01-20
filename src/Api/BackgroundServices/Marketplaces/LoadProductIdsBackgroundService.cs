@@ -13,7 +13,7 @@ public class LoadProductIdsBackgroundService : BackgroundService
 
     protected override async Task ServiceWork()
     {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using var scope = Services.CreateAsyncScope();
         var loadProductIdService = scope.ServiceProvider.GetRequiredService<ILoadProductIdentifiersService>();
 
         await loadProductIdService.LoadMarketplaceProductIds();

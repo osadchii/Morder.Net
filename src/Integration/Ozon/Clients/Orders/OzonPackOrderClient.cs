@@ -13,7 +13,7 @@ public class OzonPackOrderClient : BaseOzonClient, IOzonPackOrderClient
 {
     public async Task<PackPostingResponse> PackOrder(OzonDto ozon, PackPostingRequest request)
     {
-        HttpResponseMessage httpResponse = await PostAsync(ozon, "v4/posting/fbs/ship", request);
+        var httpResponse = await PostAsync(ozon, "v4/posting/fbs/ship", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<PackPostingResponse>();

@@ -26,7 +26,7 @@ public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderIt
 
     public async Task<Unit> Handle(CancelOrderItemsByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .SingleOrDefaultAsync(o => o.MarketplaceId == request.MarketplaceId && o.Number == request.OrderNumber,
                 cancellationToken);
 
@@ -39,7 +39,7 @@ public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderIt
         IEnumerable<Order.OrderItem> items = order.Items.Where(i => request.ItemExternalIds.Contains(i.ExternalId))
             .ToArray();
 
-        foreach (Order.OrderItem item in items)
+        foreach (var item in items)
         {
             item.Canceled = true;
         }

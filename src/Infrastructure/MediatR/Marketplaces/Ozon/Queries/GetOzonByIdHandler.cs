@@ -25,7 +25,7 @@ public class GetOzonByIdHandler : IRequestHandler<GetOzonByIdRequest, OzonDto>
     
     public async Task<OzonDto> Handle(GetOzonByIdRequest request, CancellationToken cancellationToken)
     {
-        OzonDto result = await _context.Marketplaces
+        var result = await _context.Marketplaces
             .AsNoTracking()
             .Include(m => m.Warehouse)
             .Include(m => m.PriceType)

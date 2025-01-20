@@ -28,7 +28,7 @@ public class CategoryService : BaseService
 
     public async Task<ServiceActionResult<ApiResult<IEnumerable<Category>>>> GetCategories()
     {
-        HttpResponseMessage response = await GetAsync(BaseUrl);
+        var response = await GetAsync(BaseUrl);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<IEnumerable<Category>>>(response);
 
@@ -50,7 +50,7 @@ public class CategoryService : BaseService
 
     private async Task<ServiceActionResult<ApiResult<Category>>> GetCategory(string id)
     {
-        HttpResponseMessage response = await GetAsync($"{BaseUrl}/{id}");
+        var response = await GetAsync($"{BaseUrl}/{id}");
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<Category>>(response);
 

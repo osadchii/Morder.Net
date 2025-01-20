@@ -3,7 +3,6 @@ using Infrastructure;
 using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Marketplaces;
-using Infrastructure.Models.Prices;
 using Integration.Ozon.Services;
 using Integration.SberMegaMarket.Services;
 using MediatR;
@@ -39,16 +38,16 @@ public class SendPriceService : ISendPriceService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && m.PriceChangesTracking)
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
                 try
                 {
-                    MarketplacePriceDto[] prices = (await _mediator.Send(new GetMarketplacePricesRequest()
+                    var prices = (await _mediator.Send(new GetMarketplacePricesRequest()
                     {
                         MarketplaceId = marketplace.Id,
                         Limit = marketplace.PriceSendLimit

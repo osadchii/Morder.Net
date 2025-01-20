@@ -1,5 +1,4 @@
 using System.Text;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,20 +26,20 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
 
     public async Task<Unit> Handle(OrdersSumReportRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = await _context.Orders
+        var orders = await _context.Orders
             .AsNoTracking()
             .Where(o => o.Status != OrderStatus.Canceled &&
                         o.Date >= request.From.ToUtcWithMoscowOffset() && o.Date <= request.To.ToUtcWithMoscowOffset())
             .Include(o => o.Marketplace)
             .ToArrayAsync(cancellationToken);
 
-        IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
+        var types = orders.Select(o => o.Marketplace.Type).Distinct();
 
         var extrapolation = DateTime.Now >= request.From && DateTime.Now <= request.To;
 
         var sb = new StringBuilder();
 
-        foreach (MarketplaceType type in types)
+        foreach (var type in types)
         {
             AppendReport(sb, orders
                     .Where(o => o.Marketplace.Type == type)
@@ -74,13 +73,13 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
             return;
         }
 
-        IGrouping<DateTime, Order>[] sumsPerDay = orders
+        var sumsPerDay = orders
             .GroupBy(o => new DateTime(o.Date.Year, o.Date.Month, o.Date.Day))
             .ToArray();
 
         var avgPerDay = sumsPerDay.Average(s => s.Sum(o => o.Sum));
         var bestDaySum = sumsPerDay.Max(s => s.Sum(o => o.Sum));
-        DateTime bestDay = sumsPerDay.First(s => s.Sum(o => o.Sum) == bestDaySum).Key;
+        var bestDay = sumsPerDay.First(s => s.Sum(o => o.Sum) == bestDaySum).Key;
 
         var sum = orders.Sum(o => o.Sum);
 
@@ -96,7 +95,7 @@ public class OrdersSumReportHandler : IRequestHandler<OrdersSumReportRequest, Un
 
         if (extrapolation)
         {
-            TimeSpan span = DateTime.Now - from;
+            var span = DateTime.Now - from;
             var perSecond = sum / Convert.ToDecimal(span.TotalSeconds);
             var totalSeconds = Convert.ToDecimal((to - from).TotalSeconds);
 

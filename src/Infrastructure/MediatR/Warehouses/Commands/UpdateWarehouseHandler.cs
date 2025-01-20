@@ -35,7 +35,7 @@ public class UpdateWarehouseHandler : IRequestHandler<UpdateWarehouseRequest, Un
 
     public async Task<Unit> Handle(UpdateWarehouseRequest request, CancellationToken cancellationToken)
     {
-        Warehouse dbEntry =
+        var dbEntry =
             await _context.Warehouses
                 .SingleOrDefaultAsync(w => w.ExternalId == request.ExternalId,
                     cancellationToken: cancellationToken);

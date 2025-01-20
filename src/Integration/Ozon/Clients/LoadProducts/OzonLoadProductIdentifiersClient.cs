@@ -14,16 +14,16 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 {
     public async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonProductIdentifiersAsync(OzonDto ozon)
     {
-        Dictionary<string, long> baseIdentifiers = await LoadOzonBaseIdentifiersAsync(ozon);
+        var baseIdentifiers = await LoadOzonBaseIdentifiersAsync(ozon);
         var result = new Dictionary<string, OzonProductIdentifier>();
         const int limit = 1000;
 
         for (var i = 0; i < baseIdentifiers.Count; i += limit)
         {
-            IEnumerable<KeyValuePair<string, long>> portion = baseIdentifiers.Skip(i).Take(limit);
-            Dictionary<string, OzonProductIdentifier> portionResult = await LoadOzonIdentifiersAsync(ozon, portion);
+            var portion = baseIdentifiers.Skip(i).Take(limit);
+            var portionResult = await LoadOzonIdentifiersAsync(ozon, portion);
 
-            foreach (KeyValuePair<string, OzonProductIdentifier> item in portionResult)
+            foreach (var item in portionResult)
             {
                 result.Add(item.Key, item.Value);
             }
@@ -40,7 +40,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             ProductIds = portion.Select(kv => kv.Value)
         };
 
-        HttpResponseMessage httpResponse = await PostAsync(ozon, "v2/product/info/list", request);
+        var httpResponse = await PostAsync(ozon, "v2/product/info/list", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<OzonProductInfoResponse>();
@@ -71,7 +71,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 
         while (!loaded)
         {
-            (int, string) response = await LoadProductPageAsync(ozon, result, lastId);
+            var response = await LoadProductPageAsync(ozon, result, lastId);
             lastId = response.Item2;
             
             if (result.Count >= response.Item1 || currentPage++ > pageLimit)
@@ -91,7 +91,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             Limit = ozon.Settings.LoadProductIdsPageSize
         };
 
-        HttpResponseMessage httpResponse = await PostAsync(ozon, "v2/product/list", request);
+        var httpResponse = await PostAsync(ozon, "v2/product/list", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<OzonProductIdsResponse>();
@@ -104,7 +104,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             throw new Exception(message);
         }
 
-        foreach (OzonProductIdsResponseItem item in response.Result.Items)
+        foreach (var item in response.Result.Items)
         {
             result.TryAdd(item.OfferId, item.ProductId);
         }

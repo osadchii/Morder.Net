@@ -1,5 +1,4 @@
 using Infrastructure.Extensions;
-using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Integration.SberMegaMarket.Orders;
 using Integration.SberMegaMarket.Orders.Messages;
 using MediatR;
@@ -31,9 +30,9 @@ public class SberMegaMarketOrderController : ControllerBase
         BaseSberMegaMarketOrderRequest<CreateSberMegaMarketOrdersRequest> request)
     {
         _logger.LogInformation("SberMegaMarket Create order request: {RequestJson}", request.ToJson());
-        IEnumerable<CreateOrderRequest> createRequests = await _adapter.CreateOrderRequests(request);
+        var createRequests = await _adapter.CreateOrderRequests(request);
 
-        foreach (CreateOrderRequest createRequest in createRequests)
+        foreach (var createRequest in createRequests)
         {
             try
             {
@@ -55,9 +54,9 @@ public class SberMegaMarketOrderController : ControllerBase
         BaseSberMegaMarketOrderRequest<CancelSberMegaMarketOrdersRequest> request)
     {
         _logger.LogInformation("SberMegaMarket Cancel order request: {RequestJson}", request.ToJson());
-        IEnumerable<CancelOrderItemsByExternalIdRequest> cancelRequests = await _adapter.CancelOrderRequests(request);
+        var cancelRequests = await _adapter.CancelOrderRequests(request);
 
-        foreach (CancelOrderItemsByExternalIdRequest cancelRequest in cancelRequests)
+        foreach (var cancelRequest in cancelRequests)
         {
             try
             {

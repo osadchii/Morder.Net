@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.MediatR.Orders.Company.Queries;
-using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,7 +54,7 @@ public class OrderController : ControllerBase
     [Route("sticker/{externalId:guid}")]
     public async Task<IActionResult> Sticker([Required] Guid externalId)
     {
-        OrderSticker stickerData = await _mediator.Send(new GetOrderStickerRequest()
+        var stickerData = await _mediator.Send(new GetOrderStickerRequest()
         {
             ExternalId = externalId
         });

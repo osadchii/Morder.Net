@@ -32,7 +32,7 @@ public class GetOrderStickerHandler : IRequestHandler<GetOrderStickerRequest, Or
                 HttpStatusCode.NotFound);
         }
 
-        OrderSticker stickerData = await _context.OrderStickers
+        var stickerData = await _context.OrderStickers
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.OrderId == orderData.Id, cancellationToken);
 

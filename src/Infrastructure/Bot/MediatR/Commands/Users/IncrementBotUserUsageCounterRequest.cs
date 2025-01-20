@@ -20,7 +20,7 @@ public class IncrementBotUserUsageCounterHandler : IRequestHandler<IncrementBotU
 
     public async Task<Unit> Handle(IncrementBotUserUsageCounterRequest request, CancellationToken cancellationToken)
     {
-        BotUserUsageCounter counter = await _context.BotUserUsageCounters
+        var counter = await _context.BotUserUsageCounters
             .SingleOrDefaultAsync(c => c.BotUserId == request.BotUserId, cancellationToken);
 
         if (counter is null)

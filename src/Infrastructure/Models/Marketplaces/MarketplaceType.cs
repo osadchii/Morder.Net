@@ -7,5 +7,6 @@ public enum MarketplaceType
     YandexMarket,
     Wildberries,
     Aliexpress,
-    Meso
+    Meso,
+    Kuper
 }

@@ -20,7 +20,7 @@ public class GetProductByExternalIdHandler : IRequestHandler<GetProductByExterna
 
     public async Task<ProductDto> Handle(GetProductByExternalIdRequest request, CancellationToken cancellationToken)
     {
-        Product dbEntry = await _context.Products
+        var dbEntry = await _context.Products
             .AsNoTracking()
             .Include(p => p.Category)
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);

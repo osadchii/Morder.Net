@@ -35,7 +35,7 @@ public class MesoSendFeedClient : IMesoSendFeedClient
             Password = meso.Settings.Password
         };
 
-        HttpResponseMessage response = await PostAsync(meso, "api/store/token/request", request);
+        var response = await PostAsync(meso, "api/store/token/request", request);
         var content = await response.Content.ReadAsStringAsync();
 
         var mesoResponse = content.FromJson<GetTokenResponse>();
@@ -63,7 +63,7 @@ public class MesoSendFeedClient : IMesoSendFeedClient
             httpMessage.Headers.Add("Authorization", $"Bearer {token}");
         }
 
-        HttpResponseMessage httpResponse = await _httpClient.SendAsync(httpMessage);
+        var httpResponse = await _httpClient.SendAsync(httpMessage);
 
         if (httpResponse.StatusCode != HttpStatusCode.OK)
         {

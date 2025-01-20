@@ -40,7 +40,7 @@ public class ProductIdentifierService : IProductIdentifierService
             return false;
         }
 
-        ProductIdentifier currentValue = await _context.ProductIdentifiers
+        var currentValue = await _context.ProductIdentifiers
             .SingleOrDefaultAsync(pi =>
                 pi.MarketplaceId == marketplaceId && pi.ProductId == productId && pi.Type == type);
 
@@ -78,7 +78,7 @@ public class ProductIdentifierService : IProductIdentifierService
     {
         var result = new Dictionary<int, bool>();
 
-        foreach (KeyValuePair<int, string> kv in productIdentifiers)
+        foreach (var kv in productIdentifiers)
         {
             result[kv.Key] = await SetIdentifierAsync(marketplaceId, kv.Key, type, kv.Value);
         }
@@ -95,7 +95,7 @@ public class ProductIdentifierService : IProductIdentifierService
             return cachedValue;
         }
         
-        ProductIdentifier currentValue = await _context.ProductIdentifiers
+        var currentValue = await _context.ProductIdentifiers
             .SingleOrDefaultAsync(pi =>
                 pi.MarketplaceId == marketplaceId && pi.ProductId == productId && pi.Type == type);
 

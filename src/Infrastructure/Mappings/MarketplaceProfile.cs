@@ -9,6 +9,7 @@ using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
 using Infrastructure.MediatR.Marketplaces.YandexMarket.Commands;
 using Infrastructure.Models.MarketplaceProductSettings;
 using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Marketplaces.Kuper;
 using Infrastructure.Models.Marketplaces.Meso;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
@@ -100,6 +101,20 @@ public class MarketplaceProfile : Profile
             .ForMember(m => m.Settings,
                 opt =>
                     opt.MapFrom(e => e.Settings.FromJson<MesoSettings>()))
+            .ForMember(m => m.WarehouseExternalId,
+                opt =>
+                    opt.MapFrom(e => e.Warehouse.ExternalId))
+            .ForMember(m => m.PriceTypeExternalId,
+                opt =>
+                    opt.MapFrom(e => e.PriceType!.ExternalId));
+
+        CreateMap<Marketplace, KuperDto>()
+            .ForMember(m => m.ProductTypes,
+                opt
+                    => opt.MapFrom(e => e.ProductTypes.FromJson<List<ProductType>>()))
+            .ForMember(m => m.Settings,
+                opt =>
+                    opt.MapFrom(e => e.Settings.FromJson<KuperSettings>()))
             .ForMember(m => m.WarehouseExternalId,
                 opt =>
                     opt.MapFrom(e => e.Warehouse.ExternalId))

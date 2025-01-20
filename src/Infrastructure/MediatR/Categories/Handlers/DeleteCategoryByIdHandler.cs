@@ -20,7 +20,7 @@ public class DeleteCategoryByIdHandler : IRequestHandler<DeleteCategoryByIdReque
 
     public async Task<CategoryDto> Handle(DeleteCategoryByIdRequest request, CancellationToken cancellationToken)
     {
-        Category category = await _context.Categories
+        var category = await _context.Categories
             .SingleOrDefaultAsync(c => c.Id == request.Id!.Value, cancellationToken);
 
         if (category is null)

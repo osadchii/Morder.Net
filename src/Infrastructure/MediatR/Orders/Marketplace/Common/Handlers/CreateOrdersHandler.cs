@@ -26,7 +26,7 @@ public class CreateOrdersHandler : IRequestHandler<CreateOrdersRequest, IEnumera
 
     public async Task<IEnumerable<Order>> Handle(CreateOrdersRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = request.CreateOrderRequests.Select(r => _mapper.Map<Order>(r)).ToArray();
+        var orders = request.CreateOrderRequests.Select(r => _mapper.Map<Order>(r)).ToArray();
 
         await _context.AddRangeAsync(orders, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

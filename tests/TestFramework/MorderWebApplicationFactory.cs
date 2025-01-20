@@ -14,7 +14,7 @@ public class MorderWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         builder.UseEnvironment(EnvironmentNames.TestEnvironment);
         builder.ConfigureServices(services =>
         {
-            ServiceDescriptor descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MContext>))!;
+            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MContext>))!;
             services.Remove(descriptor);
 
             services.AddDbContext<MContext>(options =>
@@ -22,10 +22,10 @@ public class MorderWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
                 options.UseInMemoryDatabase("InMemoryDbForTesting");
             });
 
-            ServiceProvider sp = services.BuildServiceProvider();
+            var sp = services.BuildServiceProvider();
 
-            using IServiceScope scope = sp.CreateScope();
-            IServiceProvider scopedServices = scope.ServiceProvider;
+            using var scope = sp.CreateScope();
+            var scopedServices = scope.ServiceProvider;
             var db = scopedServices.GetRequiredService<MContext>();
 
             db.Database.EnsureCreated();

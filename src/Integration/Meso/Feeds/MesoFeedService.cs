@@ -25,14 +25,14 @@ public class MesoFeedService : MarketplaceFeedService
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
         var client = ServiceProvider.GetRequiredService<IMesoSendFeedClient>();
 
-        MarketplaceProductData data = await mediator.Send(new GetMarketplaceProductDataRequest()
+        var data = await mediator.Send(new GetMarketplaceProductDataRequest
         {
             MarketplaceId = _meso.Id
         });
 
         var feedBuilder = new FeedBuilder(data, _meso);
 
-        Feed feed = feedBuilder.Build();
+        var feed = feedBuilder.Build();
         await client.SendFeed(_meso, feed);
 
         if (_meso.Settings.SaveFeed)

@@ -45,7 +45,7 @@ public class UpdateCompanyInformationHandler : IRequestHandler<UpdateCompanyInfo
 
         _cache.Remove(CacheKeys.CompanyInformation);
 
-        Company dbEntry =
+        var dbEntry =
             await _context.Companies.SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (dbEntry is null)

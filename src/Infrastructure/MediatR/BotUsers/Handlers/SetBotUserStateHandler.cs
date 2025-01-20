@@ -1,5 +1,4 @@
 using Infrastructure.MediatR.BotUsers.Commands;
-using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +15,7 @@ public class SetBotUserStateHandler : IRequestHandler<SetBotUserStateRequest, Un
 
     public async Task<Unit> Handle(SetBotUserStateRequest request, CancellationToken cancellationToken)
     {
-        BotUser user = await _context.BotUsers
+        var user = await _context.BotUsers
             .SingleAsync(u => u.ChatId == request.ChatId, cancellationToken);
 
         user.CurrentState = request.State;

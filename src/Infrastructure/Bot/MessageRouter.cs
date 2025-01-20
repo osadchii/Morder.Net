@@ -28,7 +28,7 @@ public class MessageRouter : IMessageRouter
 
     public async Task Route(Message message)
     {
-        BotUser user = await GetUser(message);
+        var user = await GetUser(message);
 
         await _mediator.Send(new IncrementBotUserUsageCounterRequest()
         {

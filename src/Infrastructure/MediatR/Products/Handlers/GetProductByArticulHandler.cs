@@ -20,7 +20,7 @@ public class GetProductByArticulHandler : IRequestHandler<GetProductByArticulReq
 
     public async Task<ProductDto> Handle(GetProductByArticulRequest request, CancellationToken cancellationToken)
     {
-        Product dbEntry = await _context.Products
+        var dbEntry = await _context.Products
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.Articul == request.Articul, cancellationToken);
 

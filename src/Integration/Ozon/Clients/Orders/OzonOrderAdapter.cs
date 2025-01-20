@@ -24,13 +24,13 @@ public class OzonOrderAdapter : IOzonOrderAdapter
 
     public async Task<IEnumerable<CreateOrderRequest>> CreateOrderRequests(OzonDto ozon, OzonPosting[] postings)
     {
-        List<string> requestArticuls = postings
+        var requestArticuls = postings
             .SelectMany(p => p.Products.Select(product => product.OfferId))
             .Distinct()
             .ToList();
 
 #if DEBUG
-        Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
+        var products = await _productCache.GetProductIdsByArticul(requestArticuls, true);
 #else
         Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls);
 #endif

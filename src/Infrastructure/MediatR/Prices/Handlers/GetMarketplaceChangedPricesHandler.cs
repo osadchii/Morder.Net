@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Prices.Queries;
-using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Prices;
@@ -38,7 +37,7 @@ public class
 
         var result = new List<MarketplacePriceDto>();
 
-        List<Product> products = await _context.PriceChanges
+        var products = await _context.PriceChanges
             .AsNoTracking()
             .Where(s => s.MarketplaceId == request.MarketplaceId)
             .Include(s => s.Product)
@@ -54,15 +53,15 @@ public class
 
         IEnumerable<int> productIds = products.Select(p => p.Id).ToArray();
 
-        Dictionary<int, string> externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
+        var externalIds = await _identifierService.GetIdentifiersAsync(request.MarketplaceId, productIds,
             ProductIdentifierType.StockAndPrice);
 
-        CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
-        Marketplace marketplace = await _context.Marketplaces
+        var companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
-        Dictionary<int, decimal> basePrices = await _context.Prices
+        var basePrices = await _context.Prices
             .AsNoTracking()
             .Where(p => p.PriceTypeId == companyInformation.PriceTypeId && productIds.Contains(p.ProductId))
             .ToDictionaryAsync(p => p.ProductId, p => p.Value, cancellationToken);

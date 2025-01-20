@@ -1,7 +1,6 @@
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.MediatR.BotUsers.Commands;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -28,13 +27,13 @@ public class ToMarketplacesHandler : IRequestHandler<ToMarketplacesCommand, Unit
 
     public async Task<Unit> Handle(ToMarketplacesCommand request, CancellationToken cancellationToken)
     {
-        Marketplace[] marketplaces = await _context.Marketplaces
+        var marketplaces = await _context.Marketplaces
             .AsNoTracking()
             .ToArrayAsync(cancellationToken);
 
         var menuBuilder = new KeyboardBuilder();
 
-        foreach (Marketplace marketplace in marketplaces.OrderBy(u => u.Id))
+        foreach (var marketplace in marketplaces.OrderBy(u => u.Id))
         {
             menuBuilder.AddLine();
             menuBuilder.AddButton($"{marketplace.Id} – {marketplace.Name}");

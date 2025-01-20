@@ -1,6 +1,5 @@
 using Infrastructure.Common;
 using Infrastructure.MediatR.Ozon.Warehouses.Mappings;
-using Infrastructure.MediatR.Ozon.Warehouses.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

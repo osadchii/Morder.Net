@@ -40,9 +40,9 @@ public class ProductRatingReportHandler : IRequestHandler<ProductRatingReportReq
 
         var result = new Dictionary<string, (decimal Count, decimal Sum)>();
 
-        foreach (Order order in orders)
+        foreach (var order in orders)
         {
-            foreach (Order.OrderItem item in order.Items.Where(i => !i.Canceled))
+            foreach (var item in order.Items.Where(i => !i.Canceled))
             {
                 var key = item.Product.Name!;
                 if (result.ContainsKey(key))

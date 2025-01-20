@@ -69,7 +69,7 @@ public class MarketplaceProductData
             return 0;
         }
 
-        if (_productSettings.TryGetValue(product.Id, out MarketplaceProductSetting productSetting)
+        if (_productSettings.TryGetValue(product.Id, out var productSetting)
             && productSetting.NullifyStock)
         {
             return 0;
@@ -95,7 +95,7 @@ public class MarketplaceProductData
             return 0;
         }
 
-        if (Categories.TryGetValue(product.CategoryId!.Value, out Category categoryInfo))
+        if (Categories.TryGetValue(product.CategoryId!.Value, out var categoryInfo))
         {
             if (categoryInfo.DeletionMark)
             {
@@ -103,7 +103,7 @@ public class MarketplaceProductData
             }
         }
 
-        if (_categorySettings.TryGetValue(product.CategoryId.Value, out MarketplaceCategorySetting categorySetting)
+        if (_categorySettings.TryGetValue(product.CategoryId.Value, out var categorySetting)
             && categorySetting.Blocked)
         {
             return 0;

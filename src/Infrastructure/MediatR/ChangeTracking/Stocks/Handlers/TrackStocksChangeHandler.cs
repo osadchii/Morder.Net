@@ -20,7 +20,7 @@ public class TrackStocksChangeHandler : IRequestHandler<TrackStocksChangeRequest
     // Don't checking registration conditions
     public async Task<Unit> Handle(TrackStocksChangeRequest request, CancellationToken cancellationToken)
     {
-        List<int> alreadyTracked = await _context.StockChanges
+        var alreadyTracked = await _context.StockChanges
             .AsNoTracking()
             .Where(pc => pc.MarketplaceId == request.MarketplaceId && request.ProductIds.Contains(pc.ProductId))
             .Select(pc => pc.ProductId)

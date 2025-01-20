@@ -642,6 +642,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<decimal?>("Volume")
+                        .HasColumnType("numeric");
+
                     b.Property<decimal?>("Weight")
                         .HasColumnType("numeric");
 

@@ -15,7 +15,7 @@ public static class AutoMapperDependencyInjection
             mc.AddProfile(new OrderProfile());
         });
 
-        IMapper mapper = mappingConfig.CreateMapper();
+        var mapper = mappingConfig.CreateMapper();
         services.AddSingleton(mapper);
     }
 }

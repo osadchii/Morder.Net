@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Marketplaces.Ozon.Commands;
 using Infrastructure.MediatR.Marketplaces.Ozon.Queries;
-using Infrastructure.Models.Marketplaces.Ozon;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

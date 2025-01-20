@@ -22,7 +22,7 @@ public class CreateUpdateBotUserHandler : IRequestHandler<CreateUpdateBotUserReq
 
     public async Task<BotUser> Handle(CreateUpdateBotUserRequest request, CancellationToken cancellationToken)
     {
-        BotUser dbEntry = await _context.BotUsers
+        var dbEntry = await _context.BotUsers
             .SingleOrDefaultAsync(b => b.ChatId == request.ChatId, cancellationToken);
 
         if (dbEntry is null)

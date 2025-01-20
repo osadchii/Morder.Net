@@ -1,7 +1,6 @@
 using Infrastructure.MediatR.ChangeTracking.Orders.Commands;
 using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.MediatR.Orders.Marketplace.SberMegaMarket.Commands;
-using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,7 +23,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
 
     public async Task<Unit> Handle(UpdateSberMegaMarketOrderRequest request, CancellationToken cancellationToken)
     {
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .SingleOrDefaultAsync(o => o.Number == request.ShipmentId
                                        && o.MarketplaceId == request.MarketplaceId, cancellationToken);
 
@@ -33,7 +32,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
             throw new Exception($"Order with {request.OrderId} id for {request.ShipmentId} shipment id not found");
         }
 
-        OrderStatus initialStatus = order.Status;
+        var initialStatus = order.Status;
 
         order.Customer = request.CustomerFullName;
         order.CustomerAddress = request.CustomerAddress;
@@ -43,12 +42,12 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
         order.Status = request.Status;
         order.ShippingDate = request.ShippingDate;
 
-        foreach (UpdateSberMegaMarketOrderRequestItem item in request.Items.Where(i => i.Canceled))
+        foreach (var item in request.Items.Where(i => i.Canceled))
         {
             var orderItems =
                 order.Items.Where(oi => !oi.Canceled && oi.ExternalId == item.ItemIndex);
 
-            foreach (Order.OrderItem orderItem in orderItems)
+            foreach (var orderItem in orderItems)
             {
                 orderItem.Canceled = true;
             }

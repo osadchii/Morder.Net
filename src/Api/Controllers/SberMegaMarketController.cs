@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Commands;
 using Infrastructure.MediatR.Marketplaces.SberMegaMarket.Queries;
-using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

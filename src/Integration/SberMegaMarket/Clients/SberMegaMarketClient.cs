@@ -26,7 +26,7 @@ public class SberMegaMarketClient<T> : ISberMegaMarketClient<T> where T : SberMe
 
         var json = request.ToJson();
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        HttpResponseMessage responseMessage = await _client.PostAsync(fullUrl, content);
+        var responseMessage = await _client.PostAsync(fullUrl, content);
         var body = await responseMessage.Content.ReadAsStringAsync();
 
         if (responseMessage.StatusCode == HttpStatusCode.OK)

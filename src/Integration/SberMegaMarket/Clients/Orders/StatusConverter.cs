@@ -10,7 +10,7 @@ public static class StatusConverter
     {
         OrderStatus status;
 
-        UpdateOrderResponseDataShipmentItem[] nonCanceledItems = shipment.Items
+        var nonCanceledItems = shipment.Items
             .Where(i => !SberMegaMarketOrderStatuses.IsCanceled(i.Status)).ToArray();
 
         if (shipment.Items.All(i => SberMegaMarketOrderStatuses.IsCanceled(i.Status)))

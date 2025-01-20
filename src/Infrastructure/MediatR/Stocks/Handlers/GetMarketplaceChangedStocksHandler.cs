@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Stocks.Queries;
-using Infrastructure.Models.Companies;
 using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.MarketplaceCategorySettings;
 using Infrastructure.Models.MarketplaceProductSettings;

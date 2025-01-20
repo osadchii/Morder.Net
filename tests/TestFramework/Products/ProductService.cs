@@ -26,7 +26,7 @@ public class ProductService : BaseService
 
     public async Task<ServiceActionResult<ApiResult<IEnumerable<Product>>>> GetProducts()
     {
-        HttpResponseMessage response = await GetAsync(BaseUrl);
+        var response = await GetAsync(BaseUrl);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<IEnumerable<Product>>>(response);
 
@@ -48,7 +48,7 @@ public class ProductService : BaseService
     
     private async Task<ServiceActionResult<ApiResult<Product>>> GetProduct(string id)
     {
-        HttpResponseMessage response = await GetAsync($"{BaseUrl}/{id}");
+        var response = await GetAsync($"{BaseUrl}/{id}");
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<Product>>(response);
 

@@ -153,7 +153,7 @@ public class MarketplaceProfile : Profile
                     opt.MapFrom(e => e.Settings!.ToJson()))
             .ForMember(m => m.Type,
                 opt =>
-                    opt.MapFrom(e => MarketplaceType.Meso))
+                    opt.MapFrom(e => MarketplaceType.Kuper))
             .ForMember(m => m.PriceTypeId,
                 opt =>
                     opt.MapFrom(e => e.PriceType!.Id))

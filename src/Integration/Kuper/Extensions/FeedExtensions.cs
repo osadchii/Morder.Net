@@ -64,8 +64,8 @@ public static class FeedExtensions
 
         if (product.Volume.HasValue)
         {
-            AddAttribute(attributes, WeightNet, product.Volume.Value);
-            AddAttribute(attributes, WeightNetUnit, "ML");
+            AddAttribute(attributes, VolumeNet, product.Volume.Value);
+            AddAttribute(attributes, VolumeNetUnit, "ML");
         }
 
         item.Attributes = attributes.ToArray();

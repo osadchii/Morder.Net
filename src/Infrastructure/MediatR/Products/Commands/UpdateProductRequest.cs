@@ -38,6 +38,9 @@ public class UpdateProductRequest : IRequest<Result>
     [Range(Limits.MinimalWeight, Limits.MaximalWeight)]
     public decimal? Weight { get; set; }
 
+    [Range(Limits.MinimalVolume, Limits.MaximalVolume)]
+    public decimal? Volume { get; set; }
+
     [MaxLength(Limits.ProductBrand)] public string Brand { get; set; }
 
     [MaxLength(Limits.ProductVendor)] public string Vendor { get; set; }

@@ -1,5 +1,4 @@
 using Infrastructure.MediatR.Marketplaces.Common.Commands;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,7 +21,7 @@ public class
     public async Task<Unit> Handle(IncrementMarketplaceOrderTaskTryCountRequest request,
         CancellationToken cancellationToken)
     {
-        MarketplaceOrderTask task = await _context.MarketplaceOrderTasks
+        var task = await _context.MarketplaceOrderTasks
             .SingleAsync(t => t.Id == request.MarketplaceOrderTaskId, cancellationToken);
 
         task.TryCount++;

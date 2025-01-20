@@ -21,7 +21,7 @@ public class TrackAllPricesHandler : IRequestHandler<TrackAllPricesRequest, Unit
 
     public async Task<Unit> Handle(TrackAllPricesRequest request, CancellationToken cancellationToken)
     {
-        List<int> products =
+        var products =
             await _mediator.Send(new GetAllMarketplaceProductIdsRequest { MarketplaceId = request.MarketplaceId },
                 cancellationToken);
 

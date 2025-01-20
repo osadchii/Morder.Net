@@ -3,7 +3,6 @@ using Infrastructure.Bot.Screens;
 using Infrastructure.MediatR.BotUsers.Commands;
 using MediatR;
 using Telegram.Bot;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Infrastructure.Bot.MediatR.Commands.Marketplaces;
 
@@ -26,7 +25,7 @@ public class ToSetMinimalPriceHandler : IRequestHandler<ToSetMinimalPriceCommand
 
     public async Task<Unit> Handle(ToSetMinimalPriceCommand request, CancellationToken cancellationToken)
     {
-        ReplyKeyboardMarkup menuBuilder = new KeyboardBuilder()
+        var menuBuilder = new KeyboardBuilder()
             .AddLine()
             .AddButton(MenuTexts.Back)
             .Build();

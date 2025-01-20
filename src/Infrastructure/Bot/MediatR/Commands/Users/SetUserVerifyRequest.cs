@@ -1,5 +1,4 @@
 using Infrastructure.Bot.MediatR.Commands.Common;
-using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +24,7 @@ public class SetUserVerifyHandler : IRequestHandler<SetUserVerifyRequest, Unit>
 
     public async Task<Unit> Handle(SetUserVerifyRequest request, CancellationToken cancellationToken)
     {
-        BotUser user = await _context.BotUsers
+        var user = await _context.BotUsers
             .SingleAsync(u => u.Id == request.UserId, cancellationToken);
 
         user.Verified = request.Verified;

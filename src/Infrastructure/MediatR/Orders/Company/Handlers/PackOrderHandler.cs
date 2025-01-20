@@ -39,7 +39,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
             throw new HttpRequestException("Box numbers are out of order");
         }
 
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);
@@ -57,7 +57,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
 
         order.Boxes.Clear();
 
-        foreach (PackOrderItem item in request.Items!)
+        foreach (var item in request.Items!)
         {
             int? productId = order.Items
                 .Where(p => p.Product.ExternalId == item.ProductExternalId!.Value)

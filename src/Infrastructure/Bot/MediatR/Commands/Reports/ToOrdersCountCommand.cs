@@ -27,7 +27,7 @@ public class ToOrdersCountHandler : IRequestHandler<ToOrdersCountCommand, Unit>
 
     public async Task<Unit> Handle(ToOrdersCountCommand request, CancellationToken cancellationToken)
     {
-        DateTime startDate = await _context.Orders.AsNoTracking()
+        var startDate = await _context.Orders.AsNoTracking()
             .MinAsync(o => o.Date, cancellationToken);
 
         await _client.SendReplyKeyboard(request.ChatId, new KeyboardBuilder()

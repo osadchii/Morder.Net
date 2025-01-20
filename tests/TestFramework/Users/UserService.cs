@@ -14,7 +14,7 @@ public class UserService : BaseService
 
     public async Task<ServiceActionResult<ApiResult<TokenDto>>> GetToken(User user)
     {
-        HttpResponseMessage response = await PostAsync($"{BaseUrl}/gettoken", user, true);
+        var response = await PostAsync($"{BaseUrl}/gettoken", user, true);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<TokenDto>>(response);
 

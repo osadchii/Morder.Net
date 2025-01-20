@@ -47,8 +47,8 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     public async Task<IEnumerable<CreateOrderRequest>> CreateOrderRequests(
         BaseSberMegaMarketOrderRequest<CreateSberMegaMarketOrdersRequest> createRequest)
     {
-        CreateSberMegaMarketOrdersRequest data = createRequest.Data;
-        SberMegaMarketDto sber = await GetMarketplaceByMerchantId(data.MerchantId);
+        var data = createRequest.Data;
+        var sber = await GetMarketplaceByMerchantId(data.MerchantId);
         var requestArticuls = data.Shipments
             .SelectMany(s => s.Items.Select(i => i.OfferId))
             .Distinct()
@@ -79,8 +79,8 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
     public async Task<IEnumerable<CancelOrderItemsByExternalIdRequest>> CancelOrderRequests(
         BaseSberMegaMarketOrderRequest<CancelSberMegaMarketOrdersRequest> cancelRequest)
     {
-        CancelSberMegaMarketOrdersRequest data = cancelRequest.Data;
-        SberMegaMarketDto sber = await GetMarketplaceByMerchantId(data.MerchantId);
+        var data = cancelRequest.Data;
+        var sber = await GetMarketplaceByMerchantId(data.MerchantId);
 
         return data.Shipments.Select(s => new CancelOrderItemsByExternalIdRequest()
         {
@@ -105,7 +105,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             .Where(s => s.Items.All(i => products.ContainsKey(i.OfferId)))
             .Select(s =>
             {
-                DateTime creationDate = s.CreationDate.ToCommonTime().ToUtcTime();
+                var creationDate = s.CreationDate.ToCommonTime().ToUtcTime();
                 return new CreateOrderRequest()
                 {
                     Archived = sber.Settings.LoadOrdersAsArchived,
@@ -157,7 +157,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             .Where(m => m.IsActive && m.Type == MarketplaceType.SberMegaMarket)
             .ToListAsync();
 
-        SberMegaMarketDto sberContext = marketplace
+        var sberContext = marketplace
             .Select(m => _mapper.Map<SberMegaMarketDto>(m))
             .SingleOrDefault(s => s.Settings.MerchantId == merchantId);
 

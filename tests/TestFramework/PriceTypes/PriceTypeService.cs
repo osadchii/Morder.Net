@@ -26,7 +26,7 @@ public class PriceTypeService : BaseService
 
     public async Task<ServiceActionResult<ApiResult<IEnumerable<PriceType>>>> GetPriceTypes()
     {
-        HttpResponseMessage response = await GetAsync(BaseUrl);
+        var response = await GetAsync(BaseUrl);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<IEnumerable<PriceType>>>(response);
 
@@ -47,7 +47,7 @@ public class PriceTypeService : BaseService
 
     private async Task<ServiceActionResult<ApiResult<PriceType>>> GetPriceType(string id)
     {
-        HttpResponseMessage response = await GetAsync($"{BaseUrl}/{id}");
+        var response = await GetAsync($"{BaseUrl}/{id}");
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<PriceType>>(response);
 

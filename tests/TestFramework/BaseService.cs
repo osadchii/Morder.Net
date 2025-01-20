@@ -51,7 +51,7 @@ public abstract class BaseService
         };
         
         await userService.RegisterUser(user);
-        ServiceActionResult<ApiResult<TokenDto>> tokenResult = await userService.GetToken(user);
+        var tokenResult = await userService.GetToken(user);
 
         _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenResult.Entity.Value.Token}");
     }

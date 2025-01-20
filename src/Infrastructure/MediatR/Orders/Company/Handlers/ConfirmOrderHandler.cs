@@ -26,7 +26,7 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
 
     public async Task<Unit> Handle(ConfirmOrderRequest request, CancellationToken cancellationToken)
     {
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);
 
         if (order is null)

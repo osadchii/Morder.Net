@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Marketplaces.Meso.Commands;
-using Infrastructure.Models.Marketplaces.Meso;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

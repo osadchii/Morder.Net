@@ -1,7 +1,6 @@
 using System.Net;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Orders.Company.Queries;
-using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

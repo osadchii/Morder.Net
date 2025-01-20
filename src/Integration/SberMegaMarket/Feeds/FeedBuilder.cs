@@ -26,7 +26,7 @@ public class FeedBuilder
 
     private void AddCategories(List<DbCategory> categories)
     {
-        foreach (DbCategory category in categories)
+        foreach (var category in categories)
         {
             _feed.Shop.Categories.Add(category.ToCategory());
         }
@@ -34,7 +34,7 @@ public class FeedBuilder
 
     private void AddProducts(IEnumerable<Product> products, MarketplaceProductData marketplaceProductData)
     {
-        foreach (Offer offer in products
+        foreach (var offer in products
                      .Select(product => product.ToOffer(marketplaceProductData, _sber.Settings.WarehouseId))
                      .Where(offer => offer is not null && offer.Price != 0))
         {

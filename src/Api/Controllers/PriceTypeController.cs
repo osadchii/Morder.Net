@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.PriceTypes.Commands;
 using Infrastructure.MediatR.PriceTypes.Queries;
-using Infrastructure.Models.Prices;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

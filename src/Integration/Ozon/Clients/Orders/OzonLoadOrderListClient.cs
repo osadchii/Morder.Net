@@ -25,7 +25,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
     {
         var result = new ConcurrentBag<OzonPosting>();
 
-        DateTime currentDate = startDate;
+        var currentDate = startDate;
         var intervals = new List<(DateTime Since, DateTime To)>();
 
         while (currentDate < DateTime.UtcNow.AddDays(DaysInterval * 2))
@@ -93,7 +93,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
             throw new Exception(message);
         }
 
-        foreach (OzonPosting posting in response.Result.Postings)
+        foreach (var posting in response.Result.Postings)
         {
             postings.Add(posting);
         }

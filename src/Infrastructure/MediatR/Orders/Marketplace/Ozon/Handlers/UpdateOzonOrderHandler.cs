@@ -23,7 +23,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
 
     public async Task<Unit> Handle(UpdateOzonOrderRequest request, CancellationToken cancellationToken)
     {
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.Number == request.OrderNumber && o.MarketplaceId == request.MarketplaceId,
@@ -35,7 +35,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
                 $"Order with {request.OrderNumber} id for marketplace with {request.MarketplaceId} id not found");
         }
 
-        OrderStatus initialStatus = order.Status;
+        var initialStatus = order.Status;
 
         order.Status = request.Status;
         order.ShippingDate = request.ShippingDate;
@@ -47,12 +47,12 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
             order.Customer = request.CustomerFullName;
         }
 
-        foreach (UpdateOzonOrderItem item in request.Items)
+        foreach (var item in request.Items)
         {
             var orderItems = order.Items
                 .Where(orderItem => orderItem.Product.Articul == item.Articul && !orderItem.Canceled).ToArray();
 
-            foreach (Order.OrderItem orderItem in orderItems)
+            foreach (var orderItem in orderItems)
             {
                 var handledCount = Math.Min(item.Count, orderItem.Count);
                 item.Count -= handledCount;

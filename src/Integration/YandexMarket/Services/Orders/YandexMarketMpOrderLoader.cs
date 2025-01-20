@@ -8,7 +8,6 @@ using Infrastructure.Models.Marketplaces.YandexMarket;
 using Infrastructure.Models.Orders;
 using Integration.Common.Services.Orders;
 using Integration.YandexMarket.Clients;
-using Integration.YandexMarket.Clients.Messages;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

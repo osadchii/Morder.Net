@@ -29,7 +29,7 @@ public class DeleteWarehouseByExternalIdHandler : IRequestHandler<DeleteWarehous
     public async Task<WarehouseDto> Handle(DeleteWarehouseByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        Warehouse warehouse = await _context.Warehouses
+        var warehouse = await _context.Warehouses
             .SingleOrDefaultAsync(pt => pt.ExternalId == request.ExternalId, cancellationToken);
 
         if (warehouse is null)

@@ -24,11 +24,11 @@ public class MainMenuScreenHandler : ScreenHandler
 
     public override async Task HandleMessage()
     {
-        TimeZoneInfo moscow = TimeZoneInfo.FindSystemTimeZoneById
+        var moscow = TimeZoneInfo.FindSystemTimeZoneById
             ("Russian Standard Time");
 
-        TimeSpan offset = moscow.GetUtcOffset(DateTime.UtcNow);
-        DateTime utcMoscow = DateTime.UtcNow + offset;
+        var offset = moscow.GetUtcOffset(DateTime.UtcNow);
+        var utcMoscow = DateTime.UtcNow + offset;
 
         switch (Text)
         {

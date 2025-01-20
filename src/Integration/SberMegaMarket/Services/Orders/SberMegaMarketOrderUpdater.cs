@@ -59,7 +59,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
     private async Task UpdateOrders(ConcurrentBag<UpdateOrderResponseDataShipment> shipments)
     {
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
-        foreach (UpdateOrderResponseDataShipment shipment in shipments)
+        foreach (var shipment in shipments)
         {
             TryParse(shipment.OrderCode, out var orderId);
 
@@ -126,7 +126,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
                                 $"{Environment.NewLine}Response: {content}");
         }
 
-        foreach (UpdateOrderResponseDataShipment shipment in response.Data.Shipments)
+        foreach (var shipment in response.Data.Shipments)
         {
             result.Add(shipment);
         }

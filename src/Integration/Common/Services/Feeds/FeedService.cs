@@ -3,6 +3,7 @@ using AutoMapper;
 using Infrastructure;
 using Infrastructure.Common;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Feeds;
 using Integration.Meso.Feeds;
 using Integration.SberMegaMarket.Feeds;
 using Microsoft.EntityFrameworkCore;
@@ -35,12 +36,12 @@ public class FeedService : IFeedService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && MarketplaceConstants.MarketplacesHasFeed.Contains(m.Type))
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
                 try
                 {
@@ -49,6 +50,7 @@ public class FeedService : IFeedService
                         MarketplaceType.SberMegaMarket => new SberMegaMarketFeedService(_mapper, _serviceProvider,
                             marketplace),
                         MarketplaceType.Meso => new MesoFeedService(_mapper, _serviceProvider, marketplace),
+                        MarketplaceType.Kuper => new KuperFeedService(_mapper, _serviceProvider, marketplace),
                         _ => null
                     };
 

@@ -20,7 +20,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         JsonConvert.DefaultSettings = () => new JsonSerializerSettings
         {
@@ -34,7 +34,7 @@ public class Program
             }
         };
 
-        IWebHostEnvironment env = builder.Environment;
+        var env = builder.Environment;
         var sharedFolder = Path.Combine(env.ContentRootPath, "..", "Configurations");
 
         builder.Configuration
@@ -94,7 +94,7 @@ public class Program
         builder.Services.AddMarketplaces();
         builder.Services.AddMemoryCache();
 
-        WebApplication app = builder.Build();
+        var app = builder.Build();
 
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
@@ -135,7 +135,7 @@ public class Program
 
     private static void InitializeDatabase(IApplicationBuilder app)
     {
-        using IServiceScope scope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+        using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
         scope?.ServiceProvider.GetRequiredService<MContext>().Database.Migrate();
     }
 }

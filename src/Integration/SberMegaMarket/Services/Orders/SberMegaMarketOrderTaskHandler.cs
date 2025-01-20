@@ -4,7 +4,6 @@ using Infrastructure.MediatR.Orders.Company.Commands;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
 using Infrastructure.Models.Marketplaces.TaskContext;
-using Infrastructure.Models.Orders;
 using Integration.Common.Services.Orders;
 using Integration.SberMegaMarket.Clients;
 using Integration.SberMegaMarket.Clients.Orders.Messages;
@@ -54,7 +53,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
                         Items = Order.Items.Where(i => i.Canceled)
                             .Select(i =>
                             {
-                                Order.OrderBox box = Order.Boxes
+                                var box = Order.Boxes
                                     .First(b => b.ProductId == i.ProductId && b.Count > 0);
 
                                 box.Count--;
@@ -217,7 +216,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         return Order.Items.Where(i => !i.Canceled)
             .Select(i =>
             {
-                Order.OrderBox box = Order.Boxes
+                var box = Order.Boxes
                     .First(b => b.ProductId == i.ProductId && b.Count > 0);
 
                 box.Count--;
@@ -237,7 +236,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         return Order.Items.Where(i => !i.Canceled)
             .Select(i =>
             {
-                Order.OrderBox box = Order.Boxes
+                var box = Order.Boxes
                     .First(b => b.ProductId == i.ProductId && b.Count > 0);
 
                 box.Count--;

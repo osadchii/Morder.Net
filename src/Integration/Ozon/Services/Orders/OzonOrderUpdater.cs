@@ -30,7 +30,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
             return;
         }
 
-        List<string> orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
+        var orderNumbers = await GetOrderNumbersToUpdate(Marketplace.Id);
 
         if (orderNumbers.Count == 0)
         {
@@ -38,7 +38,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
         }
 
         var client = ServiceProvider.GetRequiredService<IOzonGetOrdersClient>();
-        List<OzonPosting> postings = await client.GetOrders(_ozon, orderNumbers);
+        var postings = await client.GetOrders(_ozon, orderNumbers);
 
         _logger.LogInformation("Loaded {Count} ozon orders from marketplace with {MarketplaceId} Id",
             postings.Count, _ozon.Id);
@@ -49,7 +49,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
     private async Task UpdateOrders(List<OzonPosting> postings)
     {
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
-        foreach (OzonPosting posting in postings)
+        foreach (var posting in postings)
         {
             try
             {

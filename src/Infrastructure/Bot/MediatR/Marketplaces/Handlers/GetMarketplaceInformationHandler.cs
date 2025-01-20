@@ -1,6 +1,5 @@
 using System.Text;
 using Infrastructure.Bot.MediatR.Marketplaces.Queries;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +16,7 @@ public class GetMarketplaceInformationHandler : IRequestHandler<GetMarketplaceIn
 
     public async Task<string> Handle(GetMarketplaceInformationRequest request, CancellationToken cancellationToken)
     {
-        Marketplace marketplace = await _context.Marketplaces.AsNoTracking()
+        var marketplace = await _context.Marketplaces.AsNoTracking()
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         var builder = new StringBuilder();

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Products.Commands;
 using Infrastructure.MediatR.Products.Queries;
-using Infrastructure.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

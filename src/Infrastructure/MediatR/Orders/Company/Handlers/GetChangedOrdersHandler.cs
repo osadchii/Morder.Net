@@ -1,6 +1,5 @@
 using Infrastructure.Common;
 using Infrastructure.MediatR.Orders.Company.Commands;
-using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

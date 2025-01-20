@@ -1,6 +1,5 @@
 using Infrastructure.Bot.MediatR.Commands.Marketplaces;
 using Infrastructure.Bot.MediatR.Marketplaces.Commands;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Services.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +25,7 @@ public class SetMarketplaceMinimalPriceHandler : IRequestHandler<SetMarketplaceM
 
     public async Task<Unit> Handle(SetMarketplaceMinimalPriceRequest request, CancellationToken cancellationToken)
     {
-        Marketplace marketplace = await _context.Marketplaces
+        var marketplace = await _context.Marketplaces
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 
         var oldMinimalPrice = marketplace.MinimalPrice;

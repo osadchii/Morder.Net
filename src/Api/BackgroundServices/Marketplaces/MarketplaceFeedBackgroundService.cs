@@ -13,7 +13,7 @@ public class MarketplaceFeedBackgroundService : BackgroundService
 
     protected override async Task ServiceWork()
     {
-        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        await using var scope = Services.CreateAsyncScope();
         var feedService = scope.ServiceProvider.GetRequiredService<IFeedService>();
 
         await feedService.GenerateFeeds();

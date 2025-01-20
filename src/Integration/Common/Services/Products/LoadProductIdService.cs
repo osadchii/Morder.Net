@@ -33,12 +33,12 @@ public class LoadProductIdentifiersService : ILoadProductIdentifiersService
     {
         try
         {
-            List<Marketplace> marketplaces = await _context.Marketplaces
+            var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && !MarketplaceConstants.MarketplacesHasNoExternalProductId.Contains(m.Type))
                 .ToListAsync();
 
-            foreach (Marketplace marketplace in marketplaces)
+            foreach (var marketplace in marketplaces)
             {
                 try
                 {

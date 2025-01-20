@@ -6,7 +6,6 @@ using Infrastructure.Models.Products;
 using Infrastructure.Services.Marketplaces;
 using Integration.Common.Services.Products;
 using Integration.Ozon.Clients.LoadProducts;
-using Integration.Ozon.Clients.LoadProducts.Models;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,9 +33,9 @@ public class OzonLoadProductIdentifiersService : MarketplaceLoadProductIdentifie
             return;
         }
 
-        Dictionary<string, OzonProductIdentifier> result = await client.LoadOzonProductIdentifiersAsync(ozon);
+        var result = await client.LoadOzonProductIdentifiersAsync(ozon);
 
-        foreach (KeyValuePair<string, OzonProductIdentifier> kv in result)
+        foreach (var kv in result)
         {
             var productId = await articulService.GetProductIdByArticul(kv.Key);
 

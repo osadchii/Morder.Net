@@ -28,7 +28,7 @@ public class ToProductRatingByMarketplaceHandler : IRequestHandler<ToProductRati
 
     public async Task<Unit> Handle(ToProductRatingByMarketplaceCommand request, CancellationToken cancellationToken)
     {
-        DateTime startDate = await _context.Orders.AsNoTracking()
+        var startDate = await _context.Orders.AsNoTracking()
             .MinAsync(o => o.Date, cancellationToken);
 
         await _client.SendReplyKeyboard(request.ChatId, new KeyboardBuilder()

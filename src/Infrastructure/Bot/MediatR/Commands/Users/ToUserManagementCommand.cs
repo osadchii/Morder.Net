@@ -1,7 +1,6 @@
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.MediatR.BotUsers.Commands;
-using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -29,11 +28,11 @@ public class ToUserManagementHandler : IRequestHandler<ToUserManagementCommand, 
 
     public async Task<Unit> Handle(ToUserManagementCommand request, CancellationToken cancellationToken)
     {
-        BotUser user = await _context.BotUsers
+        var user = await _context.BotUsers
             .AsNoTracking()
             .SingleAsync(b => b.Id == request.UserId, cancellationToken);
 
-        KeyboardBuilder menuBuilder = new KeyboardBuilder()
+        var menuBuilder = new KeyboardBuilder()
             .AddLine()
             .AddButton(MenuTexts.Back)
             .AddLine()

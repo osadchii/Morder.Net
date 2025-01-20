@@ -1,5 +1,4 @@
 using System.Text;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,18 +26,18 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
 
     public async Task<Unit> Handle(OrdersCountReportRequest request, CancellationToken cancellationToken)
     {
-        Order[] orders = await _context.Orders
+        var orders = await _context.Orders
             .AsNoTracking()
             .Where(o => o.Status != OrderStatus.Canceled &&
                         o.Date >= request.From.ToUtcWithMoscowOffset() && o.Date <= request.To.ToUtcWithMoscowOffset())
             .Include(o => o.Marketplace)
             .ToArrayAsync(cancellationToken);
 
-        IEnumerable<MarketplaceType> types = orders.Select(o => o.Marketplace.Type).Distinct();
+        var types = orders.Select(o => o.Marketplace.Type).Distinct();
 
         var sb = new StringBuilder();
 
-        foreach (MarketplaceType type in types)
+        foreach (var type in types)
         {
             AppendReport(sb, orders
                     .Where(o => o.Marketplace.Type == type)
@@ -68,13 +67,13 @@ public class OrdersCountReportHandler : IRequestHandler<OrdersCountReportRequest
             return;
         }
 
-        IGrouping<DateTime, Order>[] sumsPerDay = orders
+        var sumsPerDay = orders
             .GroupBy(o => new DateTime(o.Date.Year, o.Date.Month, o.Date.Day))
             .ToArray();
 
         var avgPerDay = sumsPerDay.Average(s => s.Count());
         decimal bestDayCount = sumsPerDay.Max(s => s.Count());
-        DateTime bestDay = sumsPerDay.First(s => s.Count() == bestDayCount).Key;
+        var bestDay = sumsPerDay.First(s => s.Count() == bestDayCount).Key;
 
         var expressSuffix = express ? " (экспресс)" : "";
         sb.AppendLine($"<b>{marketplaceName}{expressSuffix}</b>");

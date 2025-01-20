@@ -1,4 +1,3 @@
-using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +22,7 @@ public class RemoveUserHandler : IRequestHandler<RemoveUserRequest, Unit>
 
     public async Task<Unit> Handle(RemoveUserRequest request, CancellationToken cancellationToken)
     {
-        BotUser user = await _context.BotUsers
+        var user = await _context.BotUsers
             .SingleAsync(u => u.Id == request.UserId, cancellationToken);
 
         user.IsDeleted = true;

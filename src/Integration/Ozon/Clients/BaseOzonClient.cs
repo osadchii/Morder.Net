@@ -23,7 +23,7 @@ public abstract class BaseOzonClient
         httpMessage.Headers.Add("Api-Key", ozon.Settings.ApiKey);
         httpMessage.Headers.Add("cache-disable", Guid.NewGuid().ToString());
 
-        HttpResponseMessage httpResponse = await client.SendAsync(httpMessage);
+        var httpResponse = await client.SendAsync(httpMessage);
 
         if (httpResponse.StatusCode == HttpStatusCode.OK)
         {

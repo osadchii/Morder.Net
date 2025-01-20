@@ -24,7 +24,7 @@ public class ProductTest : BaseTest
         var productId = Guid.NewGuid();
         
         await _productService.PostProduct(productId);
-        ServiceActionResult<ApiResult<IEnumerable<Product>>> getResult = await _productService.GetProducts();
+        var getResult = await _productService.GetProducts();
         
         Assert.True(getResult.Response.IsSuccessStatusCode);
         Assert.Contains(getResult.Entity.Value, e => e.ExternalId == productId);
@@ -35,7 +35,7 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId);
+        var result = await _productService.PostProduct(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -45,7 +45,7 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId, Guid.NewGuid());
+        var result = await _productService.PostProduct(productId, Guid.NewGuid());
         
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -54,13 +54,13 @@ public class ProductTest : BaseTest
     public async Task CreateProductExistingCategorySuccess()
     {
         var categoryId = Guid.NewGuid();
-        ServiceActionResult<Category> category = await _categoryService.PostCategory(categoryId);
+        var category = await _categoryService.PostCategory(categoryId);
         
         Assert.True(category.Response.IsSuccessStatusCode);
         
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId, categoryId);
+        var result = await _productService.PostProduct(productId, categoryId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -71,24 +71,24 @@ public class ProductTest : BaseTest
         // Create product
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId);
+        var result = await _productService.PostProduct(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
         
         // Create category
         var categoryId = Guid.NewGuid();
-        ServiceActionResult<Category> category = await _categoryService.PostCategory(categoryId);
+        var category = await _categoryService.PostCategory(categoryId);
         
         Assert.True(category.Response.IsSuccessStatusCode);
         
         // Update product with new category
-        Product product = result.Entity;
+        var product = result.Entity;
         product.CategoryId = categoryId;
         result = await _productService.PostProduct(product);
         
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        ServiceActionResult<ApiResult<Product>> getProduct = await _productService.GetProductByExternalId(productId);
+        var getProduct = await _productService.GetProductByExternalId(productId);
 
         Assert.True(getProduct.Response.IsSuccessStatusCode);
         Assert.Equal(categoryId, getProduct.Entity.Value.CategoryId ?? Guid.Empty);
@@ -100,14 +100,14 @@ public class ProductTest : BaseTest
         // Create product
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId);
+        var result = await _productService.PostProduct(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
         
         var categoryId = Guid.NewGuid();
         
         // Update product with wrong category
-        Product product = result.Entity;
+        var product = result.Entity;
         product.CategoryId = categoryId;
         result = await _productService.PostProduct(product);
         
@@ -120,11 +120,11 @@ public class ProductTest : BaseTest
         // Create product
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId);
+        var result = await _productService.PostProduct(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        ServiceActionResult<ApiResult<Product>> getResult = await _productService.GetProductByExternalId(productId);
+        var getResult = await _productService.GetProductByExternalId(productId);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
         Assert.Equal(productId, getResult.Entity.Value.ExternalId ?? Guid.Empty);
@@ -135,7 +135,7 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
 
-        ServiceActionResult<ApiResult<Product>> getResult = await _productService.GetProductByExternalId(productId);
+        var getResult = await _productService.GetProductByExternalId(productId);
 
         Assert.False(getResult.Response.IsSuccessStatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResult.Response.StatusCode);
@@ -147,13 +147,13 @@ public class ProductTest : BaseTest
         // Create product
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.PostProduct(productId);
+        var result = await _productService.PostProduct(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
         
         var articul = result.Entity.Articul!;
 
-        ServiceActionResult<ApiResult<Product>> getResult = await _productService.GetProductByArticul(articul);
+        var getResult = await _productService.GetProductByArticul(articul);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
         Assert.Equal(productId, getResult.Entity.Value.ExternalId ?? Guid.Empty);
@@ -165,7 +165,7 @@ public class ProductTest : BaseTest
     {
         var articul = Product.GetRandomArticul();
 
-        ServiceActionResult<ApiResult<Product>> getResult = await _productService.GetProductByArticul(articul);
+        var getResult = await _productService.GetProductByArticul(articul);
 
         Assert.False(getResult.Response.IsSuccessStatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResult.Response.StatusCode);
@@ -176,7 +176,7 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> result = await _productService.DeleteProductByExternalId(productId);
+        var result = await _productService.DeleteProductByExternalId(productId);
         
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -188,7 +188,7 @@ public class ProductTest : BaseTest
         
         await _productService.PostProduct(productId);
         
-        ServiceActionResult<Product> result = await _productService.DeleteProductByExternalId(productId);
+        var result = await _productService.DeleteProductByExternalId(productId);
         
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -201,7 +201,7 @@ public class ProductTest : BaseTest
         await _productService.PostProduct(productId);
         
         await _productService.DeleteProductByExternalId(productId);
-        ServiceActionResult<Product> result = await _productService.DeleteProductByExternalId(productId);
+        var result = await _productService.DeleteProductByExternalId(productId);
         
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -211,7 +211,7 @@ public class ProductTest : BaseTest
     {
         var articul = Product.GetRandomArticul();
         
-        ServiceActionResult<Product> result = await _productService.DeleteProductByArticul(articul);
+        var result = await _productService.DeleteProductByArticul(articul);
         
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -221,12 +221,12 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> productResult = await _productService.PostProduct(productId);
+        var productResult = await _productService.PostProduct(productId);
         Assert.True(productResult.Response.IsSuccessStatusCode);
 
         var articul = productResult.Entity.Articul!;
         
-        ServiceActionResult<Product> result = await _productService.DeleteProductByArticul(articul);
+        var result = await _productService.DeleteProductByArticul(articul);
         
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -236,13 +236,13 @@ public class ProductTest : BaseTest
     {
         var productId = Guid.NewGuid();
         
-        ServiceActionResult<Product> productResult = await _productService.PostProduct(productId);
+        var productResult = await _productService.PostProduct(productId);
         Assert.True(productResult.Response.IsSuccessStatusCode);
 
         var articul = productResult.Entity.Articul!;
         
         await _productService.DeleteProductByArticul(articul);
-        ServiceActionResult<Product> result = await _productService.DeleteProductByArticul(articul);
+        var result = await _productService.DeleteProductByArticul(articul);
         
         Assert.False(result.Response.IsSuccessStatusCode);
     }

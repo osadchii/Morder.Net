@@ -26,7 +26,7 @@ public class WarehouseService : BaseService
 
     public async Task<ServiceActionResult<ApiResult<IEnumerable<Warehouse>>>> GetWarehouses()
     {
-        HttpResponseMessage response = await GetAsync(BaseUrl);
+        var response = await GetAsync(BaseUrl);
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<IEnumerable<Warehouse>>>(response);
 
@@ -47,7 +47,7 @@ public class WarehouseService : BaseService
 
     private async Task<ServiceActionResult<ApiResult<Warehouse>>> GetWarehouse(string id)
     {
-        HttpResponseMessage response = await GetAsync($"{BaseUrl}/{id}");
+        var response = await GetAsync($"{BaseUrl}/{id}");
         var content = await response.Content.ReadAsStringAsync();
         var result = new ServiceActionResult<ApiResult<Warehouse>>(response);
 

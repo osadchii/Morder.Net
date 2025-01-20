@@ -20,7 +20,7 @@ public class PriceTypeTests : BaseTest
     {
         var priceTypeId = Guid.NewGuid();
 
-        ServiceActionResult<PriceType> result = await _priceTypeService.PostPriceType(priceTypeId);
+        var result = await _priceTypeService.PostPriceType(priceTypeId);
 
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -31,16 +31,16 @@ public class PriceTypeTests : BaseTest
         var priceTypeId = Guid.NewGuid();
         const string newName = "new price type name";
 
-        ServiceActionResult<PriceType> result = await _priceTypeService.PostPriceType(priceTypeId);
+        var result = await _priceTypeService.PostPriceType(priceTypeId);
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        PriceType priceType = result.Entity;
+        var priceType = result.Entity;
         priceType.Name = newName;
         result = await _priceTypeService.PostPriceType(priceType);
 
         Assert.True(result.Response.IsSuccessStatusCode);
 
-        ServiceActionResult<ApiResult<PriceType>> getResult =
+        var getResult =
             await _priceTypeService.GetPriceTypeByExternalId(priceTypeId);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
@@ -53,7 +53,7 @@ public class PriceTypeTests : BaseTest
         var priceTypeId = Guid.NewGuid();
 
         await _priceTypeService.PostPriceType(priceTypeId);
-        ServiceActionResult<ApiResult<IEnumerable<PriceType>>> getResult = await _priceTypeService.GetPriceTypes();
+        var getResult = await _priceTypeService.GetPriceTypes();
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
         Assert.Contains(getResult.Entity.Value, e => e.ExternalId == priceTypeId);
@@ -65,7 +65,7 @@ public class PriceTypeTests : BaseTest
         var priceTypeId = Guid.NewGuid();
 
         await _priceTypeService.PostPriceType(priceTypeId);
-        ServiceActionResult<ApiResult<PriceType>> getResult =
+        var getResult =
             await _priceTypeService.GetPriceTypeByExternalId(priceTypeId);
 
         Assert.True(getResult.Response.IsSuccessStatusCode);
@@ -75,7 +75,7 @@ public class PriceTypeTests : BaseTest
     public async Task GetPriceTypeByExternalIdFail()
     {
         var priceTypeId = Guid.NewGuid();
-        ServiceActionResult<ApiResult<PriceType>> getResult =
+        var getResult =
             await _priceTypeService.GetPriceTypeByExternalId(priceTypeId);
 
         Assert.False(getResult.Response.IsSuccessStatusCode);
@@ -87,7 +87,7 @@ public class PriceTypeTests : BaseTest
     {
         var priceTypeId = Guid.NewGuid();
 
-        ServiceActionResult<PriceType> result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
+        var result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
 
         Assert.False(result.Response.IsSuccessStatusCode);
     }
@@ -99,7 +99,7 @@ public class PriceTypeTests : BaseTest
 
         await _priceTypeService.PostPriceType(priceTypeId);
 
-        ServiceActionResult<PriceType> result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
+        var result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
 
         Assert.True(result.Response.IsSuccessStatusCode);
     }
@@ -112,7 +112,7 @@ public class PriceTypeTests : BaseTest
         await _priceTypeService.PostPriceType(priceTypeId);
 
         await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
-        ServiceActionResult<PriceType> result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
+        var result = await _priceTypeService.DeletePriceTypeByExternalId(priceTypeId);
 
         Assert.False(result.Response.IsSuccessStatusCode);
     }

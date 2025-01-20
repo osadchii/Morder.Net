@@ -13,7 +13,7 @@ public class OzonRejectOrderClient : BaseOzonClient, IOzonRejectOrderClient
 {
     public async Task<bool> RejectOrder(OzonDto ozonDto, RejectPostingRequest request)
     {
-        HttpResponseMessage httpResponse = await PostAsync(ozonDto, "v2/posting/fbs/cancel", request);
+        var httpResponse = await PostAsync(ozonDto, "v2/posting/fbs/cancel", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<RejectPostingResponse>();

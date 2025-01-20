@@ -33,7 +33,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
             throw new HttpRequestException("Need one or more items");
         }
 
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .Include(o => o.Items)
             .ThenInclude(i => i.Product)
             .SingleOrDefaultAsync(o => o.ExternalId == request.ExternalId!.Value, cancellationToken);
@@ -52,14 +52,14 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
 
         var taskContext = new RejectOrderContext();
 
-        foreach (RejectOrderItem item in request.Items!)
+        foreach (var item in request.Items!)
         {
             var toReject = item.Count!.Value;
 
-            IEnumerable<Order.OrderItem> orderItems = order.Items
+            var orderItems = order.Items
                 .Where(i => !i.Canceled && i.Product.ExternalId == item.ProductExternalId);
 
-            foreach (Order.OrderItem orderItem in orderItems)
+            foreach (var orderItem in orderItems)
             {
                 var rejectingCount = Math.Min(toReject, orderItem.Count);
 

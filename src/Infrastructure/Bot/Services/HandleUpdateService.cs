@@ -18,7 +18,7 @@ public class HandleUpdateService
 
     public async Task EchoAsync(Update update)
     {
-        Task handler = update.Type switch
+        var handler = update.Type switch
         {
             UpdateType.Message => BotOnMessageReceived(update.Message!),
             _ => UnknownUpdateHandlerAsync(update)

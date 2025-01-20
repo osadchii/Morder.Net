@@ -64,13 +64,13 @@ public class ProductArticulService : IProductArticulService
             }
         }
 
-        Dictionary<string, int> productIds = await _context.Products
+        var productIds = await _context.Products
             .AsNoTracking()
             .Where(p => notInCache.Contains(p.Articul!))
             .Select(p => new { p.Articul, p.Id })
             .ToDictionaryAsync(p => p.Articul!, p => p.Id);
 
-        foreach (KeyValuePair<string, int> kv in productIds)
+        foreach (var kv in productIds)
         {
             var cacheKey = GetCacheKey(kv.Key);
             _cache.Set(cacheKey, kv.Value);

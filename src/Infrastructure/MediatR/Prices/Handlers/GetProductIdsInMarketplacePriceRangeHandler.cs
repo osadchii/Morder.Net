@@ -1,8 +1,6 @@
 using Infrastructure.MediatR.Companies.Queries;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.MediatR.Products.Queries;
-using Infrastructure.Models.Companies;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +22,8 @@ public class
     public async Task<IEnumerable<int>> Handle(GetProductIdsInMarketplacePriceRangeRequest request,
         CancellationToken cancellationToken)
     {
-        CompanyDto companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
-        Marketplace marketplace = await _context.Marketplaces
+        var companyInformation = await _mediator.Send(new GetCompanyInformationRequest(), cancellationToken);
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .SingleAsync(m => m.Id == request.MarketplaceId, cancellationToken);
 

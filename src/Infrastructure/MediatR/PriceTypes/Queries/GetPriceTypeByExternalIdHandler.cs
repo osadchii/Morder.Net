@@ -25,7 +25,7 @@ public class GetPriceTypeByExternalIdHandler : IRequestHandler<GetPriceTypeByExt
     public async Task<PriceTypeDto> Handle(GetPriceTypeByExternalIdRequest request,
         CancellationToken cancellationToken)
     {
-        PriceType dbEntry = await _context.PriceTypes
+        var dbEntry = await _context.PriceTypes
             .AsNoTracking()
             .SingleOrDefaultAsync(p => p.ExternalId == request.ExternalId, cancellationToken: cancellationToken);
 

@@ -19,7 +19,7 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdRequest, Ca
 
     public async Task<CategoryDto> Handle(GetCategoryByIdRequest request, CancellationToken cancellationToken)
     {
-        Category category = await _context.Categories
+        var category = await _context.Categories
             .AsNoTracking()
             .SingleAsync(c => c.Id == request.Id, cancellationToken);
 

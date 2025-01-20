@@ -23,12 +23,12 @@ public class YandexMarketMpGetOrdersClient : IYandexMarketMpGetOrdersClient
     {
         const string fullUrl = "http://mporders.osadchiidev.ru/api/v1/order/GetOrdersByMarketplace/?marketplaceId=2";
 
-        HttpResponseMessage responseMessage = await _client.GetAsync(fullUrl);
+        var responseMessage = await _client.GetAsync(fullUrl);
         var body = await responseMessage.Content.ReadAsStringAsync();
 
         if (responseMessage.StatusCode == HttpStatusCode.OK)
         {
-            MpOrder[] result = body.FromJson<MpOrder[]>();
+            var result = body.FromJson<MpOrder[]>();
 
             if (result is null)
             {

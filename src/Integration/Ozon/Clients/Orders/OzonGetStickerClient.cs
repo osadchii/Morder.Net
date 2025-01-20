@@ -12,7 +12,7 @@ public class OzonGetStickerClient : BaseOzonClient, IOzonGetStickerClient
 {
     public async Task<byte[]> GetSticker(OzonDto ozon, GetStickerRequest request)
     {
-        HttpResponseMessage response = await PostAsync(ozon, "v2/posting/fbs/package-label", request);
+        var response = await PostAsync(ozon, "v2/posting/fbs/package-label", request);
         var body = await response.Content.ReadAsByteArrayAsync();
 
         if (body is null)

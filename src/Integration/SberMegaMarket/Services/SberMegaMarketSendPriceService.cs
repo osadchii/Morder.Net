@@ -22,7 +22,7 @@ public class SberMegaMarketSendPriceService : MarketplaceSendPriceService
         var sber = Mapper.Map<SberMegaMarketDto>(marketplace);
         var request = new SberMegaMarketMessage<SendPriceData>(sber.Settings.Token);
 
-        foreach (MarketplacePriceDto stock in prices)
+        foreach (var stock in prices)
         {
             request.Data.Prices.Add(new SberMegaMarketPrice(stock.Articul, stock.Value));
         }

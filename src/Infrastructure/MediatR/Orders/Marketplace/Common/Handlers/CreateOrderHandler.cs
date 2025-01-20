@@ -26,7 +26,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
 
     public async Task<Order> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        Order order = await _context.Orders
+        var order = await _context.Orders
             .Where(o =>  o.Number == request.Number)
             .Where(o => o.MarketplaceId == request.MarketplaceId)
             .FirstOrDefaultAsync(cancellationToken);

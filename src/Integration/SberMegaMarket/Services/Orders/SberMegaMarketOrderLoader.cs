@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using AutoMapper;
 using Infrastructure.Extensions;
-using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.MediatR.Orders.Marketplace.Common.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.SberMegaMarket;
@@ -46,7 +45,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
         });
 
         var shipments = await LoadShipments(doesNotExists.ToArray());
-        CreateOrdersRequest request = await adapter.CreateOrdersRequest(shipments, _sberMegaMarketDto);
+        var request = await adapter.CreateOrdersRequest(shipments, _sberMegaMarketDto);
 
         await mediatr.Send(request);
     }
@@ -106,7 +105,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
                                 $"{Environment.NewLine}Response: {response}");
         }
 
-        foreach (UpdateOrderResponseDataShipment shipment in response.Data.Shipments)
+        foreach (var shipment in response.Data.Shipments)
         {
             result.Add(shipment);
         }
@@ -116,7 +115,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
     {
         var result = new ConcurrentBag<string>();
 
-        DateTime currentDate = new DateTime(StartDate.Year, StartDate.Month, 1, 0, 0, 0).ToUtcTime();
+        var currentDate = new DateTime(StartDate.Year, StartDate.Month, 1, 0, 0, 0).ToUtcTime();
         var intervals = new List<DateTime>();
 
         while (currentDate < DateTime.UtcNow)

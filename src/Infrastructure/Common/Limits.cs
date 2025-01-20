@@ -20,6 +20,8 @@ public static class Limits
     public const int MaximalHeight = 1_000_000;
     public const int MinimalWeight = 0;
     public const int MaximalWeight = 1_000_000;
+    public const int MinimalVolume = 0;
+    public const int MaximalVolume = 1_000_000;
 
     public const int PriceTypeName = 128;
     public const int MinimalPrice = 0;

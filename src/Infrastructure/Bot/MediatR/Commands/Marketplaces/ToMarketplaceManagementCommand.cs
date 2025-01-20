@@ -2,7 +2,6 @@ using System.Text;
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.MediatR.BotUsers.Commands;
-using Infrastructure.Models.Marketplaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -30,7 +29,7 @@ public class ToMarketplaceManagementHandler : IRequestHandler<ToMarketplaceManag
 
     public async Task<Unit> Handle(ToMarketplaceManagementCommand request, CancellationToken cancellationToken)
     {
-        Marketplace marketplace = await _context.Marketplaces
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .SingleAsync(b => b.Id == request.MarketplaceId, cancellationToken);
 

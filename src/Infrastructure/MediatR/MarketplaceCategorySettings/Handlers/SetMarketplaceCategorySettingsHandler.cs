@@ -1,7 +1,6 @@
 using Infrastructure.Extensions;
 using Infrastructure.MediatR.MarketplaceCategorySettings.Commands;
 using Infrastructure.Models.MarketplaceCategorySettings;
-using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
 using Infrastructure.Services.Marketplaces;
 using MediatR;
@@ -55,17 +54,17 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
         List<int> categoryIds = new();
         FillCategoryIds(categories, categoryIds);
 
-        List<MarketplaceCategorySetting> settings = await _context.MarketplaceCategorySettings
+        var settings = await _context.MarketplaceCategorySettings
             .Where(s => s.MarketplaceId == request.MarketplaceId
                         && categoryIds.Contains(s.CategoryId))
             .ToListAsync(cancellationToken);
 
-        foreach (MarketplaceCategorySetting setting in settings)
+        foreach (var setting in settings)
         {
             setting.Blocked = request.Blocked!.Value;
         }
 
-        IEnumerable<int> newIds = categoryIds.Except(settings.Select(s => s.CategoryId));
+        var newIds = categoryIds.Except(settings.Select(s => s.CategoryId));
         await _context.AddRangeAsync(newIds.Select(id => new MarketplaceCategorySetting
         {
             MarketplaceId = request.MarketplaceId!.Value,
@@ -82,14 +81,14 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
     private async Task TrackProductStocksByCategoryIds(int marketplaceId, ICollection<int> categoryIds,
         CancellationToken cancellationToken)
     {
-        Marketplace marketplace = await _context.Marketplaces
+        var marketplace = await _context.Marketplaces
             .AsNoTracking()
             .Where(m => m.Id == marketplaceId)
             .SingleAsync(cancellationToken);
 
         var productTypes = marketplace.ProductTypes.FromJson<List<ProductType>>();
 
-        List<int> productIds = await _context.Products
+        var productIds = await _context.Products
             .AsNoTracking()
             .Where(p => !p.DeletionMark
                         && p.CategoryId.HasValue
@@ -109,7 +108,7 @@ public class SetMarketplaceCategorySettingsHandler : IRequestHandler<SetMarketpl
             return;
         }
 
-        foreach (Category category in categories)
+        foreach (var category in categories)
         {
             result.Add(category.Id);
             FillCategoryIds(category.Children, result);

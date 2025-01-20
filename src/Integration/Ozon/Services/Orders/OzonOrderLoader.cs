@@ -5,7 +5,6 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Common.Services.Orders;
 using Integration.Ozon.Clients.Orders;
-using Integration.Ozon.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

@@ -1,7 +1,6 @@
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
 using Infrastructure.MediatR.BotUsers.Commands;
-using Infrastructure.Models.BotUsers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -28,14 +27,14 @@ public class ToUsersHandler : IRequestHandler<ToUsersCommand, Unit>
 
     public async Task<Unit> Handle(ToUsersCommand request, CancellationToken cancellationToken)
     {
-        BotUser[] users = await _context.BotUsers
+        var users = await _context.BotUsers
             .AsNoTracking()
             .Where(u => !u.IsDeleted)
             .ToArrayAsync(cancellationToken);
 
         var menuBuilder = new KeyboardBuilder();
 
-        foreach (BotUser user in users.OrderBy(u => u.Id))
+        foreach (var user in users.OrderBy(u => u.Id))
         {
             menuBuilder.AddLine();
             menuBuilder.AddButton($"{user.Id} – {user.ToString()}");

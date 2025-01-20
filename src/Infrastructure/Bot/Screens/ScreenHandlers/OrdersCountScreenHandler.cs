@@ -29,7 +29,7 @@ public class OrdersCountScreenHandler : ScreenHandler
 
         try
         {
-            (DateTime from, DateTime to) dates = Text.FromRussianInterval();
+            var dates = Text.FromRussianInterval();
             await Mediator.Send(new OrdersCountReportRequest()
             {
                 From = dates.from.ToUtcTime(),

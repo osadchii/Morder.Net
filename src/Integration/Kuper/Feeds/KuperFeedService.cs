@@ -63,9 +63,9 @@ public class KuperFeedService : MarketplaceFeedService
         };
 
         var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        var path = Path.Combine(feedPath, $"categories_{DateTime.UtcNow:yyyyMMddHHmm}.json");
+        var path = Path.Combine(feedPath, $"stock_{DateTime.UtcNow:yyyyMMddHHmm}.json");
         
-        PrepareFeedFolder(feedPath, "categories_*.json");
+        PrepareFeedFolder(feedPath, "stock_*.json");
         
         await feed.Save(path);
     }

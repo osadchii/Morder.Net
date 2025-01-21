@@ -39,6 +39,7 @@ public class FeedService : IFeedService
             var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && MarketplaceConstants.MarketplacesHasFeed.Contains(m.Type))
+                .Include(x => x.Warehouse)
                 .ToListAsync();
 
             foreach (var marketplace in marketplaces)

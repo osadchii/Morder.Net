@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
 using Infrastructure.Models.Marketplaces;
@@ -38,6 +39,35 @@ public class KuperFeedService : MarketplaceFeedService
 
         await SaveProductFeed(products, data, productImageService);
         await SaveCategoryFeed(products, data);
+        await SaveStockFeed(products, data, _kuper.WarehouseExternalId.ToString());
+    }
+
+    private static async Task SaveStockFeed(IEnumerable<Product> products, MarketplaceProductData data, string warehouseId)
+    {
+        var stocks = products
+            .Select(x =>
+            {
+                var price = data.GetProductPrice(x);
+                return new KuperStockFeed.Item
+                {
+                    OfferId = x.Articul,
+                    Stock = data.GetProductStock(x, price).ToString(CultureInfo.InvariantCulture),
+                    OutletId = warehouseId
+                };
+            })
+            .ToArray();
+
+        var feed = new KuperStockFeed
+        {
+            Data = stocks
+        };
+
+        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
+        var path = Path.Combine(feedPath, $"categories_{DateTime.UtcNow:yyyyMMddHHmm}.json");
+        
+        PrepareFeedFolder(feedPath, "categories_*.json");
+        
+        await feed.Save(path);
     }
 
     private static async Task SaveCategoryFeed(IEnumerable<Product> products, MarketplaceProductData data)

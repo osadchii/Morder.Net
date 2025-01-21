@@ -40,6 +40,49 @@ public class KuperFeedService : MarketplaceFeedService
         await SaveProductFeed(products, data, productImageService);
         await SaveCategoryFeed(products, data);
         await SaveStockFeed(products, data, _kuper.WarehouseExternalId.ToString());
+        await SavePriceFeed(products, data, _kuper.WarehouseExternalId.ToString());
+    }
+
+    private static async Task SavePriceFeed(IEnumerable<Product> products, MarketplaceProductData data,
+        string warehouseId)
+    {
+        var prices = products
+            .Select(x =>
+            {
+                return new KuperPriceFeed.Item
+                {
+                    OfferId = x.Articul,
+                    OutletId = warehouseId,
+                    PriceType = "BASE",
+                    PriceCategory = "ONLINE",
+                    Vat = x.Vat switch
+                    {
+                        Vat.No_vat => "NO_VAT",
+                        Vat.Vat_0 => "VAT0",
+                        Vat.Vat_10 => "VAT10",
+                        Vat.Vat_20 => "VAT20",
+                        _ => "NO_VAT"
+                    },
+                    Price = new KuperPriceFeed.Item.PriceValue
+                    {
+                        Currency = "RUB",
+                        Amount = data.GetProductPrice(x).ToString(CultureInfo.InvariantCulture)
+                    }
+                };
+            })
+            .ToArray();
+
+        var feed = new KuperPriceFeed
+        {
+            Data = prices
+        };
+
+        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
+        var path = Path.Combine(feedPath, $"offer_prices_{DateTime.UtcNow:yyyyMMddHHmm}.json");
+        
+        PrepareFeedFolder(feedPath, "offer_prices_*.json");
+        
+        await feed.Save(path);
     }
 
     private static async Task SaveStockFeed(IEnumerable<Product> products, MarketplaceProductData data, string warehouseId)

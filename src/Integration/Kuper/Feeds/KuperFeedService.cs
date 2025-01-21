@@ -1,9 +1,7 @@
-using System.Globalization;
 using AutoMapper;
 using Infrastructure.MediatR.Marketplaces.Common.Queries;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Kuper;
-using Infrastructure.Models.Products;
 using Infrastructure.Services.Marketplaces;
 using Integration.Common.Services.Feeds;
 using Integration.Kuper.Extensions;
@@ -15,6 +13,7 @@ namespace Integration.Kuper.Feeds;
 public class KuperFeedService : MarketplaceFeedService
 {
     private readonly KuperDto _kuper;
+    private readonly string _feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
 
     public KuperFeedService(IMapper mapper, IServiceProvider serviceProvider, Marketplace marketplace) : base(mapper,
         serviceProvider, marketplace)
@@ -36,134 +35,33 @@ public class KuperFeedService : MarketplaceFeedService
         var products = data.Products
             .Where(x => productsWIthImages.Contains(x.Id))
             .ToArray();
-
-        await SaveProductFeed(products, data, productImageService);
-        await SaveCategoryFeed(products, data);
-        await SaveStockFeed(products, data, _kuper.WarehouseExternalId.ToString());
-        await SavePriceFeed(products, data, _kuper.WarehouseExternalId.ToString());
+        
+        var warehouseId = _kuper.WarehouseExternalId.ToString();
+        
+        await SaveFeed(() => KuperProductFeed.Build(products, data, productImageService), "offers");
+        await SaveFeed(() => KuperCategoryFeed.Build(products, data), "categories");
+        await SaveFeed(() => KuperStockFeed.Build(products, data, warehouseId), "stock");
+        await SaveFeed(() => KuperPriceFeed.Build(products, data, warehouseId), "offer_prices");
     }
 
-    private static async Task SavePriceFeed(IEnumerable<Product> products, MarketplaceProductData data,
-        string warehouseId)
+    private string GetFeedFilePath(string feedName)
     {
-        var prices = products
-            .Select(x =>
-            {
-                return new KuperPriceFeed.Item
-                {
-                    OfferId = x.Articul,
-                    OutletId = warehouseId,
-                    PriceType = "BASE",
-                    PriceCategory = "ONLINE",
-                    Vat = x.Vat switch
-                    {
-                        Vat.No_vat => "NO_VAT",
-                        Vat.Vat_0 => "VAT0",
-                        Vat.Vat_10 => "VAT10",
-                        Vat.Vat_20 => "VAT20",
-                        _ => "NO_VAT"
-                    },
-                    Price = new KuperPriceFeed.Item.PriceValue
-                    {
-                        Currency = "RUB",
-                        Amount = data.GetProductPrice(x).ToString(CultureInfo.InvariantCulture)
-                    }
-                };
-            })
-            .ToArray();
+        return Path.Combine(_feedPath, $"{feedName}_{DateTime.UtcNow:yyyyMMddHHmm}.json");
+    }
+    
+    private async Task SaveFeed<T>(Func<KuperFeed<T>> generateFeed, string feedName)
+    {
+        var feed = generateFeed();
+        var path = GetFeedFilePath(feedName);
 
-        var feed = new KuperPriceFeed
-        {
-            Data = prices
-        };
+        PrepareFeedFolder(_feedPath, feedName);
 
-        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        var path = Path.Combine(feedPath, $"offer_prices_{DateTime.UtcNow:yyyyMMddHHmm}.json");
-        
-        PrepareFeedFolder(feedPath, "offer_prices_*.json");
-        
         await feed.Save(path);
     }
 
-    private static async Task SaveStockFeed(IEnumerable<Product> products, MarketplaceProductData data, string warehouseId)
+    private static void PrepareFeedFolder(string feedPath, string feedName)
     {
-        var stocks = products
-            .Select(x =>
-            {
-                var price = data.GetProductPrice(x);
-                return new KuperStockFeed.Item
-                {
-                    OfferId = x.Articul,
-                    Stock = data.GetProductStock(x, price).ToString(CultureInfo.InvariantCulture),
-                    OutletId = warehouseId
-                };
-            })
-            .ToArray();
-
-        var feed = new KuperStockFeed
-        {
-            Data = stocks
-        };
-
-        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        var path = Path.Combine(feedPath, $"stock_{DateTime.UtcNow:yyyyMMddHHmm}.json");
-        
-        PrepareFeedFolder(feedPath, "stock_*.json");
-        
-        await feed.Save(path);
-    }
-
-    private static async Task SaveCategoryFeed(IEnumerable<Product> products, MarketplaceProductData data)
-    {
-        var categoryIds = products
-            .Where(x => x.CategoryId.HasValue)
-            .Select(x => x.CategoryId!.Value)
-            .Distinct()
-            .ToArray();
-
-        var categories = data.Categories
-            .Where(x => categoryIds.Contains(x.Key))
-            .Select(x => new KuperCategoryFeed.Item
-            {
-                Id = x.Key.ToString(),
-                Name = x.Value.Name
-            })
-            .ToArray();
-
-        var feed = new KuperCategoryFeed
-        {
-            Data = categories
-        };
-
-        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        var path = Path.Combine(feedPath, $"categories_{DateTime.UtcNow:yyyyMMddHHmm}.json");
-        
-        PrepareFeedFolder(feedPath, "categories_*.json");
-        
-        await feed.Save(path);
-    }
-
-    private static async Task SaveProductFeed(IEnumerable<Product> products, MarketplaceProductData data,
-        IProductImageService productImageService)
-    {
-        var feed = new KuperProductFeed
-        {
-            Data = products
-                .Select(x => x.ToKuperProduct(data, productImageService))
-                .ToArray()
-        };
-
-        var feedPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "feeds");
-        var path = Path.Combine(feedPath, $"offers_{DateTime.UtcNow:yyyyMMddHHmm}.json");
-        
-        PrepareFeedFolder(feedPath, "offers_*.json");
-        
-        await feed.Save(path);
-    }
-
-    private static void PrepareFeedFolder(string feedPath, string removeFilesSearchPattern)
-    {
-        var files = Directory.GetFiles(feedPath, removeFilesSearchPattern);
+        var files = Directory.GetFiles(feedPath, $"{feedName}_*.json");
         foreach (var file in files)
         {
             File.Delete(file);

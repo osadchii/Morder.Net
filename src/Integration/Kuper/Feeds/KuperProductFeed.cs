@@ -1,3 +1,7 @@
+using Infrastructure.Models.Marketplaces;
+using Infrastructure.Models.Products;
+using Infrastructure.Services.Marketplaces;
+using Integration.Kuper.Extensions;
 using Newtonsoft.Json;
 
 namespace Integration.Kuper.Feeds;
@@ -26,6 +30,18 @@ public class KuperProductFeed : KuperFeed<KuperProductFeed.Item>
             [JsonProperty("attribute")] public string Name { get; set; }
             [JsonProperty("values")] public string[] Values { get; set; }
         }
+    }
+
+    public static KuperProductFeed Build(IEnumerable<Product> products, MarketplaceProductData data,
+        IProductImageService productImageService)
+    {
+        var feed = new KuperProductFeed
+        {
+            Data = products
+                .Select(x => x.ToKuperProduct(data, productImageService))
+                .ToArray()
+        };
+        return feed;
     }
 
     public static class KuperFeedAttributes

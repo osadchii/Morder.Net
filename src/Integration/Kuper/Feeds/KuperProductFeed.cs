@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Integration.Kuper.Feeds;
 
-public class KuperProductFeed
+public class KuperProductFeed : KuperFeed
 {
     [JsonProperty("data")] public Item[] Data { get; set; }
 

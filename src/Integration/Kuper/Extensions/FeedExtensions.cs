@@ -10,7 +10,7 @@ namespace Integration.Kuper.Extensions;
 
 public static class FeedExtensions
 {
-    public static Task Save(this KuperProductFeed feed, string fileName)
+    public static Task Save<T>(this T feed, string fileName) where T : KuperFeed
     {
         return File.WriteAllTextAsync(fileName, feed.ToJson());
     }

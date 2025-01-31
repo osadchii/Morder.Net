@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Kuper;
@@ -49,7 +51,7 @@ public abstract class KuperClientBase
 
         var jsonObj = obj.ToJson();
 
-        httpMessage.Content = new StringContent(jsonObj, Encoding.UTF8, "application/json");
+        httpMessage.Content = JsonContent.Create(obj, new MediaTypeHeaderValue("application/json"));
 
         var httpResponse = await client.SendAsync(httpMessage);
 

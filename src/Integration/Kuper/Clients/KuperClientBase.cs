@@ -19,6 +19,8 @@ public abstract class KuperClientBase
             { "grant_type", "client_credentials" },
             { "scope", "openid" }
         });
+        
+        request.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
         var response = await httpClient.SendAsync(request);
 

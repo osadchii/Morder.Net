@@ -27,7 +27,7 @@ public class KuperGetOrdersClient : KuperClientBase, IKuperGetOrdersClient
 
     public async Task<List<OrderData>> GetOrdersByStatus(KuperDto kuper, string status, string token = null)
     {
-        var response = await GetAsync(kuper, "/v1/shipments?filters[status]=" + status, token);
+        var response = await GetAsync(kuper, "/v1/shipments?filters[state]=" + status, token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;

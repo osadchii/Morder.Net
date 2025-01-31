@@ -40,7 +40,7 @@ public abstract class KuperClientBase
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
         var fullUrl =
-            $"https://{kuper.Settings.ApiUrl}/{url}";
+            $"{kuper.Settings.ApiUrl}{url}";
 
         var httpMessage = new HttpRequestMessage(HttpMethod.Post, fullUrl);
 

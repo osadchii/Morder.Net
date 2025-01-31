@@ -142,7 +142,16 @@ public class KuperController : ControllerBase
                 Payload = new Payload
                 {
                     OrderId = firstOrder.OriginalOrderId,
-                    Number = "123456"
+                    Number = "123456",
+                    Order = new Order
+                    {
+                        OriginalOrderId = firstOrder.OriginalOrderId,
+                        Positions = firstOrder.Positions.Select(x => new OrderPosition
+                        {
+                            Id = x.Id,
+                            Quantity = x.Quantity
+                        }).ToArray()
+                    }
                 }
             }
         };

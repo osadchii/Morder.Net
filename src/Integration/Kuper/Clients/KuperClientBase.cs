@@ -50,7 +50,7 @@ public abstract class KuperClientBase
 
         var jsonObj = obj.ToJson();
 
-        httpMessage.Content = JsonContent.Create(jsonObj);
+        httpMessage.Content = JsonContent.Create(obj);
 
         var httpResponse = await client.SendAsync(httpMessage);
 

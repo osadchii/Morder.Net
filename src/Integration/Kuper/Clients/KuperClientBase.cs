@@ -24,7 +24,7 @@ public abstract class KuperClientBase
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception("Error while getting token from Kuper. StatusCode: " + response.StatusCode + " Error:" + await response.Content.ReadAsStringAsync());
+            throw new Exception("Error while getting token from Kuper auth url: " + kuper.Settings.AuthUrl + ". StatusCode: " + response.StatusCode + " Error:" + await response.Content.ReadAsStringAsync());
         }
 
         var body = await response.Content.ReadAsStringAsync();

@@ -31,11 +31,14 @@ public abstract class KuperClientBase
         return body.AccessToken;
     }
     
-    protected async Task<HttpResponseMessage> PostAsync(KuperDto kuper, string url, object obj)
+    protected async Task<HttpResponseMessage> PostAsync(KuperDto kuper, string url, object obj, string token = null)
     {
         using var client = new HttpClient();
-        
-        var token = await GetToken(kuper, client);
+
+        if (token.IsNullOrEmpty())
+        {
+            token = await GetToken(kuper, client);
+        }
         
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 

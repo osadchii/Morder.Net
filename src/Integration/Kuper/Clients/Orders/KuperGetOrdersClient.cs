@@ -1,10 +1,11 @@
 using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Kuper;
+using Integration.Kuper.Clients.Orders.Messages;
 
 namespace Integration.Kuper.Clients.Orders;
 
-public interface IKuperGetOrdersClient
+public interface IKuperOrdersClient
 {
     Task<string> GetToken(KuperDto kuper, HttpClient httpClient);
     Task<List<OrderData>> GetOrders(KuperDto kuper, string token = null);
@@ -16,9 +17,11 @@ public interface IKuperGetOrdersClient
     Task<List<OrderData>> GetOrdersByStoreId(KuperDto kuper, string storeId, string token = null);
     Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null,
         string token = null);
+    Task SendOrderNotification(KuperDto kuper, KuperOrderNotification notification, string token = null);
+    Task<KuperOrderState> GetOrderState(KuperDto kuper, string orderId, string token = null);
 }
 
-public class KuperGetOrdersClient : KuperClientBase, IKuperGetOrdersClient
+public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 {
     public async Task<List<OrderData>> GetOrders(KuperDto kuper, string token = null)
     {
@@ -107,7 +110,19 @@ public class KuperGetOrdersClient : KuperClientBase, IKuperGetOrdersClient
 
         return new OrdersPaginationResult(orders.Data, orders.NextPageToken);
     }
+
+    public Task SendOrderNotification(KuperDto kuper, KuperOrderNotification notification, string token = null)
+    {
+        return PostAsync(kuper, "/v1/notifications", notification, token);
+    }
     
+    public async Task<KuperOrderState> GetOrderState(KuperDto kuper, string orderId, string token = null)
+    {
+        var response = await GetAsync(kuper, $"/v1/shipments/{orderId}/state", token);
+        var order = await response.Content.ReadAsObject<KuperOrderState>();
+        
+        return order;
+    }
 }
 
 public record OrdersPaginationResult(List<OrderData> Data, string NextPageToken);

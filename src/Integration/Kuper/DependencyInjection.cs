@@ -7,6 +7,6 @@ public static class DependencyInjection
 {
     public static void AddKuper(this IServiceCollection services)
     {
-        services.AddTransient<IKuperGetOrdersClient, KuperGetOrdersClient>();
+        services.AddTransient<IKuperOrdersClient, KuperOrdersClient>();
     }
 }

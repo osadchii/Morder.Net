@@ -1,4 +1,5 @@
 using Integration.Common;
+using Integration.Kuper;
 using Integration.Meso;
 using Integration.Ozon;
 using Integration.SberMegaMarket;
@@ -15,6 +16,7 @@ public static class DependencyInjection
         services.AddSberMegaMarket();
         services.AddOzon();
         services.AddMeso();
+        services.AddKuper();
         services.AddYandexMarket();
     }
 }

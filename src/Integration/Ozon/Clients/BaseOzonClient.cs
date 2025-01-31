@@ -9,7 +9,7 @@ public abstract class BaseOzonClient
 {
     protected static async Task<HttpResponseMessage> PostAsync(OzonDto ozon, string url, object obj)
     {
-        var client = new HttpClient();
+        using var client = new HttpClient();
 
         var fullUrl =
             $"https://{ozon.Settings.Server}:{ozon.Settings.Port}/{url}";

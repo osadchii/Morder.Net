@@ -149,7 +149,7 @@ public class KuperController : ControllerBase
                         Positions = firstOrder.Positions.Select(x => new OrderPosition
                         {
                             Id = x.Id,
-                            Quantity = 1
+                            Quantity = 2
                         }).ToArray()
                     }
                 }

@@ -1,7 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Kuper;
 using Newtonsoft.Json;
@@ -25,14 +22,16 @@ public abstract class KuperClientBase
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception("Error while getting token from Kuper auth url: " + kuper.Settings.AuthUrl + ". StatusCode: " + response.StatusCode + " Error:" + await response.Content.ReadAsStringAsync());
+            throw new Exception("Error while getting token from Kuper auth url: " + kuper.Settings.AuthUrl +
+                                ". StatusCode: " + response.StatusCode + " Error:" +
+                                await response.Content.ReadAsStringAsync());
         }
 
         var body = await response.Content.ReadAsObject<KuperTokenModel>();
 
         return body.AccessToken;
     }
-    
+
     protected async Task<HttpResponseMessage> PostAsync(KuperDto kuper, string url, object obj, string token = null)
     {
         using var client = new HttpClient();
@@ -41,7 +40,7 @@ public abstract class KuperClientBase
         {
             token = await GetToken(kuper, client);
         }
-        
+
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
         var fullUrl =
@@ -51,7 +50,7 @@ public abstract class KuperClientBase
 
         var jsonObj = obj.ToJson();
 
-        httpMessage.Content = JsonContent.Create(obj, new MediaTypeHeaderValue("application/json"));
+        httpMessage.Content = new StringContent(jsonObj, null, "application/json");
 
         var httpResponse = await client.SendAsync(httpMessage);
 
@@ -69,7 +68,7 @@ public abstract class KuperClientBase
 
         throw new Exception(message);
     }
-    
+
     protected async Task<HttpResponseMessage> GetAsync(KuperDto kuper, string url, string token = null)
     {
         using var client = new HttpClient();
@@ -78,7 +77,7 @@ public abstract class KuperClientBase
         {
             token = await GetToken(kuper, client);
         }
-        
+
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
         var fullUrl =

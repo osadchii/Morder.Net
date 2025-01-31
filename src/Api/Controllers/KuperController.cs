@@ -107,31 +107,31 @@ public class KuperController : ControllerBase
         };
         
         await _kuperOrdersClient.SendOrderNotification(kuper, notificationAtWork, token);
-        await Delay();
-        
-        var notificationAssembled = new KuperOrderNotification
-        {
-            Event = new Event
-            {
-                Type = "order.assembled",
-                Payload = new Payload
-                {
-                    OrderId = firstOrder.OriginalOrderId,
-                    Number = "123456",
-                    Order = new Order
-                    {
-                        OriginalOrderId = firstOrder.OriginalOrderId,
-                        Positions = firstOrder.Positions.Select(x => new OrderPosition
-                        {
-                            Id = x.Id,
-                            Quantity = x.Quantity
-                        }).ToArray()
-                    }
-                }
-            }
-        };
-        
-        await _kuperOrdersClient.SendOrderNotification(kuper, notificationAssembled, token);
+        // await Delay();
+        //
+        // var notificationAssembled = new KuperOrderNotification
+        // {
+        //     Event = new Event
+        //     {
+        //         Type = "order.assembled",
+        //         Payload = new Payload
+        //         {
+        //             OrderId = firstOrder.OriginalOrderId,
+        //             Number = "123456",
+        //             Order = new Order
+        //             {
+        //                 OriginalOrderId = firstOrder.OriginalOrderId,
+        //                 Positions = firstOrder.Positions.Select(x => new OrderPosition
+        //                 {
+        //                     Id = x.Id,
+        //                     Quantity = x.Quantity
+        //                 }).ToArray()
+        //             }
+        //         }
+        //     }
+        // };
+        //
+        // await _kuperOrdersClient.SendOrderNotification(kuper, notificationAssembled, token);
         await Delay();
         
         var notificationReadyForDelivery = new KuperOrderNotification
@@ -149,7 +149,7 @@ public class KuperController : ControllerBase
                         Positions = firstOrder.Positions.Select(x => new OrderPosition
                         {
                             Id = x.Id,
-                            Quantity = x.Quantity
+                            Quantity = 1
                         }).ToArray()
                     }
                 }

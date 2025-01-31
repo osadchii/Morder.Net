@@ -13,6 +13,9 @@ public class KuperOrderState
 
 public class KuperOrderStateData
 {
+    [JsonProperty("state")]
     public string State { get; set; }
+    
+    [JsonProperty("paymentState")]
     public string PaymentState { get; set; }
 }

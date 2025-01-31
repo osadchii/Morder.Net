@@ -1,3 +1,4 @@
+using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Kuper;
 
@@ -13,6 +14,8 @@ public interface IKuperGetOrdersClient
     Task<List<OrderData>> GetOrdersByDeliveryDate(KuperDto kuper, DateTime from, DateTime to, string token = null);
     Task<List<OrderData>> GetOrdersByPaymentStatus(KuperDto kuper, string paymentStatus, string token = null);
     Task<List<OrderData>> GetOrdersByStoreId(KuperDto kuper, string storeId, string token = null);
+    Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null,
+        string token = null);
 }
 
 public class KuperGetOrdersClient : KuperClientBase, IKuperGetOrdersClient
@@ -82,4 +85,29 @@ public class KuperGetOrdersClient : KuperClientBase, IKuperGetOrdersClient
 
         return orders.Data;
     }
+
+    public async Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null, string token = null)
+    {
+        var sb = new StringBuilder("/v1/shipments?");
+
+        if (maxPageSize.HasValue)
+        {
+            sb.Append("maxPageSize=" + maxPageSize);
+        }
+        else if (!nextPageToken.IsNullOrEmpty())
+        {
+            sb.Append("nextPageToken=" + nextPageToken);
+        }
+        else
+        {
+            throw new InvalidOperationException("maxPageSize or nextPageToken must be set");
+        }
+        var response = await GetAsync(kuper, sb.ToString(), token);
+        var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
+
+        return new OrdersPaginationResult(orders.Data, orders.NextPageToken);
+    }
+    
 }
+
+public record OrdersPaginationResult(List<OrderData> Data, string NextPageToken);

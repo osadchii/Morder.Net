@@ -69,33 +69,11 @@ public class KuperController : ControllerBase
 
 
         await Delay();
-        var orders = await _kuperGetOrdersClient.GetOrders(kuper, token);
-
+        var result = await _kuperGetOrdersClient.GetOrdersWIthPagination(kuper, 1, token: token);
         await Delay();
-        var ordersByStatus = await _kuperGetOrdersClient.GetOrdersByStatus(kuper, "shipped", token);
+        var nextPageResult = await _kuperGetOrdersClient.GetOrdersWIthPagination(kuper, nextPageToken: result.NextPageToken, token: token);
 
-        await Delay();
-        var ordersByCreationDate = await _kuperGetOrdersClient.GetOrdersByCreationDate(kuper, new DateTime(2024, 8, 26),
-            new DateTime(2024, 8, 26, 23, 59, 59), token);
-
-        await Delay();
-        var ordersByUpdatedDate = await _kuperGetOrdersClient.GetOrdersByUpdatedDate(kuper, new DateTime(2024, 8, 26),
-            new DateTime(2024, 8, 26, 23, 59, 59), token);
-
-        await Delay();
-        var ordersByDeliveryDate = await _kuperGetOrdersClient.GetOrdersByDeliveryDate(kuper, new DateTime(2024, 8, 26),
-            new DateTime(2024, 8, 26, 23, 59, 59), token);
-
-        await Delay();
-        var ordersByPaymentStatus = await _kuperGetOrdersClient.GetOrdersByPaymentStatus(kuper, "paid", token);
-
-        await Delay();
-        var ordersByPaymentStatusNotPaid = await _kuperGetOrdersClient.GetOrdersByPaymentStatus(kuper, "not_paid", token);
-
-        await Delay();
-        var ordersByStoreId = await _kuperGetOrdersClient.GetOrdersByStoreId(kuper, "34949", token);
-
-        return orders.AsResult();
+        return result.AsResult();
 
         Task Delay() => Task.Delay(TimeSpan.FromSeconds(1));
     }

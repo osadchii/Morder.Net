@@ -16,11 +16,8 @@ public abstract class KuperClientBase
         {
             { "client_id", kuper.Settings.ClientId },
             { "client_secret", kuper.Settings.ClientSecret },
-            { "grant_type", "client_credentials" },
-            { "scope", "openid" }
+            { "grant_type", "client_credentials" }
         });
-        
-        request.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
         var response = await httpClient.SendAsync(request);
 
@@ -29,11 +26,9 @@ public abstract class KuperClientBase
             throw new Exception("Error while getting token from Kuper auth url: " + kuper.Settings.AuthUrl + ". StatusCode: " + response.StatusCode + " Error:" + await response.Content.ReadAsStringAsync());
         }
 
-        var body = await response.Content.ReadAsStringAsync();
+        var body = await response.Content.ReadAsObject<KuperTokenModel>();
 
-        var content = body.FromJson<KuperTokenModel>();
-
-        return content.AccessToken;
+        return body.AccessToken;
     }
     
     protected async Task<HttpResponseMessage> PostAsync(KuperDto kuper, string url, object obj)

@@ -25,7 +25,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 {
     public async Task<List<OrderData>> GetOrders(KuperDto kuper, string token = null)
     {
-        var response = await GetAsync(kuper, "/v1/shipments", token);
+        var response = await GetAsync(kuper, "/ofm/api/v1/shipments", token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;
@@ -33,7 +33,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 
     public async Task<List<OrderData>> GetOrdersByStatus(KuperDto kuper, string status, string token = null)
     {
-        var response = await GetAsync(kuper, "/v1/shipments?filters[state]=" + status, token);
+        var response = await GetAsync(kuper, "/ofm/api/v1/shipments?filters[state]=" + status, token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;
@@ -43,7 +43,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/v1/shipments?filters[createdFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[createdTo]=" +
+            "/ofm/api/v1/shipments?filters[createdFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[createdTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -54,7 +54,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/v1/shipments?filters[updatedFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[updatedTo]=" +
+            "/ofm/api/v1/shipments?filters[updatedFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[updatedTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -65,7 +65,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/v1/shipments?filters[deliveryFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[deliveryTo]=" +
+            "/ofm/api/v1/shipments?filters[deliveryFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[deliveryTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -75,7 +75,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
     public async Task<List<OrderData>> GetOrdersByPaymentStatus(KuperDto kuper, string paymentStatus,
         string token = null)
     {
-        var response = await GetAsync(kuper, "/v1/shipments?filters[paymentState]=" + paymentStatus, token);
+        var response = await GetAsync(kuper, "/ofm/api/v1/shipments?filters[paymentState]=" + paymentStatus, token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;
@@ -83,7 +83,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 
     public async Task<List<OrderData>> GetOrdersByStoreId(KuperDto kuper, string storeId, string token = null)
     {
-        var response = await GetAsync(kuper, "/v1/shipments?filters[storeId]=" + storeId, token);
+        var response = await GetAsync(kuper, "/ofm/api/v1/shipments?filters[storeId]=" + storeId, token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;
@@ -91,7 +91,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 
     public async Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null, string token = null)
     {
-        var sb = new StringBuilder("/v1/shipments?");
+        var sb = new StringBuilder("/ofm/api/v1/shipments?");
 
         if (maxPageSize.HasValue)
         {
@@ -113,12 +113,12 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 
     public Task SendOrderNotification(KuperDto kuper, KuperOrderNotification notification, string token = null)
     {
-        return PostAsync(kuper, "/v1/notifications", notification, token);
+        return PostAsync(kuper, "/ofm/api/v1/notifications", notification, token);
     }
     
     public async Task<KuperOrderState> GetOrderState(KuperDto kuper, string orderId, string token = null)
     {
-        var response = await GetAsync(kuper, $"/v1/shipments/{orderId}/state", token);
+        var response = await GetAsync(kuper, $"/ofm/api/v1/shipments/{orderId}/state", token);
         var order = await response.Content.ReadAsObject<KuperOrderState>();
         
         return order;

@@ -25,7 +25,7 @@ public class IncrementBotUserUsageCounterHandler : IRequestHandler<IncrementBotU
 
         if (counter is null)
         {
-            counter = new BotUserUsageCounter()
+            counter = new BotUserUsageCounter
             {
                 Count = 1,
                 LastUse = DateTime.UtcNow,

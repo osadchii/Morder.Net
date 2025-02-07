@@ -69,7 +69,7 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
                 throw new HttpRequestException($"Product with {item.ProductExternalId!.Value} external id not found");
             }
 
-            order.Boxes.Add(new Order.OrderBox()
+            order.Boxes.Add(new Order.OrderBox
             {
                 Count = item.Count!.Value,
                 ProductId = productId.Value,
@@ -103,20 +103,20 @@ public class PackOrderHandler : IRequestHandler<PackOrderRequest, Unit>
         order.Status = Status;
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
-        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest
         {
             Type = TaskType.Pack,
             MarketplaceId = order.MarketplaceId,
             OrderId = order.Id
         }, cancellationToken);
 
-        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest
         {
             Type = TaskType.Sticker,
             MarketplaceId = order.MarketplaceId,
             OrderId = order.Id
         }, cancellationToken);
-        await _mediator.Send(new SaveOrderStatusHistoryRequest()
+        await _mediator.Send(new SaveOrderStatusHistoryRequest
         {
             Status = Status,
             OrderId = order.Id,

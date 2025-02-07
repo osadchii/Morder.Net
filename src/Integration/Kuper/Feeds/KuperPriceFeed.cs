@@ -1,6 +1,7 @@
 using System.Globalization;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
+using Integration.Kuper.Extensions;
 using Newtonsoft.Json;
 
 namespace Integration.Kuper.Feeds;
@@ -35,28 +36,18 @@ public class KuperPriceFeed : KuperFeed<KuperPriceFeed.Item>
         string warehouseId)
     {
         var prices = products
-            .Select(x =>
+            .Select(x => new Item
             {
-                return new KuperPriceFeed.Item
+                OfferId = x.Articul,
+                OutletId = warehouseId,
+                PriceType = "BASE",
+                PriceCategory = "ONLINE",
+                Vat = x.Vat.ConvertToString(),
+                Price = new Item.PriceValue
                 {
-                    OfferId = x.Articul,
-                    OutletId = warehouseId,
-                    PriceType = "BASE",
-                    PriceCategory = "ONLINE",
-                    Vat = x.Vat switch
-                    {
-                        Vat.No_vat => "NO_VAT",
-                        Vat.Vat_0 => "VAT0",
-                        Vat.Vat_10 => "VAT10",
-                        Vat.Vat_20 => "VAT20",
-                        _ => "NO_VAT"
-                    },
-                    Price = new KuperPriceFeed.Item.PriceValue
-                    {
-                        Currency = "RUB",
-                        Amount = data.GetProductPrice(x).ToString(CultureInfo.InvariantCulture)
-                    }
-                };
+                    Currency = "RUB",
+                    Amount = data.GetProductPrice(x).ToString(CultureInfo.InvariantCulture)
+                }
             })
             .ToArray();
 

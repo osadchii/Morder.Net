@@ -33,14 +33,14 @@ public class MainMenuScreenHandler : ScreenHandler
         switch (Text)
         {
             case MenuTexts.TodaySummary:
-                await Mediator.Send(new GetOrderSummaryByDayRequest()
+                await Mediator.Send(new GetOrderSummaryByDayRequest
                 {
                     ChatId = ChatId,
                     Date = new DateTime(utcMoscow.Year, utcMoscow.Month, utcMoscow.Day).ToUtcTime()
                 });
                 break;
             case MenuTexts.YesterdaySummary:
-                await Mediator.Send(new GetOrderSummaryByDayRequest()
+                await Mediator.Send(new GetOrderSummaryByDayRequest
                 {
                     ChatId = ChatId,
                     Date = new DateTime(utcMoscow.Year, utcMoscow.Month, utcMoscow.Day).AddDays(-1)
@@ -48,7 +48,7 @@ public class MainMenuScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.ToReports:
-                await Mediator.Send(new ToReportMenuCommand()
+                await Mediator.Send(new ToReportMenuCommand
                 {
                     ChatId = ChatId
                 });
@@ -60,7 +60,7 @@ public class MainMenuScreenHandler : ScreenHandler
                     break;
                 }
 
-                await Mediator.Send(new ToUsersCommand()
+                await Mediator.Send(new ToUsersCommand
                 {
                     ChatId = ChatId
                 });
@@ -72,13 +72,13 @@ public class MainMenuScreenHandler : ScreenHandler
                     break;
                 }
 
-                await Mediator.Send(new ToMarketplacesCommand()
+                await Mediator.Send(new ToMarketplacesCommand
                 {
                     ChatId = ChatId
                 });
                 break;
             default:
-                await Mediator.Send(new ToMainMenuCommand()
+                await Mediator.Send(new ToMainMenuCommand
                 {
                     ChatId = ChatId
                 });

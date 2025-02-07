@@ -34,7 +34,7 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
             currentDate = currentDate.AddDays(DaysInterval);
         }
 
-        await Parallel.ForEachAsync(intervals, new ParallelOptions()
+        await Parallel.ForEachAsync(intervals, new ParallelOptions
         {
             MaxDegreeOfParallelism = ozonDto.Settings.UpdateOrdersThreads
         }, async (interval, _) => { await LoadPostingByInterval(ozonDto, result, interval); });
@@ -58,11 +58,11 @@ public class OzonLoadOrderListClient : BaseOzonClient, IOzonLoadOrderListClient
     private async Task<bool> LoadPostingsPortions(OzonDto ozon, ConcurrentBag<OzonPosting> postings,
         (DateTime Since, DateTime To) interval, int currentPage)
     {
-        var request = new GetOrderListRequest()
+        var request = new GetOrderListRequest
         {
             Limit = ozon.Settings.LoadOrdersPageSize,
             Offset = (currentPage - 1) * ozon.Settings.LoadOrdersPageSize,
-            Filter = new GetOrderListFilter()
+            Filter = new GetOrderListFilter
             {
                 Since = interval.Since,
                 To = interval.To

@@ -17,7 +17,7 @@ public class MarketplaceManagementScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToMarketplacesCommand()
+            await Mediator.Send(new ToMarketplacesCommand
             {
                 ChatId = ChatId
             });
@@ -32,21 +32,21 @@ public class MarketplaceManagementScreenHandler : ScreenHandler
         switch (Text)
         {
             case MenuTexts.SetMinimalPrice:
-                await Mediator.Send(new ToSetMinimalPriceCommand()
+                await Mediator.Send(new ToSetMinimalPriceCommand
                 {
                     ChatId = ChatId,
                     MarketplaceId = marketplaceId
                 });
                 break;
             case MenuTexts.SetMinimalStock:
-                await Mediator.Send(new ToSetMinimalStockCommand()
+                await Mediator.Send(new ToSetMinimalStockCommand
                 {
                     ChatId = ChatId,
                     MarketplaceId = marketplaceId
                 });
                 break;
             case MenuTexts.NullifyStockOn:
-                await Mediator.Send(new SetMarketplaceNullifyStocksRequest()
+                await Mediator.Send(new SetMarketplaceNullifyStocksRequest
                 {
                     ChatId = ChatId,
                     MarketplaceId = marketplaceId,
@@ -54,7 +54,7 @@ public class MarketplaceManagementScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.NullifyStockOff:
-                await Mediator.Send(new SetMarketplaceNullifyStocksRequest()
+                await Mediator.Send(new SetMarketplaceNullifyStocksRequest
                 {
                     ChatId = ChatId,
                     MarketplaceId = marketplaceId,

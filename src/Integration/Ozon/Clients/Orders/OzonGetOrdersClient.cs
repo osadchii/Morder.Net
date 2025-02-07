@@ -24,7 +24,7 @@ public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
     {
         var result = new ConcurrentBag<OzonPosting>();
 
-        await Parallel.ForEachAsync(orderNumbers, new ParallelOptions()
+        await Parallel.ForEachAsync(orderNumbers, new ParallelOptions
         {
             MaxDegreeOfParallelism = ozonDto.Settings.LoadOrdersThreads
         }, async (number, _) => { await LoadOrder(ozonDto, result, number); });
@@ -34,7 +34,7 @@ public class OzonGetOrdersClient : BaseOzonClient, IOzonGetOrdersClient
 
     private async Task LoadOrder(OzonDto ozonDto, ConcurrentBag<OzonPosting> postings, string number)
     {
-        var request = new GetOrderRequest()
+        var request = new GetOrderRequest
         {
             PostingNumber = number
         };

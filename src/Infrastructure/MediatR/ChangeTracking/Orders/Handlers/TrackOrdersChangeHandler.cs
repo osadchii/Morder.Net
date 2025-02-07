@@ -22,7 +22,7 @@ public class TrackOrdersChangeHandler : IRequestHandler<TrackOrdersChangeRequest
             .Select(ot => ot.OrderId)
             .ToListAsync(cancellationToken);
 
-        await _context.OrderChanges.AddRangeAsync(request.OrderIds.Except(tracked).Select(id => new OrderChange()
+        await _context.OrderChanges.AddRangeAsync(request.OrderIds.Except(tracked).Select(id => new OrderChange
         {
             OrderId = id
         }), cancellationToken);

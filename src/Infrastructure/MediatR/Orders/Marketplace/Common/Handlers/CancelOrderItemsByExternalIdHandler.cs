@@ -54,7 +54,7 @@ public class CancelOrderItemsByExternalIdHandler : IRequestHandler<CancelOrderIt
 
         if (order.Status == Status)
         {
-            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            await _mediator.Send(new SaveOrderStatusHistoryRequest
             {
                 Status = Status,
                 OrderId = order.Id

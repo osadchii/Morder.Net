@@ -20,7 +20,7 @@ public class OrdersCountScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToReportMenuCommand()
+            await Mediator.Send(new ToReportMenuCommand
             {
                 ChatId = ChatId
             });
@@ -30,7 +30,7 @@ public class OrdersCountScreenHandler : ScreenHandler
         try
         {
             var dates = Text.FromRussianInterval();
-            await Mediator.Send(new OrdersCountReportRequest()
+            await Mediator.Send(new OrdersCountReportRequest
             {
                 From = dates.from.ToUtcTime(),
                 To = dates.to.ToUtcTime(),

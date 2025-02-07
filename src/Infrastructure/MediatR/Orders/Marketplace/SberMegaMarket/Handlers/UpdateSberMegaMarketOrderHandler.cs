@@ -70,7 +70,7 @@ public class UpdateSberMegaMarketOrderHandler : IRequestHandler<UpdateSberMegaMa
 
         if (initialStatus != order.Status)
         {
-            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            await _mediator.Send(new SaveOrderStatusHistoryRequest
             {
                 Status = order.Status,
                 OrderId = order.Id

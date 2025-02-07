@@ -16,7 +16,7 @@ public class UserManagementScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToUsersCommand()
+            await Mediator.Send(new ToUsersCommand
             {
                 ChatId = ChatId
             });
@@ -31,7 +31,7 @@ public class UserManagementScreenHandler : ScreenHandler
         switch (Text)
         {
             case MenuTexts.Verify:
-                await Mediator.Send(new SetUserVerifyRequest()
+                await Mediator.Send(new SetUserVerifyRequest
                 {
                     ChatId = ChatId,
                     Verified = true,
@@ -39,7 +39,7 @@ public class UserManagementScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.Block:
-                await Mediator.Send(new SetUserVerifyRequest()
+                await Mediator.Send(new SetUserVerifyRequest
                 {
                     ChatId = ChatId,
                     Verified = false,
@@ -47,7 +47,7 @@ public class UserManagementScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.AddAdministrator:
-                await Mediator.Send(new SetUserAdministratorRequest()
+                await Mediator.Send(new SetUserAdministratorRequest
                 {
                     ChatId = ChatId,
                     Administrator = true,
@@ -55,7 +55,7 @@ public class UserManagementScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.RemoveAdministrator:
-                await Mediator.Send(new SetUserAdministratorRequest()
+                await Mediator.Send(new SetUserAdministratorRequest
                 {
                     ChatId = ChatId,
                     Administrator = false,
@@ -63,7 +63,7 @@ public class UserManagementScreenHandler : ScreenHandler
                 });
                 break;
             case MenuTexts.RemoveUser:
-                await Mediator.Send(new RemoveUserRequest()
+                await Mediator.Send(new RemoveUserRequest
                 {
                     ChatId = ChatId,
                     UserId = userId

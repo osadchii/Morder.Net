@@ -15,7 +15,7 @@ public class SaveOrderStatusHistoryHandler : IRequestHandler<SaveOrderStatusHist
 
     public async Task<Unit> Handle(SaveOrderStatusHistoryRequest request, CancellationToken cancellationToken)
     {
-        await _context.OrderStatusHistories.AddAsync(new OrderStatusHistory()
+        await _context.OrderStatusHistories.AddAsync(new OrderStatusHistory
         {
             Date = DateTime.UtcNow,
             OrderId = request.OrderId,

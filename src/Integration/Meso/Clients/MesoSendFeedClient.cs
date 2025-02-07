@@ -29,7 +29,7 @@ public class MesoSendFeedClient : IMesoSendFeedClient
 
     private async Task<string> GetToken(MesoDto meso)
     {
-        var request = new GetTokenRequest()
+        var request = new GetTokenRequest
         {
             Username = meso.Settings.Login,
             Password = meso.Settings.Password

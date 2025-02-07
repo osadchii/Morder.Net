@@ -15,7 +15,7 @@ public class DeleteStockChangesHandler : IRequestHandler<DeleteStockChangesReque
 
     public async Task<Unit> Handle(DeleteStockChangesRequest request, CancellationToken cancellationToken)
     {
-        _context.RemoveRange(request.ProductIds.Select(p => new StockChange()
+        _context.RemoveRange(request.ProductIds.Select(p => new StockChange
         {
             MarketplaceId = request.MarketplaceId,
             ProductId = p

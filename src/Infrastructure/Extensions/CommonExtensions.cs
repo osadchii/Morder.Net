@@ -6,7 +6,7 @@ public static class CommonExtensions
 {
     public static string ToJson(this object obj)
     {
-        var settings = new JsonSerializerSettings()
+        var settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };

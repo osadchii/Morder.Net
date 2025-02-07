@@ -39,7 +39,7 @@ public class OzonOrderAdapter : IOzonOrderAdapter
             .Where(p => p.Products.All(i => products.ContainsKey(i.OfferId)))
             .Select(p =>
             {
-                return new CreateOrderRequest()
+                return new CreateOrderRequest
                 {
                     Customer = p.Customer?.Name ?? Customer,
                     Date = p.InProcessAt.ToUtcTime(),
@@ -51,7 +51,7 @@ public class OzonOrderAdapter : IOzonOrderAdapter
                     ShippingDate = p.ShipmentDate.ToUtcTime(),
                     ExpressOrder = p.IsExpress,
                     TrackNumber = p.TrackingNumber,
-                    Items = p.Products.Select(i => new CreateOrderItem()
+                    Items = p.Products.Select(i => new CreateOrderItem
                     {
                         Count = i.Quantity,
                         Price = decimal.Parse(i.Price),

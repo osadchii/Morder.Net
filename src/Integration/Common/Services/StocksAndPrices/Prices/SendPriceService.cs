@@ -3,6 +3,7 @@ using Infrastructure;
 using Infrastructure.MediatR.ChangeTracking.Prices.Commands;
 using Infrastructure.MediatR.Prices.Queries;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Services;
 using Integration.Ozon.Services;
 using Integration.SberMegaMarket.Services;
 using MediatR;
@@ -47,7 +48,7 @@ public class SendPriceService : ISendPriceService
             {
                 try
                 {
-                    var prices = (await _mediator.Send(new GetMarketplacePricesRequest()
+                    var prices = (await _mediator.Send(new GetMarketplacePricesRequest
                     {
                         MarketplaceId = marketplace.Id,
                         Limit = marketplace.PriceSendLimit
@@ -63,6 +64,7 @@ public class SendPriceService : ISendPriceService
                         MarketplaceType.SberMegaMarket => new SberMegaMarketSendPriceService(_mapper,
                             _serviceProvider),
                         MarketplaceType.Ozon => new OzonSendPriceService(_mapper, _serviceProvider),
+                        MarketplaceType.Kuper => new KuperSendPriceService(_mapper, _serviceProvider),
                         _ => null
                     };
 

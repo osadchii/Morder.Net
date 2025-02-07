@@ -18,7 +18,7 @@ public class MarketplacesScreenHandler : ScreenHandler
 
         if (int.TryParse(firstPart, out var marketplaceId))
         {
-            await Mediator.Send(new ToMarketplaceManagementCommand()
+            await Mediator.Send(new ToMarketplaceManagementCommand
             {
                 ChatId = ChatId,
                 MarketplaceId = marketplaceId

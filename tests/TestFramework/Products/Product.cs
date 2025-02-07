@@ -40,7 +40,7 @@ public class Product
 
     public static Product Create(Guid id, Guid? categoryId = null)
     {
-        return new Product()
+        return new Product
         {
             Name = id.ToString(),
             Articul = id.ToString().Split('-')[0],

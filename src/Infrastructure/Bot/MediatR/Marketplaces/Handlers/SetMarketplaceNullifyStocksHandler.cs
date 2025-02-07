@@ -41,7 +41,7 @@ public class SetMarketplaceNullifyStocksHandler : IRequestHandler<SetMarketplace
             "User: {ChatId} changed nullify stock value for {MarketplaceName} ({MarketplaceId}) to {NullifyStock}",
             request.ChatId, marketplace.Name, marketplace.Id, request.NullifyStocks);
 
-        await _mediator.Send(new ToMarketplaceManagementCommand()
+        await _mediator.Send(new ToMarketplaceManagementCommand
         {
             ChatId = request.ChatId,
             MarketplaceId = request.MarketplaceId

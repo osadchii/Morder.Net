@@ -24,7 +24,7 @@ public class OzonSendPriceService : MarketplaceSendPriceService
         var ozon = Mapper.Map<OzonDto>(marketplace);
         var logger = ServiceProvider.GetRequiredService<ILogger<OzonSendPriceService>>();
 
-        var request = new OzonPriceRequest()
+        var request = new OzonPriceRequest
         {
             Prices = prices
                 .Where(p => !p.ProductExternalId.IsNullOrEmpty())

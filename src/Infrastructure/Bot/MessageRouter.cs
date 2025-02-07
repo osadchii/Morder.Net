@@ -30,12 +30,12 @@ public class MessageRouter : IMessageRouter
     {
         var user = await GetUser(message);
 
-        await _mediator.Send(new IncrementBotUserUsageCounterRequest()
+        await _mediator.Send(new IncrementBotUserUsageCounterRequest
         {
             BotUserId = user.Id
         });
 
-        var hasAccess = await _mediator.Send(new UserAccessCheckRequest()
+        var hasAccess = await _mediator.Send(new UserAccessCheckRequest
         {
             User = user
         });
@@ -47,7 +47,7 @@ public class MessageRouter : IMessageRouter
 
         if ((message.Text ?? string.Empty) == MenuTexts.ToMainMenu)
         {
-            await _mediator.Send(new ToMainMenuCommand()
+            await _mediator.Send(new ToMainMenuCommand
             {
                 ChatId = message.Chat.Id
             });
@@ -80,7 +80,7 @@ public class MessageRouter : IMessageRouter
 
         if (handler is null)
         {
-            await _mediator.Send(new ToMainMenuCommand()
+            await _mediator.Send(new ToMainMenuCommand
             {
                 ChatId = message.Chat.Id
             });
@@ -93,7 +93,7 @@ public class MessageRouter : IMessageRouter
 
     private Task<BotUser> GetUser(Message message)
     {
-        return _mediator.Send(new CreateUpdateBotUserRequest()
+        return _mediator.Send(new CreateUpdateBotUserRequest
         {
             ChatId = message.Chat.Id,
             FirstName = message.Chat.FirstName ?? string.Empty,

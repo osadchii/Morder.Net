@@ -22,7 +22,7 @@ public class SetMarketplaceMinimalStockScreenHandler : ScreenHandler
 
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToMarketplaceManagementCommand()
+            await Mediator.Send(new ToMarketplaceManagementCommand
             {
                 ChatId = ChatId,
                 MarketplaceId = marketplaceId
@@ -35,7 +35,7 @@ public class SetMarketplaceMinimalStockScreenHandler : ScreenHandler
             return;
         }
 
-        await Mediator.Send(new SetMarketplaceMinimalStockRequest()
+        await Mediator.Send(new SetMarketplaceMinimalStockRequest
         {
             ChatId = ChatId,
             MarketplaceId = marketplaceId,

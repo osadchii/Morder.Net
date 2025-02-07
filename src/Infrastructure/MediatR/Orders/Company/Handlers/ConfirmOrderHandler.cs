@@ -44,13 +44,13 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderRequest, Unit>
 
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
-        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest
         {
             Type = TaskType.Confirm,
             MarketplaceId = order.MarketplaceId,
             OrderId = order.Id
         }, cancellationToken);
-        await _mediator.Send(new SaveOrderStatusHistoryRequest()
+        await _mediator.Send(new SaveOrderStatusHistoryRequest
         {
             Status = Status,
             OrderId = order.Id,

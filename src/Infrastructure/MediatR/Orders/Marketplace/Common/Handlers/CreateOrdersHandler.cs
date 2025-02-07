@@ -31,14 +31,14 @@ public class CreateOrdersHandler : IRequestHandler<CreateOrdersRequest, IEnumera
         await _context.AddRangeAsync(orders, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _mediator.Send(new TrackOrdersChangeRequest()
+        await _mediator.Send(new TrackOrdersChangeRequest
         {
             OrderIds = orders.Where(o => !o.Archived).Select(o => o.Id)
         }, cancellationToken);
 
-        await _mediator.Send(new SaveOrdersStatusHistoryRequest()
+        await _mediator.Send(new SaveOrdersStatusHistoryRequest
         {
-            Requests = orders.Select(o => new SaveOrderStatusHistoryRequest()
+            Requests = orders.Select(o => new SaveOrderStatusHistoryRequest
             {
                 Status = o.Status,
                 OrderId = o.Id

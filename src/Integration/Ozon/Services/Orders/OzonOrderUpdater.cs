@@ -53,7 +53,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
         {
             try
             {
-                await mediator.Send(new UpdateOzonOrderRequest()
+                await mediator.Send(new UpdateOzonOrderRequest
                 {
                     MarketplaceId = _ozon.Id,
                     OrderNumber = posting.PostingNumber,
@@ -62,7 +62,7 @@ public class OzonOrderUpdater : MarketplaceOrderUpdater
                     CustomerFullName = posting.Customer?.Name,
                     ShippingDate = posting.ShipmentDate,
                     TrackNumber = posting.TrackingNumber,
-                    Items = posting.Products.Select(p => new UpdateOzonOrderItem()
+                    Items = posting.Products.Select(p => new UpdateOzonOrderItem
                     {
                         Articul = p.OfferId,
                         Count = p.Quantity,

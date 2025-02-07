@@ -44,7 +44,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
         var adapter = ServiceProvider.GetRequiredService<IOzonOrderAdapter>();
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
 
-        var doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = (await mediatr.Send(new OrdersDoNotExistRequest
         {
             MarketplaceId = _ozon.Id,
             Numbers = postings.Select(r => r.PostingNumber)
@@ -55,7 +55,7 @@ public class OzonOrderLoader : MarketplaceOrderLoader
         var requests = await adapter
             .CreateOrderRequests(_ozon, postings.IntersectBy(doesNotExists, x => x.PostingNumber).ToArray());
 
-        await mediatr.Send(new CreateOrdersRequest()
+        await mediatr.Send(new CreateOrdersRequest
         {
             CreateOrderRequests = requests
         });

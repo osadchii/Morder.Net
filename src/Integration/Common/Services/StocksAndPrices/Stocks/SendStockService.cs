@@ -3,6 +3,7 @@ using Infrastructure;
 using Infrastructure.MediatR.ChangeTracking.Stocks.Commands;
 using Infrastructure.MediatR.Stocks.Queries;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Services;
 using Integration.Ozon.Services;
 using Integration.SberMegaMarket.Services;
 using MediatR;
@@ -63,6 +64,7 @@ public class SendStockService : ISendStockService
                         MarketplaceType.SberMegaMarket => new SberMegaMarketSendStockService(_mediator, _mapper,
                             _serviceProvider),
                         MarketplaceType.Ozon => new OzonSendStockService(_mediator, _mapper, _serviceProvider),
+                        MarketplaceType.Kuper => new KuperSendStockService(_mediator, _mapper, _serviceProvider),
                         _ => null
                     };
 

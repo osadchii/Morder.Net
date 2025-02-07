@@ -40,7 +40,7 @@ public class SberMegaMarketController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> GetSberMegaMarketById([Required] int id)
     {
-        var result = await _mediator.Send(new GetSberMegaMarketByIdRequest()
+        var result = await _mediator.Send(new GetSberMegaMarketByIdRequest
         {
             Id = id
         });

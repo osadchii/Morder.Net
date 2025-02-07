@@ -16,7 +16,7 @@ public class SberMegaMarketResponse
 
         if (error is not null)
         {
-            Data = new Dictionary<string, object>()
+            Data = new Dictionary<string, object>
             {
                 ["error"] = error
             };

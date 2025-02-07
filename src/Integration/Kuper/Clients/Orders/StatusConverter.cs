@@ -5,7 +5,7 @@ namespace Integration.Kuper.Clients.Orders;
 
 public static class StatusConverter
 {
-    public static OrderStatus OzonStatusToOrderStatus(string status)
+    public static OrderStatus KuperStatusToOrderStatus(string status)
     {
         return status.ToLowerInvariant().Trim() switch
         {

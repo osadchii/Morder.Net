@@ -32,7 +32,7 @@ public class KuperOrderAdapter : IKuperOrderAdapter
 #else
         Dictionary<string, int> products = await _productCache.GetProductIdsByArticul(requestArticuls);
 #endif
-        
+
         return postings
             .Where(p => p.Positions.All(i => products.ContainsKey(i.Id)))
             .Select(p =>
@@ -42,7 +42,7 @@ public class KuperOrderAdapter : IKuperOrderAdapter
                     Customer = p.Customer?.Name ?? Customer,
                     Date = DateTime.UtcNow,
                     Number = p.OriginalOrderId,
-                    Status = StatusConverter.OzonStatusToOrderStatus(p.State),
+                    Status = StatusConverter.KuperStatusToOrderStatus(p.State),
                     ExternalId = Guid.NewGuid(),
                     MarketplaceId = kuper.Id,
                     Archived = kuper.Settings.LoadOrdersAsArchived == true,

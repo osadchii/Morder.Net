@@ -29,7 +29,7 @@ public class TrackOrderChangeHandler : IRequestHandler<TrackOrderChangeRequest, 
             return Unit.Value;
         }
 
-        await _context.OrderChanges.AddAsync(new OrderChange()
+        await _context.OrderChanges.AddAsync(new OrderChange
         {
             OrderId = request.OrderId
         }, cancellationToken);

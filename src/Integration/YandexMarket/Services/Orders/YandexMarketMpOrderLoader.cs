@@ -36,7 +36,7 @@ public class YandexMarketMpOrderLoader : MarketplaceOrderLoader
 
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
 
-        var doesNotExists = (await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = (await mediatr.Send(new OrdersDoNotExistRequest
         {
             MarketplaceId = _marketDto.Id,
             Numbers = orders.Where(o => !o.Fake && o.Items.Any(i => !i.Canceled)).Select(r => r.Number)
@@ -64,7 +64,7 @@ public class YandexMarketMpOrderLoader : MarketplaceOrderLoader
             CreateOrderRequests = toCreate
                 .Select(o =>
                 {
-                    return new CreateOrderRequest()
+                    return new CreateOrderRequest
                     {
                         Archived = true,
                         Customer = "Yandex.Market Customer",
@@ -73,7 +73,7 @@ public class YandexMarketMpOrderLoader : MarketplaceOrderLoader
                         ExternalId = Guid.NewGuid(),
                         MarketplaceId = _marketDto.Id,
                         ShippingDate = o.ShippingDate.ToCommonTime().ToUtcTime(),
-                        Items = o.Items.Where(i => !i.Canceled).Select(i => new CreateOrderItem()
+                        Items = o.Items.Where(i => !i.Canceled).Select(i => new CreateOrderItem
                         {
                             Count = i.Count,
                             Price = i.Price,

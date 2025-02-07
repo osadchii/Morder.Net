@@ -83,7 +83,7 @@ public class
                 MarketplaceType.YandexMarket => externalIds[product.Id],
                 _ => string.Empty
             }
-            select new MarketplacePriceDto()
+            select new MarketplacePriceDto
             {
                 Articul = product.Articul!,
                 MarketplaceId = marketplace.Id,

@@ -38,7 +38,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
         var mediatr = ServiceProvider.GetRequiredService<IMediator>();
         var adapter = ServiceProvider.GetRequiredService<ISberMegaMarketOrderAdapter>();
 
-        var doesNotExists = await mediatr.Send(new OrdersDoesNotExistsRequest()
+        var doesNotExists = await mediatr.Send(new OrdersDoNotExistRequest
         {
             MarketplaceId = _sberMegaMarketDto.Id,
             Numbers = numbers
@@ -63,7 +63,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
             skip += LoadOrdersPortionSize;
         }
 
-        await Parallel.ForEachAsync(portions, new ParallelOptions()
+        await Parallel.ForEachAsync(portions, new ParallelOptions
         {
             MaxDegreeOfParallelism = 10
         }, async (portion, _) => { await LoadOrderPortion(portion, result); });
@@ -124,7 +124,7 @@ public class SberMegaMarketOrderLoader : MarketplaceOrderLoader
             intervals.Add(currentDate);
         }
 
-        await Parallel.ForEachAsync(intervals, new ParallelOptions()
+        await Parallel.ForEachAsync(intervals, new ParallelOptions
         {
             MaxDegreeOfParallelism = 10
         }, async (time, _) => { await LoadOrderNumbersByInterval(time, time.AddDays(IntervalDays), result); });

@@ -17,7 +17,7 @@ public class ProductRatingScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToReportMenuCommand()
+            await Mediator.Send(new ToReportMenuCommand
             {
                 ChatId = ChatId
             });
@@ -26,7 +26,7 @@ public class ProductRatingScreenHandler : ScreenHandler
 
         if (Text.Equals(MenuTexts.Total, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToProductRatingByMarketplaceCommand()
+            await Mediator.Send(new ToProductRatingByMarketplaceCommand
             {
                 ChatId = ChatId,
                 MarketplaceId = null
@@ -39,7 +39,7 @@ public class ProductRatingScreenHandler : ScreenHandler
 
         if (int.TryParse(firstPart, out var marketplaceId))
         {
-            await Mediator.Send(new ToProductRatingByMarketplaceCommand()
+            await Mediator.Send(new ToProductRatingByMarketplaceCommand
             {
                 ChatId = ChatId,
                 MarketplaceId = marketplaceId

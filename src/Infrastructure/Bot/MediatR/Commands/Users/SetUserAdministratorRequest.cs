@@ -29,7 +29,7 @@ public class SetUserAdministratorHandler : IRequestHandler<SetUserAdministratorR
         user.Administrator = request.Administrator;
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _mediator.Send(new ToUserManagementCommand()
+        await _mediator.Send(new ToUserManagementCommand
         {
             ChatId = request.ChatId,
             UserId = request.UserId

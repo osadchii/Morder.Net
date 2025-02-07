@@ -44,7 +44,7 @@ public class ShipOrderHandler : IRequestHandler<ShipOrderRequest, Unit>
         order.Status = OrderStatus.Shipped;
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
-        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest
         {
             Type = TaskType.Ship,
             MarketplaceId = order.MarketplaceId,
@@ -53,7 +53,7 @@ public class ShipOrderHandler : IRequestHandler<ShipOrderRequest, Unit>
 
         if (order.Status == OrderStatus.Shipped)
         {
-            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            await _mediator.Send(new SaveOrderStatusHistoryRequest
             {
                 Status = OrderStatus.Shipped,
                 OrderId = order.Id,

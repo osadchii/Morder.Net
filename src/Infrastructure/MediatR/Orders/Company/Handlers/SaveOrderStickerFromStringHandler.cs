@@ -33,7 +33,7 @@ public class SaveOrderStickerFromStringHandler : IRequestHandler<SaveOrderSticke
 
         if (dbEntry is null)
         {
-            await _context.OrderStickers.AddAsync(new OrderSticker()
+            await _context.OrderStickers.AddAsync(new OrderSticker
             {
                 Name = request.FileName,
                 OrderId = request.OrderId,

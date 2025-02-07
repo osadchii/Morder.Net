@@ -52,7 +52,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest, Order>
             await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
         }
 
-        await _mediator.Send(new SaveOrderStatusHistoryRequest()
+        await _mediator.Send(new SaveOrderStatusHistoryRequest
         {
             Status = order.Status,
             OrderId = order.Id

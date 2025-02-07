@@ -43,7 +43,7 @@ public class SetMarketplaceMinimalStockHandler : IRequestHandler<SetMarketplaceM
             "User: {ChatId} changed minimal stock for {MarketplaceName} ({MarketplaceId}) to {MinimalStock}",
             request.ChatId, marketplace.Name, marketplace.Id, request.MinimalStock);
 
-        await _mediator.Send(new ToMarketplaceManagementCommand()
+        await _mediator.Send(new ToMarketplaceManagementCommand
         {
             ChatId = request.ChatId,
             MarketplaceId = request.MarketplaceId

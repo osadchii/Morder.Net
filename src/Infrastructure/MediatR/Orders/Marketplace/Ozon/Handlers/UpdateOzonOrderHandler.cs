@@ -61,7 +61,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
                 {
                     var newLineCount = orderItem.Count - handledCount;
                     var newLineSum = newLineCount * orderItem.Price;
-                    var newLine = new Order.OrderItem()
+                    var newLine = new Order.OrderItem
                     {
                         Canceled = true,
                         Price = orderItem.Price,
@@ -107,7 +107,7 @@ public class UpdateOzonOrderHandler : IRequestHandler<UpdateOzonOrderRequest, Un
 
         if (initialStatus != order.Status)
         {
-            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            await _mediator.Send(new SaveOrderStatusHistoryRequest
             {
                 Status = order.Status,
                 OrderId = order.Id

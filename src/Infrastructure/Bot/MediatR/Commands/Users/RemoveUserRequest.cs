@@ -28,7 +28,7 @@ public class RemoveUserHandler : IRequestHandler<RemoveUserRequest, Unit>
         user.IsDeleted = true;
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _mediator.Send(new ToUsersCommand()
+        await _mediator.Send(new ToUsersCommand
         {
             ChatId = request.ChatId
         }, cancellationToken);

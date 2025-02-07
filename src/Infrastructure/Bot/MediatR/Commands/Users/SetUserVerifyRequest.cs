@@ -32,13 +32,13 @@ public class SetUserVerifyHandler : IRequestHandler<SetUserVerifyRequest, Unit>
 
         if (user.Verified && request.ChatId != user.ChatId)
         {
-            await _mediator.Send(new ToMainMenuCommand()
+            await _mediator.Send(new ToMainMenuCommand
             {
                 ChatId = user.ChatId
             }, cancellationToken);
         }
 
-        await _mediator.Send(new ToUserManagementCommand()
+        await _mediator.Send(new ToUserManagementCommand
         {
             ChatId = request.ChatId,
             UserId = request.UserId

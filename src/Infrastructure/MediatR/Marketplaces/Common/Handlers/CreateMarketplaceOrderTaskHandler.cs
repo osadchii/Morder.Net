@@ -18,7 +18,7 @@ public class CreateMarketplaceOrderTaskHandler : IRequestHandler<CreateMarketpla
 
     public async Task<Unit> Handle(CreateMarketplaceOrderTaskRequest request, CancellationToken cancellationToken)
     {
-        var task = new MarketplaceOrderTask()
+        var task = new MarketplaceOrderTask
         {
             Date = DateTime.UtcNow,
             MarketplaceId = request.MarketplaceId,

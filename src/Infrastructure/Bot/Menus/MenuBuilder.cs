@@ -45,7 +45,7 @@ public class KeyboardBuilder
             currentDate = currentDate.AddMonths(1);
         }
 
-        var names = new List<string>()
+        var names = new List<string>
         {
             MenuTexts.Days7,
             MenuTexts.Days28,

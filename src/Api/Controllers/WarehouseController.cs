@@ -28,7 +28,7 @@ public class WarehouseController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetByExternalId([Required] Guid externalId)
     {
-        var result = await _mediator.Send(new GetWarehouseByExternalIdRequest() { ExternalId = externalId });
+        var result = await _mediator.Send(new GetWarehouseByExternalIdRequest { ExternalId = externalId });
         return result.AsResult();
     }
 
@@ -43,7 +43,7 @@ public class WarehouseController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> DeleteWarehouseByExternalId([Required] Guid externalId)
     {
-        return (await _mediator.Send(new DeleteWarehouseByExternalIdRequest()
+        return (await _mediator.Send(new DeleteWarehouseByExternalIdRequest
         {
             ExternalId = externalId
         })).AsResult();

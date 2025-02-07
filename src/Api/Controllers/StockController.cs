@@ -29,7 +29,7 @@ public class StockController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<Result>> GetAllStocks([Required] Guid warehouseExternalId)
     {
-        return (await _mediator.Send(new GetAllStocksRequest()
+        return (await _mediator.Send(new GetAllStocksRequest
         {
             WarehouseExternalId = warehouseExternalId
         }));

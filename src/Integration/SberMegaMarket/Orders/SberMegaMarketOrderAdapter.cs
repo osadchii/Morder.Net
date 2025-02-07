@@ -56,7 +56,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
 
         var products = await _productCache.GetProductIdsByArticul(requestArticuls);
 
-        return data.Shipments.Select(s => new CreateOrderRequest()
+        return data.Shipments.Select(s => new CreateOrderRequest
         {
             Customer = Customer,
             Date = s.ShipmentDate.ToCommonTime().ToUtcTime(),
@@ -65,7 +65,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             ExternalId = Guid.NewGuid(),
             MarketplaceId = sber.Id,
             ShippingDate = s.Shipping.ShippingDate.ToCommonTime().ToUtcTime(),
-            Items = s.Items.Select(i => new CreateOrderItem()
+            Items = s.Items.Select(i => new CreateOrderItem
             {
                 Count = i.Quantity,
                 Price = i.Price,
@@ -82,7 +82,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
         var data = cancelRequest.Data;
         var sber = await GetMarketplaceByMerchantId(data.MerchantId);
 
-        return data.Shipments.Select(s => new CancelOrderItemsByExternalIdRequest()
+        return data.Shipments.Select(s => new CancelOrderItemsByExternalIdRequest
         {
             MarketplaceId = sber.Id,
             OrderNumber = s.ShipmentId,
@@ -106,7 +106,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
             .Select(s =>
             {
                 var creationDate = s.CreationDate.ToCommonTime().ToUtcTime();
-                return new CreateOrderRequest()
+                return new CreateOrderRequest
                 {
                     Archived = sber.Settings.LoadOrdersAsArchived,
                     Customer = s.CustomerFullName,
@@ -128,7 +128,7 @@ public class SberMegaMarketOrderAdapter : ISberMegaMarketOrderAdapter
                     ShippingTimeLimit = s.ShippingTimeLimit.HasValue
                         ? s.ShippingTimeLimit.Value.ToCommonTime().ToUtcTime()
                         : new DateTime().ToUtcTime(),
-                    Items = s.Items.Select(i => new CreateOrderItem()
+                    Items = s.Items.Select(i => new CreateOrderItem
                     {
                         Count = i.Quantity,
                         Price = i.Price,

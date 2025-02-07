@@ -14,7 +14,7 @@ public class Category
 
     public static Category Create(Guid id, Guid? parentId = null)
     {
-        return new Category()
+        return new Category
         {
             Name = id.ToString(),
             DeletionMark = false,

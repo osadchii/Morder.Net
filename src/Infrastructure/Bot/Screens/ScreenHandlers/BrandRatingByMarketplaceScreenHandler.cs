@@ -19,7 +19,7 @@ public class BrandRatingByMarketplaceScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToBrandRatingCommand()
+            await Mediator.Send(new ToBrandRatingCommand
             {
                 ChatId = ChatId
             });
@@ -31,7 +31,7 @@ public class BrandRatingByMarketplaceScreenHandler : ScreenHandler
         try
         {
             var dates = Text.FromRussianInterval();
-            await Mediator.Send(new BrandRatingReportRequest()
+            await Mediator.Send(new BrandRatingReportRequest
             {
                 From = dates.from.ToUtcTime(),
                 To = dates.to.ToUtcTime(),

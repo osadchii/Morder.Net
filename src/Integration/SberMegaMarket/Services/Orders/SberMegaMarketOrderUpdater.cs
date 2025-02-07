@@ -48,7 +48,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
             handled += PortionSize;
         }
 
-        await Parallel.ForEachAsync(portions, new ParallelOptions()
+        await Parallel.ForEachAsync(portions, new ParallelOptions
         {
             MaxDegreeOfParallelism = 10
         }, async (list, _) => { await LoadOrdersPortion(list, shipments); });
@@ -63,7 +63,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
         {
             TryParse(shipment.OrderCode, out var orderId);
 
-            await mediator.Send(new UpdateSberMegaMarketOrderRequest()
+            await mediator.Send(new UpdateSberMegaMarketOrderRequest
             {
                 MarketplaceId = _sberMegaMarketDto.Id,
                 OrderId = orderId,
@@ -83,7 +83,7 @@ public class SberMegaMarketOrderUpdater : MarketplaceOrderUpdater
                 ShippingDate = shipment.ShippingDate.HasValue
                     ? shipment.ShippingDate.Value.ToCommonTime().ToUtcTime()
                     : new DateTime().ToUtcTime(),
-                Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem()
+                Items = shipment.Items.Select(i => new UpdateSberMegaMarketOrderRequestItem
                 {
                     ItemIndex = i.ItemIndex,
                     Canceled = SberMegaMarketOrderStatuses.IsCanceled(i.Status)

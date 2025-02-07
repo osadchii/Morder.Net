@@ -65,7 +65,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
 
                 if (rejectingCount != orderItem.Count)
                 {
-                    var newLine = new Order.OrderItem()
+                    var newLine = new Order.OrderItem
                     {
                         Canceled = false,
                         Count = orderItem.Count - rejectingCount,
@@ -82,7 +82,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
                 orderItem.Sum = orderItem.Count * orderItem.Price;
                 orderItem.Canceled = true;
                 
-                taskContext.Add(new RejectOrderContextItem()
+                taskContext.Add(new RejectOrderContextItem
                 {
                     ProductId = orderItem.ProductId,
                     Articul = orderItem.Product.Articul!,
@@ -111,7 +111,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
 
         await _context.SaveChangesAsync(cancellationToken);
         await _mediator.Send(new TrackOrderChangeRequest(order.Id), cancellationToken);
-        await _mediator.Send(new CreateMarketplaceOrderTaskRequest()
+        await _mediator.Send(new CreateMarketplaceOrderTaskRequest
         {
             Type = TaskType.Reject,
             MarketplaceId = order.MarketplaceId,
@@ -121,7 +121,7 @@ public class RejectOrderHandler : IRequestHandler<RejectOrderRequest, Unit>
 
         if (order.Status == Status)
         {
-            await _mediator.Send(new SaveOrderStatusHistoryRequest()
+            await _mediator.Send(new SaveOrderStatusHistoryRequest
             {
                 Status = Status,
                 OrderId = order.Id,

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Services.Orders;
 using Integration.Ozon.Services.Orders;
 using Integration.SberMegaMarket.Services.Orders;
 using Integration.YandexMarket.Services.Orders;
@@ -54,6 +55,7 @@ public class LoadOrdersService : ILoadOrdersService
                             _mapper, startDate),
                         MarketplaceType.YandexMarket => new YandexMarketMpOrderLoader(marketplace, _serviceProvider,
                             _mapper, startDate),
+                        MarketplaceType.Kuper => new KuperOrderLoader(marketplace, _serviceProvider, _mapper, startDate),
                         _ => null
                     };
 

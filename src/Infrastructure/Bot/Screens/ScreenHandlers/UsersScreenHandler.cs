@@ -18,7 +18,7 @@ public class UsersScreenHandler : ScreenHandler
 
         if (int.TryParse(firstPart, out var userId))
         {
-            await Mediator.Send(new ToUserManagementCommand()
+            await Mediator.Send(new ToUserManagementCommand
             {
                 ChatId = ChatId,
                 UserId = userId

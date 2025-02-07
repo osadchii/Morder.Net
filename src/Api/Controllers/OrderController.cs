@@ -54,7 +54,7 @@ public class OrderController : ControllerBase
     [Route("sticker/{externalId:guid}")]
     public async Task<IActionResult> Sticker([Required] Guid externalId)
     {
-        var stickerData = await _mediator.Send(new GetOrderStickerRequest()
+        var stickerData = await _mediator.Send(new GetOrderStickerRequest
         {
             ExternalId = externalId
         });
@@ -65,7 +65,7 @@ public class OrderController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetOrderByExternalId([Required] Guid externalId)
     {
-        return await _mediator.Send(new GetOrderByExternalIdRequest()
+        return await _mediator.Send(new GetOrderByExternalIdRequest
         {
             ExternalId = externalId
         });

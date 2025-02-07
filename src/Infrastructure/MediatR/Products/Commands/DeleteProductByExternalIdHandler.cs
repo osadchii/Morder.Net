@@ -31,7 +31,7 @@ public class DeleteProductByExternalIdHandler : IRequestHandler<DeleteProductByE
                 HttpStatusCode.NotFound);
         }
 
-        return await _mediator.Send(new DeleteProductByIdRequest()
+        return await _mediator.Send(new DeleteProductByIdRequest
         {
             Id = id.Value
         }, cancellationToken);

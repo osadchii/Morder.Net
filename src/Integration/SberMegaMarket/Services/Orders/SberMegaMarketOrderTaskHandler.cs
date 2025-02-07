@@ -45,7 +45,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         {
             Data =
             {
-                Shipments = new List<StickerPrintShipment>()
+                Shipments = new List<StickerPrintShipment>
                 {
                     new()
                     {
@@ -58,10 +58,10 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
 
                                 box.Count--;
 
-                                var sberBox = new StickerPrintShipmentItem()
+                                var sberBox = new StickerPrintShipmentItem
                                 {
                                     ItemIndex = i.ExternalId!,
-                                    Boxes = new List<StickerPrintShipmentItemBox>()
+                                    Boxes = new List<StickerPrintShipmentItemBox>
                                     {
                                         new()
                                         {
@@ -93,7 +93,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         }
 
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
-        await mediator.Send(new SaveOrderStickerFromStringRequest()
+        await mediator.Send(new SaveOrderStickerFromStringRequest
         {
             Content = response.Data,
             FileName = "SberMegaMarket Sticker.html",
@@ -111,18 +111,18 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         {
             Data =
             {
-                Shipments = new List<OrderRejectingShipment>()
+                Shipments = new List<OrderRejectingShipment>
                 {
                     new()
                     {
                         ShipmentId = Order.Number,
                         Items = taskContext.Items
-                            .Select(i => new OrderRejectingShipmentItem()
+                            .Select(i => new OrderRejectingShipmentItem
                             {
                                 ItemIndex = i.ItemIndex,
                                 OfferId = i.Articul
                             }),
-                        Reason = new OrderRejectingShipmentReason()
+                        Reason = new OrderRejectingShipmentReason
                         {
                             Type = RejectingReason.OutOfStock
                         }
@@ -142,7 +142,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         {
             Data =
             {
-                Shipments = new List<OrderPackingShipment>()
+                Shipments = new List<OrderPackingShipment>
                 {
                     new()
                     {
@@ -165,13 +165,13 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
         {
             Data =
             {
-                Shipments = new List<OrderShippingShipment>()
+                Shipments = new List<OrderShippingShipment>
                 {
                     new()
                     {
                         ShipmentId = Order.Number,
                         Boxes = GetShippingBoxes(),
-                        Shipping = new OrderShippingShipmentShipping()
+                        Shipping = new OrderShippingShipmentShipping
                         {
                             ShippingDate = DateTime.UtcNow.ToMoscowTime()
                                 .ToString("yyyy-MM-ddTHH:mm:ss")
@@ -198,7 +198,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
                     {
                         OrderCode = Order.Id.ToString(),
                         ShipmentId = Order.Number,
-                        Items = Order.Items.Select(i => new ConfirmOrderShipmentItem()
+                        Items = Order.Items.Select(i => new ConfirmOrderShipmentItem
                         {
                             ItemIndex = i.ExternalId!,
                             OfferId = i.Product.Articul!
@@ -221,7 +221,7 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
 
                 box.Count--;
 
-                var sberBox = new OrderShippingShipmentBox()
+                var sberBox = new OrderShippingShipmentBox
                 {
                     BoxIndex = box.Number,
                     BoxCode = $"{_sberMegaMarketDto.Settings.MerchantId}*{Order.Id}*{box.Number}"
@@ -241,10 +241,10 @@ public class SberMegaMarketOrderTaskHandler : MarketplaceTaskHandler
 
                 box.Count--;
 
-                var sberBox = new OrderPackingShipmentItem()
+                var sberBox = new OrderPackingShipmentItem
                 {
                     ItemIndex = i.ExternalId!,
-                    Boxes = new List<OrderPackingShipmentItemBox>()
+                    Boxes = new List<OrderPackingShipmentItemBox>
                     {
                         new()
                         {

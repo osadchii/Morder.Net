@@ -44,7 +44,7 @@ public abstract class BaseService
         
         var userService = new UserService(_client);
 
-        var user = new User()
+        var user = new User
         {
             Name = Guid.NewGuid().ToString(),
             Password = Guid.NewGuid().ToString()

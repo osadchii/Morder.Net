@@ -31,7 +31,7 @@ public class SberMegaMarketFeedService : MarketplaceFeedService
 
         var companyInformation = await mediator.Send(new GetCompanyInformationRequest());
 
-        var data = await mediator.Send(new GetMarketplaceProductDataRequest()
+        var data = await mediator.Send(new GetMarketplaceProductDataRequest
         {
             MarketplaceId = _sber.Id
         });

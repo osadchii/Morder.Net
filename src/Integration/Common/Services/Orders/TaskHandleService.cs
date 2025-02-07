@@ -73,7 +73,7 @@ public class TaskHandleService : ITaskHandleService
                     try
                     {
                         await handler.Handle();
-                        taskResultHandler = new DeleteMarketplaceOrderTaskRequest()
+                        taskResultHandler = new DeleteMarketplaceOrderTaskRequest
                         {
                             MarketplaceOrderTaskId = task.Id
                         };
@@ -81,7 +81,7 @@ public class TaskHandleService : ITaskHandleService
                     catch (Exception e)
                     {
                         _logger.LogError(e, e.Message);
-                        taskResultHandler = new IncrementMarketplaceOrderTaskTryCountRequest()
+                        taskResultHandler = new IncrementMarketplaceOrderTaskTryCountRequest
                         {
                             MarketplaceOrderTaskId = task.Id
                         };

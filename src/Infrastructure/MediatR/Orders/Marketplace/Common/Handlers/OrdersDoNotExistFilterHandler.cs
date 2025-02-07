@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MediatR.Orders.Marketplace.Common.Handlers;
 
-public class OrdersDoesNotExistsFilterHandler : IRequestHandler<OrdersDoesNotExistsRequest, IEnumerable<string>>
+public class OrdersDoNotExistFilterHandler : IRequestHandler<OrdersDoNotExistRequest, IEnumerable<string>>
 {
     private readonly MContext _context;
 
-    public OrdersDoesNotExistsFilterHandler(MContext context)
+    public OrdersDoNotExistFilterHandler(MContext context)
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<string>> Handle(OrdersDoesNotExistsRequest request,
+    public async Task<IEnumerable<string>> Handle(OrdersDoNotExistRequest request,
         CancellationToken cancellationToken)
     {
         var exists = await _context.Orders

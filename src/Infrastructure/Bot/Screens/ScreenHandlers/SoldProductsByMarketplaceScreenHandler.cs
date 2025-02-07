@@ -17,7 +17,7 @@ public class SoldProductsByMarketplaceScreenHandler : ScreenHandler
     {
         if (Text.Equals(MenuTexts.Back, StringComparison.InvariantCultureIgnoreCase))
         {
-            await Mediator.Send(new ToSoldProductCommand()
+            await Mediator.Send(new ToSoldProductCommand
             {
                 ChatId = ChatId
             });
@@ -36,7 +36,7 @@ public class SoldProductsByMarketplaceScreenHandler : ScreenHandler
             _ => (new DateTime(), new DateTime())
         };
 
-        await Mediator.Send(new SoldProductsReportRequest()
+        await Mediator.Send(new SoldProductsReportRequest
         {
             From = dates.from.ToUtcTime(),
             To = dates.to.ToUtcTime(),

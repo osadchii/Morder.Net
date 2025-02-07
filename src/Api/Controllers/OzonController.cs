@@ -40,7 +40,7 @@ public class OzonController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> GetOzonById([Required] int id)
     {
-        var result = await _mediator.Send(new GetOzonByIdRequest()
+        var result = await _mediator.Send(new GetOzonByIdRequest
         {
             Id = id
         });

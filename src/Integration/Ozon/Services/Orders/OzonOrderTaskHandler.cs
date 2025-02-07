@@ -48,9 +48,9 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var request = new PackPostingRequest
         {
             PostingNumber = Order.Number,
-            Packages = Order.Boxes.GroupBy(b => b.Number).Select(g => new PackPostingPackage()
+            Packages = Order.Boxes.GroupBy(b => b.Number).Select(g => new PackPostingPackage
             {
-                Products = g.Select(p => new PackPostingProduct()
+                Products = g.Select(p => new PackPostingProduct
                 {
                     Quantity = Convert.ToInt32(p.Count),
                     ProductId = Convert.ToInt32(externalIds[p.ProductId])
@@ -70,7 +70,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var productIds = taskContext.Items.Select(b => b.ProductId).Distinct();
         var externalIds = await _identifierService.GetIdentifiersAsync(_ozonDto.Id, productIds, ProductIdentifierType.OzonFbs);
         
-        await client.RejectOrder(_ozonDto, new RejectPostingRequest()
+        await client.RejectOrder(_ozonDto, new RejectPostingRequest
         {
             PostingNumber = Order.Number,
             Items = taskContext.Items.Select(i => new RejectPostingItem
@@ -86,7 +86,7 @@ public class OzonOrderTaskHandler : MarketplaceTaskHandler
         var client = ServiceProvider.GetRequiredService<IOzonGetStickerClient>();
         var file = await client.GetSticker(_ozonDto, new GetStickerRequest(Order.Number));
 
-        await Mediator.Send(new SaveOrderStickerFromStringRequest()
+        await Mediator.Send(new SaveOrderStickerFromStringRequest
         {
             Bytes = file,
             FileName = "Ozon Sticker.pdf",

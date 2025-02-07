@@ -28,7 +28,7 @@ public class CategoryController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> GetCategoryById([Required] int id)
     {
-        return (await _mediator.Send(new GetCategoryByIdRequest()
+        return (await _mediator.Send(new GetCategoryByIdRequest
         {
             Id = id
         })).AsResult();
@@ -38,7 +38,7 @@ public class CategoryController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> GetCategoryByExternalId([Required] Guid externalId)
     {
-        return (await _mediator.Send(new GetCategoryByExternalIdRequest()
+        return (await _mediator.Send(new GetCategoryByExternalIdRequest
         {
             ExternalId = externalId
         })).AsResult();
@@ -63,7 +63,7 @@ public class CategoryController : ControllerBase
     [Route("{id:int}")]
     public async Task<Result> DeleteCategoryById([Required] int id)
     {
-        return (await _mediator.Send(new DeleteCategoryByIdRequest()
+        return (await _mediator.Send(new DeleteCategoryByIdRequest
         {
             Id = id
         })).AsResult();
@@ -73,7 +73,7 @@ public class CategoryController : ControllerBase
     [Route("{externalId:guid}")]
     public async Task<Result> DeleteCategoryByExternalId([Required] Guid externalId)
     {
-        return (await _mediator.Send(new DeleteCategoryByExternalIdRequest()
+        return (await _mediator.Send(new DeleteCategoryByExternalIdRequest
         {
             ExternalId = externalId
         })).AsResult();

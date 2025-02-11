@@ -49,9 +49,14 @@ public class KuperController : ControllerBase
     [Route("test")]
     public async Task<Result> TestKuper()
     {
+        var orderId = new Random().Next(280000, 285000);
         await _mediator.Send(new SendOrderForConfirmation
         {
-            OrderId = new Random().Next(280000, 285000),
+            OrderId = orderId,
+        });
+        await _mediator.Send(new SendOrderForConfirmation
+        {
+            OrderId = orderId,
         });
         return Unit.Value.AsResult();
     }

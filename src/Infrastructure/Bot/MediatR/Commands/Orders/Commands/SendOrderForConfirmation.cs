@@ -65,21 +65,14 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
         }
 
         textBuilder.AppendLine();
-        textBuilder.AppendLine("Подтвердите получение заказа.");
+        textBuilder.AppendLine(Constants.ConfirmOrderText);
 
         var text = textBuilder.ToString();
 
-        var buttons = new[]
-        {
-            InlineKeyboardButton.WithCallbackData("✅ Подтвердить", $"confirm|{order.Id}"),
-            InlineKeyboardButton.WithCallbackData("\u274c Отменить", $"cancel|{order.Id}")
-        };
-
-        var inlineKeyboard = new InlineKeyboardMarkup(buttons);
-
         foreach (var user in users)
         {
-            var message = await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Html, replyMarkup: inlineKeyboard, cancellationToken: cancellationToken);
+            var message = await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Html,
+                replyMarkup: Constants.OrderActionChoice(order.Id), cancellationToken: cancellationToken);
             var telegramMessage = new TelegramMessage
             {
                 Text = text,
@@ -87,12 +80,12 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
                 BotUserId = user.Id,
                 MessageId = message.MessageId,
             };
-            
+
             await _context.TelegramMessages.AddAsync(telegramMessage, cancellationToken);
         }
-        
+
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return Unit.Value;
     }
 }

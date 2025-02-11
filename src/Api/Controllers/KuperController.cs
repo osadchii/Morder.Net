@@ -49,16 +49,9 @@ public class KuperController : ControllerBase
     [Route("test")]
     public async Task<Result> TestKuper()
     {
-        var skip = new Random().Next(1, 5000);
-        var order = _context.Orders
-            .AsNoTracking()
-            .OrderByDescending(x => x.Id)
-            .Skip(skip)
-            .FirstOrDefaultAsync();
-
         await _mediator.Send(new SendOrderForConfirmation
         {
-            OrderId = order.Id,
+            OrderId = new Random().Next(10000, 110000),
         });
         return Unit.Value.AsResult();
     }

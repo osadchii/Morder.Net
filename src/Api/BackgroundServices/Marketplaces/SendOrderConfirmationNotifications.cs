@@ -4,7 +4,7 @@ namespace Api.BackgroundServices.Marketplaces;
 
 public class SendOrderConfirmationNotifications: BackgroundService
 {
-    public SendOrderConfirmationNotifications(ILogger logger, IServiceProvider services) : base(logger, services)
+    public SendOrderConfirmationNotifications(ILogger<SendOrderConfirmationNotifications> logger, IServiceProvider services) : base(logger, services)
     {
         TimerInterval = 5;
     }

@@ -32,6 +32,16 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
             .AsNoTracking()
             .Where(x => x.Id == request.BotUserId)
             .FirstOrDefaultAsync(cancellationToken);
+
+        if (user == null)
+        {
+            throw new Exception($"User with id {request.BotUserId} not found");
+        }
+
+        if (!user.ConfirmsOrders)
+        {
+            return Unit.Value;
+        }
         
         var separatedData = request.Data.Split("|");
         var action = separatedData[0];

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Infrastructure.Common;
+using Infrastructure.Models.BotUsers;
 using Infrastructure.Models.Interfaces;
 using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Products;
@@ -45,6 +46,11 @@ public class Order : BaseEntity, IHasId, IHasExternalId
 
     public bool ExpressOrder { get; set; }
     public string TrackNumber { get; set; }
+    
+    public BotUser ConfirmedByBotUser { get; set; }
+    
+    [ForeignKey("ConfirmedByBotUser")] 
+    public int? ConfirmedByBotUserId { get; set; }
 
     public decimal Sum => Items.Where(i => !i.Canceled).Sum(i => i.Sum);
 

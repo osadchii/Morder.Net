@@ -1,6 +1,7 @@
 using Infrastructure;
 using Infrastructure.MediatR.Marketplaces.Common.Commands;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Services.Orders;
 using Integration.Ozon.Services.Orders;
 using Integration.SberMegaMarket.Services.Orders;
 using MediatR;
@@ -60,6 +61,7 @@ public class TaskHandleService : ITaskHandleService
                         MarketplaceType.SberMegaMarket => new SberMegaMarketOrderTaskHandler(marketplace, task,
                             _serviceProvider),
                         MarketplaceType.Ozon => new OzonOrderTaskHandler(marketplace, task, _serviceProvider),
+                        MarketplaceType.Kuper => new KuperOrderTaskHandler(marketplace, task, _serviceProvider),
                         _ => null
                     };
 

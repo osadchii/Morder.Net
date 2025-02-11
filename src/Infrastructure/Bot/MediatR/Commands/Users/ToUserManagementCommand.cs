@@ -38,7 +38,9 @@ public class ToUserManagementHandler : IRequestHandler<ToUserManagementCommand, 
             .AddLine()
             .AddButton(user.Verified ? MenuTexts.Block : MenuTexts.Verify)
             .AddLine()
-            .AddButton(user.Administrator ? MenuTexts.RemoveAdministrator : MenuTexts.AddAdministrator);
+            .AddButton(user.Administrator ? MenuTexts.RemoveAdministrator : MenuTexts.AddAdministrator)
+            .AddLine()
+            .AddButton(user.ConfirmsOrders ? MenuTexts.TurnOffOrderConfirmation : MenuTexts.TurnOnOrderConfirmation);
 
         if (!user.Administrator && !user.Verified)
         {

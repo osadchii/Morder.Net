@@ -15,10 +15,14 @@ public interface IKuperOrdersClient
     Task<List<OrderData>> GetOrdersByDeliveryDate(KuperDto kuper, DateTime from, DateTime to, string token = null);
     Task<List<OrderData>> GetOrdersByPaymentStatus(KuperDto kuper, string paymentStatus, string token = null);
     Task<List<OrderData>> GetOrdersByStoreId(KuperDto kuper, string storeId, string token = null);
-    Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null,
+
+    Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null,
+        string nextPageToken = null,
         string token = null);
+
     Task SendOrderNotification(KuperDto kuper, KuperOrderNotification notification, string token = null);
     Task<KuperOrderState> GetOrderState(KuperDto kuper, string orderId, string token = null);
+    Task<OrderData> GetOrder(KuperDto kuper, string orderId, string token = null);
 }
 
 public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
@@ -43,7 +47,8 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/ofm/api/v1/shipments?filters[createdFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[createdTo]=" +
+            "/ofm/api/v1/shipments?filters[createdFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") +
+            "&filters[createdTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -54,7 +59,8 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/ofm/api/v1/shipments?filters[updatedFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[updatedTo]=" +
+            "/ofm/api/v1/shipments?filters[updatedFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") +
+            "&filters[updatedTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -65,7 +71,8 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         string token = null)
     {
         var response = await GetAsync(kuper,
-            "/ofm/api/v1/shipments?filters[deliveryFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") + "&filters[deliveryTo]=" +
+            "/ofm/api/v1/shipments?filters[deliveryFrom]=" + from.ToString("yyyy-MM-ddTHH:mm:ss") +
+            "&filters[deliveryTo]=" +
             to.ToString("yyyy-MM-ddTHH:mm:ss"), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -89,7 +96,8 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         return orders.Data;
     }
 
-    public async Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null, string nextPageToken = null, string token = null)
+    public async Task<OrdersPaginationResult> GetOrdersWIthPagination(KuperDto kuper, int? maxPageSize = null,
+        string nextPageToken = null, string token = null)
     {
         var sb = new StringBuilder("/ofm/api/v1/shipments?");
 
@@ -105,6 +113,7 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         {
             throw new InvalidOperationException("maxPageSize or nextPageToken must be set");
         }
+
         var response = await GetAsync(kuper, sb.ToString(), token);
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
@@ -115,13 +124,21 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
     {
         return PostAsync(kuper, "/ofm/api/v1/notifications", notification, token);
     }
-    
+
     public async Task<KuperOrderState> GetOrderState(KuperDto kuper, string orderId, string token = null)
     {
         var response = await GetAsync(kuper, $"/ofm/api/v1/shipments/{orderId}/state", token);
         var order = await response.Content.ReadAsObject<KuperOrderState>();
-        
+
         return order;
+    }
+
+    public async Task<OrderData> GetOrder(KuperDto kuper, string orderId, string token = null)
+    {
+        var response = await GetAsync(kuper, $"/ofm/api/v1/shipments/{orderId}", token);
+        var order = await response.Content.ReadAsObject<KuperOrderMessage>();
+
+        return order.Data;
     }
 }
 

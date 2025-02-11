@@ -41,6 +41,8 @@ public class Order
 
     [JsonProperty("positions")]
     public OrderPosition[] Positions { get; set; }
+    [JsonProperty("packs")]
+    public OrderPack Packs { get; set; }
 }
 
 public class OrderPosition
@@ -51,4 +53,10 @@ public class OrderPosition
     
     [JsonProperty("quantity")]
     public int Quantity { get; set; }
+}
+
+public class OrderPack
+{
+    [JsonProperty("count")]
+    public int Count { get; set; }
 }

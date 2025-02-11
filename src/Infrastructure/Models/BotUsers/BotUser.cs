@@ -31,6 +31,8 @@ public class BotUser : BaseEntity, IHasId
 
     public bool IsDeleted { get; set; }
 
+    public bool ConfirmsOrders { get; set; }
+
     public override string ToString()
     {
         return UserName.IsNullOrEmpty()

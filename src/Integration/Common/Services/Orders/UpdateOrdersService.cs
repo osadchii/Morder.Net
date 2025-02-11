@@ -2,6 +2,7 @@ using System.Diagnostics;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Models.Marketplaces;
+using Integration.Kuper.Services.Orders;
 using Integration.Ozon.Services.Orders;
 using Integration.SberMegaMarket.Services.Orders;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ public class UpdateOrdersService : IUpdateOrdersService
                         MarketplaceType.SberMegaMarket => new SberMegaMarketOrderUpdater(marketplace, _serviceProvider,
                             _mapper),
                         MarketplaceType.Ozon => new OzonOrderUpdater(marketplace, _serviceProvider, _mapper),
+                        MarketplaceType.Kuper => new KuperOrderUpdater(marketplace, _serviceProvider, _mapper),
                         _ => null
                     };
 

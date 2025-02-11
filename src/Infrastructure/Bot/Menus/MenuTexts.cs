@@ -28,6 +28,8 @@ public static class MenuTexts
 
     public const string AddAdministrator = "Сделать администратором";
     public const string RemoveAdministrator = "Сделать пользователем";
+    public const string TurnOnOrderConfirmation = "Разрешить подтверждать заказы";
+    public const string TurnOffOrderConfirmation = "Запретить подтверждать заказы";
     public const string Verify = "Дать доступ к боту";
     public const string Block = "Забрать доступ к боту";
     public const string RemoveUser = "Удалить пользователя";

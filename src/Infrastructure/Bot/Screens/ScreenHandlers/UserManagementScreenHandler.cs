@@ -62,6 +62,22 @@ public class UserManagementScreenHandler : ScreenHandler
                     UserId = userId
                 });
                 break;
+            case MenuTexts.TurnOnOrderConfirmation:
+                await Mediator.Send(new SetUserConfirmsOrdersRequest
+                {
+                    ChatId = ChatId,
+                    ConfirmsOrders = true,
+                    UserId = userId
+                });
+                break;
+            case MenuTexts.TurnOffOrderConfirmation:
+                await Mediator.Send(new SetUserConfirmsOrdersRequest
+                {
+                    ChatId = ChatId,
+                    ConfirmsOrders = false,
+                    UserId = userId
+                });
+                break;
             case MenuTexts.RemoveUser:
                 await Mediator.Send(new RemoveUserRequest
                 {

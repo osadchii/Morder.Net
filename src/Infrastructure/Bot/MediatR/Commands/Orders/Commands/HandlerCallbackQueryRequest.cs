@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace Infrastructure.Bot.MediatR.Commands.Orders.Commands;
 
@@ -35,8 +36,8 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
         var orderId = int.Parse(separatedData[1]);
 
         var readableAction = action.Equals("confirm", StringComparison.InvariantCultureIgnoreCase)
-            ? "подтвержден"
-            : "отменен";
+            ? "✅ подтвержден"
+            : "\u274c отменен";
         
         var messagesByOrder = await _context.TelegramMessages
             .Where(x => x.OrderId == orderId)
@@ -48,7 +49,7 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
             message.Text = message.Text.Replace("Подтвердите получение заказа.",
                 $"Заказ {readableAction} пользователем {user}");
 
-            await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text, cancellationToken: cancellationToken);
+            await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text, parseMode:ParseMode.Html, cancellationToken: cancellationToken);
         }
         
         await _context.SaveChangesAsync(cancellationToken);

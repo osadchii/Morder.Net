@@ -49,9 +49,11 @@ public class KuperController : ControllerBase
     [Route("test")]
     public async Task<Result> TestKuper()
     {
+        var skip = new Random().Next(1, 5000);
         var order = _context.Orders
             .AsNoTracking()
-            .Where(x => x.Date < DateTime.Now.AddDays(new Random().Next(1, 5)))
+            .OrderByDescending(x => x.Id)
+            .Skip(skip)
             .FirstOrDefaultAsync();
 
         await _mediator.Send(new SendOrderForConfirmation

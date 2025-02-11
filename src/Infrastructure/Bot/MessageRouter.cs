@@ -1,4 +1,5 @@
 using Infrastructure.Bot.MediatR.Commands.Common;
+using Infrastructure.Bot.MediatR.Commands.Orders.Commands;
 using Infrastructure.Bot.MediatR.Commands.Users;
 using Infrastructure.Bot.Menus;
 using Infrastructure.Bot.Screens;
@@ -13,6 +14,7 @@ namespace Infrastructure.Bot;
 public interface IMessageRouter
 {
     Task Route(Message message);
+    Task HandlerCallbackQuery(CallbackQuery callbackQuery);
 }
 
 public class MessageRouter : IMessageRouter
@@ -91,14 +93,34 @@ public class MessageRouter : IMessageRouter
         await handler.HandleMessage();
     }
 
+    public async Task HandlerCallbackQuery(CallbackQuery callbackQuery)
+    {
+        var from = callbackQuery.From;
+        var user = await GetUser(from.Id, from.FirstName ?? string.Empty, from.LastName ?? string.Empty,
+            from.Username ?? string.Empty);
+
+        await _mediator.Send(new HandlerCallbackQueryRequest
+        {
+            BotUserId = user.Id,
+            Data = callbackQuery.Data
+        });
+    }
+
     private Task<BotUser> GetUser(Message message)
+    {
+        var chat = message.Chat;
+        return GetUser(chat.Id, chat.FirstName ?? string.Empty, chat.LastName ?? string.Empty,
+            chat.Username ?? string.Empty);
+    }
+
+    private Task<BotUser> GetUser(long chatId, string firstName, string lastName, string userName)
     {
         return _mediator.Send(new CreateUpdateBotUserRequest
         {
-            ChatId = message.Chat.Id,
-            FirstName = message.Chat.FirstName ?? string.Empty,
-            LastName = message.Chat.LastName ?? string.Empty,
-            UserName = message.Chat.Username ?? string.Empty
+            ChatId = chatId,
+            FirstName = firstName,
+            LastName = lastName,
+            UserName = userName
         });
     }
 }

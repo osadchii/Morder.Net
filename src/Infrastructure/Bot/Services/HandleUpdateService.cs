@@ -37,7 +37,7 @@ public class HandleUpdateService
 
     private Task BonOnCallbackQueryReceived(CallbackQuery callbackQuery)
     {
-        return Task.CompletedTask;
+        return _router.HandlerCallbackQuery(callbackQuery);
     }
 
     private Task BotOnMessageReceived(Message message)

@@ -52,7 +52,7 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
         }
 
         var textBuilder = new StringBuilder();
-        textBuilder.Append($"Поступил новый заказ от маркетплейса <b>{order.Marketplace.Name}</b>");
+        textBuilder.Append($"⚡️ Поступил новый заказ от маркетплейса <b>{order.Marketplace.Name}</b>");
         textBuilder.AppendLine();
         textBuilder.AppendLine($"<b>Номер заказа маркетплейса:</b> {order.Number}");
         textBuilder.AppendLine();

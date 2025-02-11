@@ -1,4 +1,5 @@
 using System.Text;
+using Infrastructure.Models.TelegramMessages;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
@@ -78,7 +79,16 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
 
         foreach (var user in users)
         {
-            await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Html, replyMarkup: inlineKeyboard, cancellationToken: cancellationToken);
+            var message = await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Html, replyMarkup: inlineKeyboard, cancellationToken: cancellationToken);
+            var telegramMessage = new TelegramMessage
+            {
+                Text = text,
+                OrderId = order.Id,
+                BotUserId = user.Id,
+                MessageId = message.MessageId,
+            };
+            
+            await _context.TelegramMessages.AddAsync(telegramMessage, cancellationToken);
         }
         
         return Unit.Value;

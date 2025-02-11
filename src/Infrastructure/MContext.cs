@@ -8,6 +8,7 @@ using Infrastructure.Models.Marketplaces.Ozon;
 using Infrastructure.Models.Orders;
 using Infrastructure.Models.Prices;
 using Infrastructure.Models.Products;
+using Infrastructure.Models.TelegramMessages;
 using Infrastructure.Models.Users;
 using Infrastructure.Models.Warehouses;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -53,6 +54,7 @@ public class MContext : IdentityDbContext<ApplicationUser>
     public DbSet<ProductIdentifier> ProductIdentifiers { get; set; }
     public DbSet<OzonWarehouse> OzonWarehouses { get; set; }
     public DbSet<OzonWarehouseBlacklist> OzonWarehouseBlacklists { get; set; }
+    public DbSet<TelegramMessage> TelegramMessages { get; set; }
 
     #endregion
 

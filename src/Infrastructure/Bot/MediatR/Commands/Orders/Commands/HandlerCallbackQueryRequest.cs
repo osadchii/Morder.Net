@@ -30,6 +30,27 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
         
         await _telegramBotClient.SendTextMessageAsync(user.ChatId, request.Data, cancellationToken: cancellationToken);
         
+        var separatedData = request.Data.Split("|");
+        var action = separatedData[0];
+        var orderId = int.Parse(separatedData[1]);
+
+        var readableAction = action.Equals("confirm", StringComparison.InvariantCultureIgnoreCase)
+            ? "подтвержден"
+            : "отменен";
+        
+        var messagesByOrder = await _context.TelegramMessages
+            .Where(x => x.OrderId == orderId)
+            .Include(telegramMessage => telegramMessage.BotUser)
+            .ToListAsync(cancellationToken);
+
+        foreach (var message in messagesByOrder)
+        {
+            message.Text = message.Text.Replace("Подтвердите получение заказа.",
+                $"Заказ {readableAction} пользователем {user}");
+
+            await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text, cancellationToken: cancellationToken);
+        }
+        
         return Unit.Value;
     }
 }

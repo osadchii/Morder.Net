@@ -51,7 +51,7 @@ public class KuperController : ControllerBase
     {
         await _mediator.Send(new SendOrderForConfirmation
         {
-            OrderId = new Random().Next(10000, 110000),
+            OrderId = new Random().Next(280000, 285000),
         });
         return Unit.Value.AsResult();
     }

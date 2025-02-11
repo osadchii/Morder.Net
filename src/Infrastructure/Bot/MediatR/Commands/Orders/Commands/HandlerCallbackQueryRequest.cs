@@ -169,10 +169,13 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
             .Include(telegramMessage => telegramMessage.BotUser)
             .ToListAsync(cancellationToken);
 
+        var newText = $"Заказ ✅ подтвержден пользователем {user}";
+
         foreach (var message in messagesByOrder)
         {
-            message.Text = message.Text.Replace(Constants.ApproveConfirmOrderText,
-                $"Заказ ✅ подтвержден пользователем {user}");
+            message.Text = message.Text
+                .Replace(Constants.ApproveConfirmOrderText, newText)
+                .Replace(Constants.ConfirmOrderText, newText);
 
             await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text,
                 parseMode: ParseMode.Html, cancellationToken: cancellationToken);
@@ -199,10 +202,13 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
             .Include(telegramMessage => telegramMessage.BotUser)
             .ToListAsync(cancellationToken);
 
+        var newText = $"Заказ \u274c отменен пользователем {user}";
+
         foreach (var message in messagesByOrder)
         {
-            message.Text = message.Text.Replace(Constants.ApproveCancelOrderText,
-                $"Заказ \u274c отменен пользователем {user}");
+            message.Text = message.Text
+                .Replace(Constants.ApproveCancelOrderText, newText)
+                .Replace(Constants.ConfirmOrderText, newText);
 
             await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text,
                 parseMode: ParseMode.Html, cancellationToken: cancellationToken);

@@ -21,6 +21,7 @@ public class HandleUpdateService
         var handler = update.Type switch
         {
             UpdateType.Message => BotOnMessageReceived(update.Message!),
+            UpdateType.CallbackQuery => BonOnCallbackQueryReceived(update.CallbackQuery!),
             _ => UnknownUpdateHandlerAsync(update)
         };
 
@@ -32,6 +33,11 @@ public class HandleUpdateService
         {
             HandleError(exception);
         }
+    }
+
+    private Task BonOnCallbackQueryReceived(CallbackQuery callbackQuery)
+    {
+        return Task.CompletedTask;
     }
 
     private Task BotOnMessageReceived(Message message)

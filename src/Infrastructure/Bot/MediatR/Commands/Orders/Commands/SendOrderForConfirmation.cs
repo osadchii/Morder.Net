@@ -91,6 +91,8 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
             await _context.TelegramMessages.AddAsync(telegramMessage, cancellationToken);
         }
         
+        await _context.SaveChangesAsync(cancellationToken);
+        
         return Unit.Value;
     }
 }

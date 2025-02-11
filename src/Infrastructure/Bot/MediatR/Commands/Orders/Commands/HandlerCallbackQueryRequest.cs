@@ -51,6 +51,8 @@ public class HandlerCallbackQueryRequestHandler : IRequestHandler<HandlerCallbac
             await _telegramBotClient.EditMessageTextAsync(message.BotUser.ChatId, message.MessageId, message.Text, cancellationToken: cancellationToken);
         }
         
+        await _context.SaveChangesAsync(cancellationToken);
+        
         return Unit.Value;
     }
 }

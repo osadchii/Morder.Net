@@ -5,6 +5,7 @@ using Infrastructure.Models.Orders;
 
 namespace Infrastructure.Models.TelegramMessages;
 
+[Table("TelegramMessages", Schema = "dbo")]
 public class TelegramMessage : BaseEntity
 {
     [Key] public int Id { get; set; }

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Infrastructure;
+using Infrastructure.Bot.MediatR.Commands.Orders.Commands;
 using Infrastructure.Common;
 using Infrastructure.MediatR.Marketplaces.Kuper.Commands;
 using Infrastructure.Models.Marketplaces;
@@ -18,10 +19,12 @@ namespace Api.Controllers;
 public class KuperController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly MContext _context;
 
-    public KuperController(IMediator mediator)
+    public KuperController(IMediator mediator, MContext context)
     {
         _mediator = mediator;
+        _context = context;
     }
 
     [HttpPost]
@@ -40,6 +43,22 @@ public class KuperController : ControllerBase
         command.Id = id;
         var result = await _mediator.Send(command);
         return result.AsResult();
+    }
+
+    [HttpPost]
+    [Route("test")]
+    public async Task<Result> TestKuper()
+    {
+        var order = _context.Orders
+            .AsNoTracking()
+            .Where(x => x.Date < DateTime.Now.AddDays(new Random().Next(1, 5)))
+            .FirstOrDefaultAsync();
+
+        await _mediator.Send(new SendOrderForConfirmation
+        {
+            OrderId = order.Id,
+        });
+        return Unit.Value.AsResult();
     }
 
     // [HttpPost]

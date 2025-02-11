@@ -51,16 +51,16 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
         }
 
         var textBuilder = new StringBuilder();
-        textBuilder.Append($"Поступил новый заказ от маркетплейса **{order.Marketplace.Name}**");
+        textBuilder.Append($"Поступил новый заказ от маркетплейса <b>{order.Marketplace.Name}</b>");
         textBuilder.AppendLine();
-        textBuilder.AppendLine($"**Номер заказа маркетплейса:** {order.Number}");
+        textBuilder.AppendLine($"<b>Номер заказа маркетплейса:</b> {order.Number}");
         textBuilder.AppendLine();
-        textBuilder.AppendLine("**Состав:**");
+        textBuilder.AppendLine("<b>Состав:</b>");
 
         foreach (var orderItem in order.Items)
         {
             textBuilder.AppendLine(
-                $"— {orderItem.Product.Name}, Артикул: **{orderItem.Product.Articul}**, Количество: {orderItem.Count}");
+                $"— {orderItem.Product.Name}, Артикул: <b>{orderItem.Product.Articul}</b>, Количество: {orderItem.Count}");
         }
 
         textBuilder.AppendLine();
@@ -70,15 +70,15 @@ public class SendOrderForConfirmationHandler : IRequestHandler<SendOrderForConfi
 
         var buttons = new[]
         {
-            InlineKeyboardButton.WithCallbackData("✅ Подтвердить заказ", $"confirm|{order.Id}"),
-            InlineKeyboardButton.WithCallbackData("\u274c Отменить заказ", $"cancel|{order.Id}")
+            InlineKeyboardButton.WithCallbackData("✅ Подтвердить", $"confirm|{order.Id}"),
+            InlineKeyboardButton.WithCallbackData("\u274c Отменить", $"cancel|{order.Id}")
         };
 
         var inlineKeyboard = new InlineKeyboardMarkup(buttons);
 
         foreach (var user in users)
         {
-            await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Markdown, replyMarkup: inlineKeyboard, cancellationToken: cancellationToken);
+            await _client.SendTextMessageAsync(user.ChatId, text, ParseMode.Html, replyMarkup: inlineKeyboard, cancellationToken: cancellationToken);
         }
         
         return Unit.Value;

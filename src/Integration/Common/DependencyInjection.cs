@@ -20,5 +20,6 @@ public static class DependencyInjection
         services.AddTransient<ILoadOrdersService, LoadOrdersService>();
         services.AddTransient<IFeedService, FeedService>();
         services.AddTransient<ITrackAllStocksAndPricesService, TrackAllStocksAndPricesService>();
+        services.AddTransient<ISendNotificationService, SendNotificationService>();
     }
 }

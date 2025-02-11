@@ -14,5 +14,6 @@ public static class DependencyInjection
         services.AddHostedService<UpdateOrdersBackgroundService>();
         services.AddHostedService<LoadOrdersBackgroundService>();
         services.AddHostedService<TrackAllStocksAndPricesBackgroundService>();
+        services.AddHostedService<SendOrderConfirmationNotifications>();
     }
 }

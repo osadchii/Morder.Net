@@ -40,8 +40,8 @@ public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
         var response = await GetAsync(kuper, "/ofm/api/v1/shipments", token);
         var content = await response.Content.ReadAsStringAsync();
         _logger.LogInformation(content);
-        
-        var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
+
+        var orders = content.FromJson<KuperOrdersMessage>();
 
         return orders.Data;
     }

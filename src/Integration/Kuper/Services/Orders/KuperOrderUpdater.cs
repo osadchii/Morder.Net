@@ -4,6 +4,7 @@ using Infrastructure.Models.Marketplaces;
 using Infrastructure.Models.Marketplaces.Kuper;
 using Integration.Common.Services.Orders;
 using Integration.Kuper.Clients.Orders;
+using Integration.Kuper.Clients.Orders.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

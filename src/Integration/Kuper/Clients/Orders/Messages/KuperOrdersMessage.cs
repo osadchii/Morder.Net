@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 
+namespace Integration.Kuper.Clients.Orders.Messages;
+
 public class KuperOrdersMessage
 {
     [JsonProperty("data")]

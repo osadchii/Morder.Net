@@ -1,6 +1,7 @@
 using Infrastructure.Cache.Interfaces;
 using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Marketplaces.Kuper;
+using Integration.Kuper.Clients.Orders.Messages;
 
 namespace Integration.Kuper.Clients.Orders;
 

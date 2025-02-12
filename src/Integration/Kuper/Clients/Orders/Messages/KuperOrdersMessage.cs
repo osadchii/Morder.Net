@@ -279,16 +279,16 @@ public class PositionExtensions
 public class AppliedFilters
 {
     [JsonProperty("createdFrom")]
-    public DateTime CreatedFrom { get; set; }
+    public DateTime? CreatedFrom { get; set; }
 
     [JsonProperty("createdTo")]
-    public DateTime CreatedTo { get; set; }
+    public DateTime? CreatedTo { get; set; }
 
     [JsonProperty("updatedFrom")]
-    public DateTime UpdatedFrom { get; set; }
+    public DateTime? UpdatedFrom { get; set; }
 
     [JsonProperty("updatedTo")]
-    public DateTime UpdatedTo { get; set; }
+    public DateTime? UpdatedTo { get; set; }
 
     [JsonProperty("state")]
     public string State { get; set; }
@@ -303,8 +303,8 @@ public class AppliedFilters
     public string StoreImportKey { get; set; }
 
     [JsonProperty("deliveryFrom")]
-    public DateTime DeliveryFrom { get; set; }
+    public DateTime? DeliveryFrom { get; set; }
 
     [JsonProperty("deliveryTo")]
-    public DateTime DeliveryTo { get; set; }
+    public DateTime? DeliveryTo { get; set; }
 }

@@ -1,4 +1,5 @@
 using Infrastructure.Cache.Interfaces;
+using Infrastructure.Extensions;
 using Infrastructure.MediatR.Orders.Marketplace.Common.Commands;
 using Infrastructure.Models.Marketplaces.Kuper;
 using Integration.Kuper.Clients.Orders.Messages;
@@ -47,7 +48,7 @@ public class KuperOrderAdapter : IKuperOrderAdapter
                     ExternalId = Guid.NewGuid(),
                     MarketplaceId = kuper.Id,
                     Archived = kuper.Settings.LoadOrdersAsArchived == true,
-                    ShippingDate = p.Delivery.ExpectedTo,
+                    ShippingDate = p.Delivery.ExpectedTo.ToUtcTime(),
                     ExpressOrder = true,
                     Items = p.Positions.Select(i => new CreateOrderItem
                     {

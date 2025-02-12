@@ -2,6 +2,7 @@ using System.Text;
 using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Kuper;
 using Integration.Kuper.Clients.Orders.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Kuper.Clients.Orders;
 
@@ -27,9 +28,19 @@ public interface IKuperOrdersClient
 
 public class KuperOrdersClient : KuperClientBase, IKuperOrdersClient
 {
+    public KuperOrdersClient(ILogger<KuperOrdersClient> logger)
+    {
+        _logger = logger;
+    }
+
+    private readonly ILogger<KuperOrdersClient> _logger;
+
     public async Task<List<OrderData>> GetOrders(KuperDto kuper, string token = null)
     {
         var response = await GetAsync(kuper, "/ofm/api/v1/shipments", token);
+        var content = await response.Content.ReadAsStringAsync();
+        _logger.LogInformation(content);
+        
         var orders = await response.Content.ReadAsObject<KuperOrdersMessage>();
 
         return orders.Data;

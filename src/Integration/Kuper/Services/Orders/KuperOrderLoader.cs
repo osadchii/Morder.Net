@@ -30,7 +30,7 @@ public class KuperOrderLoader : MarketplaceOrderLoader
         var logger = ServiceProvider.GetRequiredService<ILogger<KuperOrderLoader>>();
         var client = ServiceProvider.GetRequiredService<IKuperOrdersClient>();
 
-        var postings = await client.GetOrdersByCreationDate(_kuper, StartDate, DateTime.Now.AddDays(1));
+        var postings = await client.GetOrders(_kuper);
 
         logger.LogInformation("Loaded {Count} orders from Kuper", postings.Count);
 

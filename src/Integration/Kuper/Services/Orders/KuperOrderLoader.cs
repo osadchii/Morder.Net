@@ -21,7 +21,7 @@ public class KuperOrderLoader : MarketplaceOrderLoader
 
     public override async Task LoadOrders()
     {
-        if (!_kuper.Settings.LoadOrders != true)
+        if (_kuper.Settings.LoadOrders != true)
         {
             return;
         }
@@ -31,7 +31,7 @@ public class KuperOrderLoader : MarketplaceOrderLoader
 
         var postings = await client.GetOrdersByCreationDate(_kuper, StartDate, DateTime.UtcNow);
 
-        logger.LogInformation("Loaded {Count} orders from Ozon", postings.Count);
+        logger.LogInformation("Loaded {Count} orders from Kuper", postings.Count);
 
         if (postings.Count == 0)
         {

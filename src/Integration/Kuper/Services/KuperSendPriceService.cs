@@ -71,6 +71,6 @@ public class KuperSendPriceService : MarketplaceSendPriceService
         }
 
         await client.SendPrices(kuper, message);
-        logger.LogInformation("Sent {Count} prices to Kuper", prices.Length);
+        logger.LogInformation("Sent {Count} prices to Kuper", message.Data.Length);
     }
 }

@@ -206,10 +206,10 @@ public class Position
     public string Id { get; set; }
 
     [JsonProperty("originalQuantity")]
-    public int OriginalQuantity { get; set; }
+    public decimal OriginalQuantity { get; set; }
 
     [JsonProperty("quantity")]
-    public int Quantity { get; set; }
+    public decimal Quantity { get; set; }
 
     [JsonProperty("totalDiscountPrice")]
     public string TotalDiscountPrice { get; set; }

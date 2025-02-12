@@ -13,11 +13,11 @@ public class KuperOfferClient : KuperClientBase, IKuperOfferClient
 {
     public Task SendCategories(KuperDto kuper, KuperCategoryFeed categories)
     {
-        return PostAsync(kuper, "/v1/import/categories", categories);
+        return PutAsync(kuper, "/v1/import/categories", categories);
     }
-    
+
     public Task SendOffers(KuperDto kuper, KuperProductFeed offers)
     {
-        return PostAsync(kuper, "/v1/import/offers", offers);
+        return PutAsync(kuper, "/v1/import/offers", offers);
     }
 }

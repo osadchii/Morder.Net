@@ -12,6 +12,6 @@ public class KuperStockClient : KuperClientBase, IKuperStockClient
 {
     public Task SendStocks(KuperDto kuper, KuperStockMessage message)
     {
-        return PostAsync(kuper, "/v1/import/stocks", message);
+        return PutAsync(kuper, "/v1/import/stocks", message);
     }
 }

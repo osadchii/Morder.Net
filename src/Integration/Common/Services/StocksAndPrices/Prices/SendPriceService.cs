@@ -42,6 +42,7 @@ public class SendPriceService : ISendPriceService
             var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && m.PriceChangesTracking)
+                .Include(x => x.Warehouse)
                 .ToListAsync();
 
             foreach (var marketplace in marketplaces)

@@ -42,6 +42,7 @@ public class SendStockService : ISendStockService
             var marketplaces = await _context.Marketplaces
                 .AsNoTracking()
                 .Where(m => m.IsActive && m.StockChangesTracking)
+                .Include(x => x.Warehouse)
                 .ToListAsync();
 
             foreach (var marketplace in marketplaces)

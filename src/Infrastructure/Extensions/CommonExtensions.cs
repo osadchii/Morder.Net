@@ -22,12 +22,12 @@ public static class CommonExtensions
         }
         catch
         {
-#if DEBUG
+// #if DEBUG
             throw;
-#endif
-#pragma warning disable CS0162
-            return default;
-#pragma warning restore CS0162
+// #endif
+// #pragma warning disable CS0162
+//             return default;
+// #pragma warning restore CS0162
         }
     }
 

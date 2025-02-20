@@ -91,7 +91,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             Limit = ozon.Settings.LoadProductIdsPageSize
         };
 
-        var httpResponse = await PostAsync(ozon, "v2/product/list", request);
+        var httpResponse = await PostAsync(ozon, "v3/product/list", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
         var response = body.FromJson<OzonProductIdsResponse>();

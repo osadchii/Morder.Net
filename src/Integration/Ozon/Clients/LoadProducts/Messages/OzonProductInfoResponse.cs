@@ -21,10 +21,15 @@ public class OzonProductInfoItem
     public long Id { get; set; }
 
     [JsonProperty("offer_id")] public string OfferId { get; set; } = null!;
+    
+    [JsonProperty("sources")] public OzonProductInfoItemSource[] Sources { get; set; } = null!;
+}
 
-    [JsonProperty("fbs_sku")]
-    public long FbsSku { get; set; }
-
-    [JsonProperty("fbo_sku")]
-    public long FboSku { get; set; }
+public class OzonProductInfoItemSource
+{
+    [JsonProperty("sku")]
+    public long Sku { get; set; }
+    
+    [JsonProperty("source")]
+    public string Source { get; set; }
 }

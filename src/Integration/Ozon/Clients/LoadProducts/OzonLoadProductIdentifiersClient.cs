@@ -40,10 +40,10 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             ProductIds = portion.Select(kv => kv.Value)
         };
 
-        var httpResponse = await PostAsync(ozon, "v2/product/info/list", request);
+        var httpResponse = await PostAsync(ozon, "v3/product/info/list", request);
         var body = await httpResponse.Content.ReadAsStringAsync();
 
-        var response = body.FromJson<OzonProductInfoResponse>();
+        var response = body.FromJson<OzonProductInfoResult>();
 
         if (response is null)
         {
@@ -56,8 +56,8 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         return response.Items.ToDictionary(i => i.OfferId, i => new OzonProductIdentifier
         {
             OzonId = i.Id.ToString(),
-            FboSku = i.FboSku.ToString(),
-            FbsSku = i.FbsSku.ToString()
+            FboSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbo", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString(),
+            FbsSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbs", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString()
         });
     }
 

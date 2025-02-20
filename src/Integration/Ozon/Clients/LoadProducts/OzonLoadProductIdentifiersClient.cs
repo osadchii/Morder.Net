@@ -67,7 +67,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         {
             OzonId = i.Id.ToString(),
             FboSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbo", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString(),
-            FbsSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbs", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString()
+            FbsSku = i.Sources.FirstOrDefault(x => x.Source.Equals("sds", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString()
         });
     }
 

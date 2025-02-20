@@ -2,6 +2,7 @@ using Infrastructure.Extensions;
 using Infrastructure.Models.Marketplaces.Ozon;
 using Integration.Ozon.Clients.LoadProducts.Messages;
 using Integration.Ozon.Clients.LoadProducts.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Integration.Ozon.Clients.LoadProducts;
 
@@ -12,6 +13,13 @@ public interface IOzonLoadProductIdentifiersClient
 
 public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProductIdentifiersClient
 {
+    private readonly ILogger<OzonLoadProductIdentifiersClient> _logger;
+
+    public OzonLoadProductIdentifiersClient(ILogger<OzonLoadProductIdentifiersClient> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonProductIdentifiersAsync(OzonDto ozon)
     {
         var baseIdentifiers = await LoadOzonBaseIdentifiersAsync(ozon);
@@ -32,7 +40,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         return result;
     }
 
-    private static async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonIdentifiersAsync(OzonDto ozon, 
+    private async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonIdentifiersAsync(OzonDto ozon, 
         IEnumerable<KeyValuePair<string, long>> portion)
     {
         var request = new OzonProductInfoRequest
@@ -52,6 +60,8 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 
             throw new Exception(message);
         }
+        
+        _logger.LogInformation("Loaded product identifier list from Ozon for {Count} products", response.Items.Count());
 
         return response.Items.ToDictionary(i => i.OfferId, i => new OzonProductIdentifier
         {
@@ -61,7 +71,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         });
     }
 
-    private static async Task<Dictionary<string, long>> LoadOzonBaseIdentifiersAsync(OzonDto ozon)
+    private async Task<Dictionary<string, long>> LoadOzonBaseIdentifiersAsync(OzonDto ozon)
     {
         var result = new Dictionary<string, long>();
         var lastId = string.Empty;
@@ -83,7 +93,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         return result;
     }
 
-    private static async Task<(int, string)> LoadProductPageAsync(OzonDto ozon, IDictionary<string, long> result, string lastId)
+    private async Task<(int, string)> LoadProductPageAsync(OzonDto ozon, IDictionary<string, long> result, string lastId)
     {
         var request = new OzonProductIdsRequest
         {
@@ -103,6 +113,8 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 
             throw new Exception(message);
         }
+        
+        _logger.LogInformation("Loaded product base identifier list from Ozon for {Count} products.", response.Result.Items.Count);
 
         foreach (var item in response.Result.Items)
         {

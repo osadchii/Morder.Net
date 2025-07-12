@@ -35,12 +35,14 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
             {
                 result.Add(item.Key, item.Value);
             }
+
+            Thread.Sleep(1000); // Ozon API limit 1000 requests per minute
         }
 
         return result;
     }
 
-    private async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonIdentifiersAsync(OzonDto ozon, 
+    private async Task<Dictionary<string, OzonProductIdentifier>> LoadOzonIdentifiersAsync(OzonDto ozon,
         IEnumerable<KeyValuePair<string, long>> portion)
     {
         var request = new OzonProductInfoRequest
@@ -60,14 +62,16 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 
             throw new Exception(message);
         }
-        
+
         _logger.LogInformation("Loaded product identifier list from Ozon for {Count} products", response.Items.Count());
 
         return response.Items.ToDictionary(i => i.OfferId, i => new OzonProductIdentifier
         {
             OzonId = i.Id.ToString(),
-            FboSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbo", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString(),
-            FbsSku = i.Sources.FirstOrDefault(x => x.Source.Equals("sds", StringComparison.InvariantCultureIgnoreCase))?.Sku.ToString()
+            FboSku = i.Sources.FirstOrDefault(x => x.Source.Equals("fbo", StringComparison.InvariantCultureIgnoreCase))
+                ?.Sku.ToString(),
+            FbsSku = i.Sources.FirstOrDefault(x => x.Source.Equals("sds", StringComparison.InvariantCultureIgnoreCase))
+                ?.Sku.ToString()
         });
     }
 
@@ -83,7 +87,7 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         {
             var response = await LoadProductPageAsync(ozon, result, lastId);
             lastId = response.Item2;
-            
+
             if (result.Count >= response.Item1 || currentPage++ > pageLimit)
             {
                 loaded = true;
@@ -93,7 +97,8 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
         return result;
     }
 
-    private async Task<(int, string)> LoadProductPageAsync(OzonDto ozon, IDictionary<string, long> result, string lastId)
+    private async Task<(int, string)> LoadProductPageAsync(OzonDto ozon, IDictionary<string, long> result,
+        string lastId)
     {
         var request = new OzonProductIdsRequest
         {
@@ -113,8 +118,9 @@ public class OzonLoadProductIdentifiersClient : BaseOzonClient, IOzonLoadProduct
 
             throw new Exception(message);
         }
-        
-        _logger.LogInformation("Loaded product base identifier list from Ozon for {Count} products.", response.Result.Items.Count);
+
+        _logger.LogInformation("Loaded product base identifier list from Ozon for {Count} products.",
+            response.Result.Items.Count);
 
         foreach (var item in response.Result.Items)
         {

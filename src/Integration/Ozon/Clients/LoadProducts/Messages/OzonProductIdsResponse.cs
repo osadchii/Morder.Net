@@ -18,7 +18,7 @@ public class OzonProductIdsResponseResult
 
 public class OzonProductIdsResponseItem
 {
-    [JsonProperty("product_id")] public int ProductId { get; set; }
+    [JsonProperty("product_id")] public long ProductId { get; set; }
 
     [JsonProperty("offer_id")] public string OfferId { get; set; } = null!;
 }
